@@ -1,0 +1,250 @@
+{
+ "protocol": 0,
+ "name": "cable_box_print_demo",
+ "description": "Offline demo, long form: the cable box of cable_box_demo (turns 1 to 5 are identical), then the maker answers the agent's questions one at a time. The agent keeps the contract true, slices, removes an overhang the plate summary reports, suggests printing the fit gauge first and, when the maker asks, proposes a print job for review. `user_messages` is the maker's side.",
+ "user_messages": [
+  "A box that hides a power strip on my desk, with a lid that snaps on. Show me a first version before I measure anything.",
+  "It is 180 mm long, 50 mm wide and 35 mm high with the plugs in.",
+  "The thickest cable is 9 mm, so a 12 mm slot is fine. Please slice it so I can see how long it prints.",
+  "I will print the gauge first. Queue the box for my review anyway."
+ ],
+ "turns": [
+  {
+   "say": "Here is what I will make.\n\n- A box that hides a power strip, open at the top, with a slot in both end walls for the cables.\n- A lid that snaps on and is locked with one M3 screw in a corner.\n\nNumbers and where they come from:\n- Inside 120 x 60 mm, 40 mm high: guessed. I do not know your power strip yet.\n- Cable slot 12 mm: guessed.\n- Wall thickness: style.\n- M3 screw: standard.\n- Every clearance of the snap lid and the screw: from your printer's calibration.\n\nYou asked to see it first, so I will start with these sizes and make them sliders. First I am checking which fit features are available.",
+   "calls": [
+    {
+     "tool": "list_cards",
+     "args": {}
+    }
+   ]
+  },
+  {
+   "expect": [
+    "snap_lid",
+    "screw_boss"
+   ],
+   "say": "The lid will use the snap-lid feature and the screw the screw-boss feature, so both halves of each joint come from one definition. Writing the first version.",
+   "calls": [
+    {
+     "tool": "write_model_code",
+     "args": {
+      "code": "\"\"\"Desk cable box: a two-part box that hides a power strip, with a lid that snaps on and one\nscrew that locks it. The end-to-end Proven Fit example: both joints come from feature cards,\nso every clearance is resolved from the printer's calibration.\n\nThe declared ranges passed the range sampler at both material extremes; what fails outside\nthem is noted next to each range (tests/fit/test_fit_cable_box.py checks both).\n\"\"\"\n\nfrom build123d import *\nfrom hotend_fit import cards\n\nPARAMS = {\n    # Inside sizes. From about 253 mm the box no longer fits the X2D's main nozzle; 200 mm\n    # also keeps it inside the auxiliary nozzle's reach.\n    \"width\": {\"default\": 120.0, \"min\": 60.0, \"max\": 200.0, \"unit\": \"mm\",\n              \"label\": \"Inside width\", \"provenance\": \"guessed\"},\n    # Under about 7.5 mm the lid's rails no longer fit the opening. The screw boss stands in\n    # a post outside one end wall, so the whole width x depth inside is free.\n    \"depth\": {\"default\": 60.0, \"min\": 30.0, \"max\": 80.0, \"unit\": \"mm\",\n              \"label\": \"Inside depth\", \"provenance\": \"guessed\"},\n    # Under 20 mm the cable slot cuts away the wall the lid's locating rails bear on.\n    \"height\": {\"default\": 40.0, \"min\": 26.0, \"max\": 80.0, \"unit\": \"mm\",\n               \"label\": \"Height\", \"provenance\": \"style\"},\n    # At 1.2 mm and below the wall behind the snap groove is thinner than the 0.8 mm minimum\n    # (at 1.2 mm only for the tightest printer the calibration allows).\n    \"wall\": {\"default\": 1.0, \"min\": 0.8, \"max\": 3.0, \"unit\": \"mm\",\n             \"label\": \"Wall thickness\", \"provenance\": \"style\"},\n    \"cable\": {\"default\": 12.0, \"unit\": \"mm\", \"label\": \"Cable slot\", \"provenance\": \"guessed\"},\n}\n\nCONTRACT = {\n    \"protocol\": 0,\n    \"name\": \"Desk cable box\",\n    \"parts\": [\"box\", \"lid\"],\n    \"requirements\": [\n        {\"id\": \"holds_power_strip\", \"kind\": \"cavity_min\", \"part\": \"box\",\n         \"size\": [120.0, 60.0, 36.0], \"provenance\": \"guessed\",\n         \"params\": [\"width\", \"depth\", \"height\"]},\n        {\"id\": \"cables_pass\", \"kind\": \"dimension\", \"part\": \"box\", \"name\": \"cable slot width\",\n         \"value\": 12.0, \"provenance\": \"guessed\", \"params\": [\"cable\"]},\n        {\"id\": \"lid_snaps\", \"kind\": \"fit\", \"card\": \"snap_lid\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"snap\", \"provenance\": \"guessed\"},\n        {\"id\": \"lid_screwed\", \"kind\": \"fit\", \"card\": \"screw_boss\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"thread_tap\", \"provenance\": \"standard\"},\n        {\"id\": \"walls_print\", \"kind\": \"wall_min\", \"part\": \"box\", \"value\": 0.8,\n         \"provenance\": \"style\", \"params\": [\"wall\"]},\n    ],\n}\n\nFLOOR = 2.0\nLID = 2.4\nCORNER = 3.0\n# The screw post stands on the outside of one end wall, near a corner: its centre is this far\n# beyond the inside along X, so the boss (6.6 mm across for an M3) stays clear of the inside,\n# and this far in from the inside corner along Y, so the post stays within the box's depth.\n# The post is POST_SKIN wider than the boss all round.\nPOST_OUT = 3.5\nPOST_IN = 3.0\nPOST_SKIN = 1.2\n\n\ndef build(p, ctx):\n    bottom = (Align.CENTER, Align.CENTER, Align.MIN)\n    outer_x, outer_y = p.width + 2 * p.wall, p.depth + 2 * p.wall\n    snap = cards.snap_lid(opening=(p.width, p.depth), wall=p.wall, ctx=ctx)\n    screw = cards.screw_boss(\"M3\", \"self_tap\", height=p.height - FLOOR, plate=LID, ctx=ctx)\n    post_x, post_y = p.width / 2 + POST_OUT, p.depth / 2 - POST_IN\n    post_radius = screw.boss_diameter / 2 + POST_SKIN\n\n    shell = Box(outer_x, outer_y, p.height, align=bottom)\n    shell = fillet(shell.edges().filter_by(Axis.Z), radius=CORNER)\n    shell += Pos(post_x, post_y, 0) * Cylinder(post_radius, p.height, align=bottom)\n    # The inside is cut last, so it is the full width x depth whatever stands round it.\n    box = shell - Pos(0, 0, FLOOR) * Box(p.width, p.depth, p.height, align=bottom)\n    # One slot through both end walls, low enough to stay clear of the lid's rails.\n    box -= Pos(0, 0, FLOOR + 2.0) * Box(outer_x + 2.0, p.cable, p.cable, align=bottom)\n\n    lid = Pos(0, 0, p.height) * Box(outer_x, outer_y, LID, align=bottom)\n    lid = fillet(lid.edges().filter_by(Axis.Z), radius=CORNER)\n    lid += Pos(post_x, post_y, p.height) * Cylinder(post_radius, LID, align=bottom)\n\n    rim = Pos(0, 0, p.height)\n    box = snap.apply_a(box, at=rim)\n    lid = snap.apply_b(lid, at=rim)\n\n    # The screw boss in the post, standing on the floor, outside the inside.\n    corner = Pos(post_x, post_y, p.height)\n    box = screw.apply_a(box, at=corner)\n    lid = screw.apply_b(lid, at=corner)\n    return {\"box\": box, \"lid\": lid}\n",
+      "note": "First version: box, snap lid and screw boss, 1 mm walls"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "status: check_error",
+    "FAIL min_wall [box]"
+   ],
+   "say": "It builds, but the min_wall check failed: behind the groove that the lid snaps into, the wall is thinner than the 0.8 mm your printer needs. A 1 mm wall is too thin for this lid. I am making the wall 2 mm and limiting its slider to 1.6 to 3 mm.",
+   "calls": [
+    {
+     "tool": "write_model_code",
+     "args": {
+      "code": "\"\"\"Desk cable box: a two-part box that hides a power strip, with a lid that snaps on and one\nscrew that locks it. The end-to-end Proven Fit example: both joints come from feature cards,\nso every clearance is resolved from the printer's calibration.\n\nThe declared ranges passed the range sampler at both material extremes; what fails outside\nthem is noted next to each range (tests/fit/test_fit_cable_box.py checks both).\n\"\"\"\n\nfrom build123d import *\nfrom hotend_fit import cards\n\nPARAMS = {\n    # Inside sizes. From about 253 mm the box no longer fits the X2D's main nozzle; 200 mm\n    # also keeps it inside the auxiliary nozzle's reach.\n    \"width\": {\"default\": 120.0, \"min\": 60.0, \"max\": 200.0, \"unit\": \"mm\",\n              \"label\": \"Inside width\", \"provenance\": \"guessed\"},\n    # Under about 7.5 mm the lid's rails no longer fit the opening. The screw boss stands in\n    # a post outside one end wall, so the whole width x depth inside is free.\n    \"depth\": {\"default\": 60.0, \"min\": 30.0, \"max\": 80.0, \"unit\": \"mm\",\n              \"label\": \"Inside depth\", \"provenance\": \"guessed\"},\n    # Under 20 mm the cable slot cuts away the wall the lid's locating rails bear on.\n    \"height\": {\"default\": 40.0, \"min\": 26.0, \"max\": 80.0, \"unit\": \"mm\",\n               \"label\": \"Height\", \"provenance\": \"style\"},\n    # At 1.2 mm and below the wall behind the snap groove is thinner than the 0.8 mm minimum\n    # (at 1.2 mm only for the tightest printer the calibration allows).\n    \"wall\": {\"default\": 2.0, \"min\": 1.6, \"max\": 3.0, \"unit\": \"mm\",\n             \"label\": \"Wall thickness\", \"provenance\": \"style\"},\n    \"cable\": {\"default\": 12.0, \"unit\": \"mm\", \"label\": \"Cable slot\", \"provenance\": \"guessed\"},\n}\n\nCONTRACT = {\n    \"protocol\": 0,\n    \"name\": \"Desk cable box\",\n    \"parts\": [\"box\", \"lid\"],\n    \"requirements\": [\n        {\"id\": \"holds_power_strip\", \"kind\": \"cavity_min\", \"part\": \"box\",\n         \"size\": [120.0, 60.0, 36.0], \"provenance\": \"guessed\",\n         \"params\": [\"width\", \"depth\", \"height\"]},\n        {\"id\": \"cables_pass\", \"kind\": \"dimension\", \"part\": \"box\", \"name\": \"cable slot width\",\n         \"value\": 12.0, \"provenance\": \"guessed\", \"params\": [\"cable\"]},\n        {\"id\": \"lid_snaps\", \"kind\": \"fit\", \"card\": \"snap_lid\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"snap\", \"provenance\": \"guessed\"},\n        {\"id\": \"lid_screwed\", \"kind\": \"fit\", \"card\": \"screw_boss\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"thread_tap\", \"provenance\": \"standard\"},\n        {\"id\": \"walls_print\", \"kind\": \"wall_min\", \"part\": \"box\", \"value\": 0.8,\n         \"provenance\": \"style\", \"params\": [\"wall\"]},\n    ],\n}\n\nFLOOR = 2.0\nLID = 2.4\nCORNER = 3.0\n# The screw post stands on the outside of one end wall, near a corner: its centre is this far\n# beyond the inside along X, so the boss (6.6 mm across for an M3) stays clear of the inside,\n# and this far in from the inside corner along Y, so the post stays within the box's depth.\n# The post is POST_SKIN wider than the boss all round.\nPOST_OUT = 3.5\nPOST_IN = 3.0\nPOST_SKIN = 1.2\n\n\ndef build(p, ctx):\n    bottom = (Align.CENTER, Align.CENTER, Align.MIN)\n    outer_x, outer_y = p.width + 2 * p.wall, p.depth + 2 * p.wall\n    snap = cards.snap_lid(opening=(p.width, p.depth), wall=p.wall, ctx=ctx)\n    screw = cards.screw_boss(\"M3\", \"self_tap\", height=p.height - FLOOR, plate=LID, ctx=ctx)\n    post_x, post_y = p.width / 2 + POST_OUT, p.depth / 2 - POST_IN\n    post_radius = screw.boss_diameter / 2 + POST_SKIN\n\n    shell = Box(outer_x, outer_y, p.height, align=bottom)\n    shell = fillet(shell.edges().filter_by(Axis.Z), radius=CORNER)\n    shell += Pos(post_x, post_y, 0) * Cylinder(post_radius, p.height, align=bottom)\n    # The inside is cut last, so it is the full width x depth whatever stands round it.\n    box = shell - Pos(0, 0, FLOOR) * Box(p.width, p.depth, p.height, align=bottom)\n    # One slot through both end walls, low enough to stay clear of the lid's rails.\n    box -= Pos(0, 0, FLOOR + 2.0) * Box(outer_x + 2.0, p.cable, p.cable, align=bottom)\n\n    lid = Pos(0, 0, p.height) * Box(outer_x, outer_y, LID, align=bottom)\n    lid = fillet(lid.edges().filter_by(Axis.Z), radius=CORNER)\n    lid += Pos(post_x, post_y, p.height) * Cylinder(post_radius, LID, align=bottom)\n\n    rim = Pos(0, 0, p.height)\n    box = snap.apply_a(box, at=rim)\n    lid = snap.apply_b(lid, at=rim)\n\n    # The screw boss in the post, standing on the floor, outside the inside.\n    corner = Pos(post_x, post_y, p.height)\n    box = screw.apply_a(box, at=corner)\n    lid = screw.apply_b(lid, at=corner)\n    return {\"box\": box, \"lid\": lid}\n",
+      "note": "Wall 2 mm (slider 1.6 to 3 mm) so the snap groove leaves 0.8 mm"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "status: ok",
+    "checks: 0 fail"
+   ],
+   "say": "All error checks pass now. Looking at the result, outside and cut open.",
+   "calls": [
+    {
+     "tool": "render_views",
+     "args": {
+      "views": [
+       "iso"
+      ]
+     }
+    },
+    {
+     "tool": "render_views",
+     "args": {
+      "views": [
+       "front"
+      ],
+      "section": {
+       "plane": "XZ"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "views of version"
+   ],
+   "say": "Your cable box is ready to look at: a box with 120 x 60 mm of room inside, 40 mm high, with 2 mm walls, a cable slot at both ends and a lid that snaps on and takes one M3 screw.\n\nChecked: both parts are valid solids, fit the printer, have no wall under 0.8 mm and do not collide, and every clearance of the snap lid and the screw is drawn as your printer's calibration asks. One warning: the flat top of each cable slot hangs over and would need a little support. I will deal with that when we come to printing.\n\nNot settled: the inside size and the cable slot are my guesses. The check confirms that a 120 x 60 x 36 mm block goes in as built (the screw sits in a post outside the inside), but that only proves my guess, not your power strip. Your printer's fits have not been measured either.\n\nSo I have three questions for you, one at a time. The first: how long, how wide and how high is your power strip with the plugs in? A ruler is enough. The cable slot and the lid's snap fit come after that, before the first print."
+  },
+  {
+   "expect": [
+    "180 mm long",
+    "50 mm wide",
+    "35 mm high"
+   ],
+   "say": "Thank you. I am sizing the box around a 180 x 50 x 35 mm power strip: 184 x 54 mm inside, so the strip has 2 mm of room all round, and 46 mm high, so it stays below the lid's rails, which hang 8 mm into the box. These three sizes and the contract now carry your measurement instead of my guess.",
+   "calls": [
+    {
+     "tool": "write_model_code",
+     "args": {
+      "code": "\"\"\"Desk cable box: a two-part box that hides a power strip, with a lid that snaps on and one\nscrew that locks it. The end-to-end Proven Fit example: both joints come from feature cards,\nso every clearance is resolved from the printer's calibration.\n\nSized for the maker's power strip, measured 180 x 50 x 35 mm with the plugs in.\n\"\"\"\n\nfrom build123d import *\nfrom hotend_fit import cards\n\nPARAMS = {\n    # Inside sizes. From about 253 mm the box no longer fits the X2D's main nozzle; 200 mm\n    # also keeps it inside the auxiliary nozzle's reach.\n    # The strip is 180 mm long; 2 mm of room at each end.\n    \"width\": {\"default\": 184.0, \"min\": 60.0, \"max\": 200.0, \"unit\": \"mm\",\n              \"label\": \"Inside width\", \"provenance\": \"measured\"},\n    # Under about 7.5 mm the lid's rails no longer fit the opening. The screw boss stands in\n    # a post outside one end wall, so the whole width x depth inside is free.\n    # The strip is 50 mm wide; 2 mm of room on each side.\n    \"depth\": {\"default\": 54.0, \"min\": 30.0, \"max\": 80.0, \"unit\": \"mm\",\n              \"label\": \"Inside depth\", \"provenance\": \"measured\"},\n    # Under 20 mm the cable slot cuts away the wall the lid's locating rails bear on.\n    # The strip is 35 mm high: a 2 mm floor, the strip, 1 mm of air, then the lid's\n    # rails, which hang 8 mm into the box.\n    \"height\": {\"default\": 46.0, \"min\": 26.0, \"max\": 80.0, \"unit\": \"mm\",\n               \"label\": \"Height\", \"provenance\": \"measured\"},\n    # At 1.2 mm and below the wall behind the snap groove is thinner than the 0.8 mm minimum\n    # (at 1.2 mm only for the tightest printer the calibration allows).\n    \"wall\": {\"default\": 2.0, \"min\": 1.6, \"max\": 3.0, \"unit\": \"mm\",\n             \"label\": \"Wall thickness\", \"provenance\": \"style\"},\n    \"cable\": {\"default\": 12.0, \"unit\": \"mm\", \"label\": \"Cable slot\", \"provenance\": \"guessed\"},\n}\n\nCONTRACT = {\n    \"protocol\": 0,\n    \"name\": \"Desk cable box\",\n    \"parts\": [\"box\", \"lid\"],\n    \"requirements\": [\n        {\"id\": \"holds_power_strip\", \"kind\": \"cavity_min\", \"part\": \"box\",\n         \"size\": [180.0, 50.0, 35.0], \"provenance\": \"measured\",\n         \"params\": [\"width\", \"depth\", \"height\"]},\n        {\"id\": \"cables_pass\", \"kind\": \"dimension\", \"part\": \"box\", \"name\": \"cable slot width\",\n         \"value\": 12.0, \"provenance\": \"guessed\", \"params\": [\"cable\"]},\n        {\"id\": \"lid_snaps\", \"kind\": \"fit\", \"card\": \"snap_lid\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"snap\", \"provenance\": \"guessed\"},\n        {\"id\": \"lid_screwed\", \"kind\": \"fit\", \"card\": \"screw_boss\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"thread_tap\", \"provenance\": \"standard\"},\n        {\"id\": \"walls_print\", \"kind\": \"wall_min\", \"part\": \"box\", \"value\": 0.8,\n         \"provenance\": \"style\", \"params\": [\"wall\"]},\n    ],\n}\n\nFLOOR = 2.0\nLID = 2.4\nCORNER = 3.0\n# The screw post stands on the outside of one end wall, near a corner: its centre is this far\n# beyond the inside along X, so the boss (6.6 mm across for an M3) stays clear of the inside,\n# and this far in from the inside corner along Y, so the post stays within the box's depth.\n# The post is POST_SKIN wider than the boss all round.\nPOST_OUT = 3.5\nPOST_IN = 3.0\nPOST_SKIN = 1.2\n\n\ndef build(p, ctx):\n    bottom = (Align.CENTER, Align.CENTER, Align.MIN)\n    outer_x, outer_y = p.width + 2 * p.wall, p.depth + 2 * p.wall\n    snap = cards.snap_lid(opening=(p.width, p.depth), wall=p.wall, ctx=ctx)\n    screw = cards.screw_boss(\"M3\", \"self_tap\", height=p.height - FLOOR, plate=LID, ctx=ctx)\n    post_x, post_y = p.width / 2 + POST_OUT, p.depth / 2 - POST_IN\n    post_radius = screw.boss_diameter / 2 + POST_SKIN\n\n    shell = Box(outer_x, outer_y, p.height, align=bottom)\n    shell = fillet(shell.edges().filter_by(Axis.Z), radius=CORNER)\n    shell += Pos(post_x, post_y, 0) * Cylinder(post_radius, p.height, align=bottom)\n    # The inside is cut last, so it is the full width x depth whatever stands round it.\n    box = shell - Pos(0, 0, FLOOR) * Box(p.width, p.depth, p.height, align=bottom)\n    # One slot through both end walls, low enough to stay clear of the lid's rails.\n    box -= Pos(0, 0, FLOOR + 2.0) * Box(outer_x + 2.0, p.cable, p.cable, align=bottom)\n\n    lid = Pos(0, 0, p.height) * Box(outer_x, outer_y, LID, align=bottom)\n    lid = fillet(lid.edges().filter_by(Axis.Z), radius=CORNER)\n    lid += Pos(post_x, post_y, p.height) * Cylinder(post_radius, LID, align=bottom)\n\n    rim = Pos(0, 0, p.height)\n    box = snap.apply_a(box, at=rim)\n    lid = snap.apply_b(lid, at=rim)\n\n    # The screw boss in the post, standing on the floor, outside the inside.\n    corner = Pos(post_x, post_y, p.height)\n    box = screw.apply_a(box, at=corner)\n    lid = screw.apply_b(lid, at=corner)\n    return {\"box\": box, \"lid\": lid}\n",
+      "note": "Sized for the measured power strip: 180 x 50 x 35 mm"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "status: ok",
+    "checks: 0 fail",
+    "questions for the user (2"
+   ],
+   "say": "It builds, and the contract check now confirms that a 180 x 50 x 35 mm block goes into the box. Two questions are left. The next one: how thick is the thickest cable that has to pass through the slot? Measure it at its widest point, with a ruler or calipers. The slot is 12 mm wide and 12 mm high now, which is my guess."
+  },
+  {
+   "expect": [
+    "9 mm",
+    "slice"
+   ],
+   "say": "Good: a 9 mm cable has room in a 12 mm slot, so the slot stays as it is. I am marking it as measured and noting your 9 mm in the contract.",
+   "calls": [
+    {
+     "tool": "write_model_code",
+     "args": {
+      "code": "\"\"\"Desk cable box: a two-part box that hides a power strip, with a lid that snaps on and one\nscrew that locks it. The end-to-end Proven Fit example: both joints come from feature cards,\nso every clearance is resolved from the printer's calibration.\n\nSized for the maker's power strip, measured 180 x 50 x 35 mm with the plugs in.\n\"\"\"\n\nfrom build123d import *\nfrom hotend_fit import cards\n\nPARAMS = {\n    # Inside sizes. From about 253 mm the box no longer fits the X2D's main nozzle; 200 mm\n    # also keeps it inside the auxiliary nozzle's reach.\n    # The strip is 180 mm long; 2 mm of room at each end.\n    \"width\": {\"default\": 184.0, \"min\": 60.0, \"max\": 200.0, \"unit\": \"mm\",\n              \"label\": \"Inside width\", \"provenance\": \"measured\"},\n    # Under about 7.5 mm the lid's rails no longer fit the opening. The screw boss stands in\n    # a post outside one end wall, so the whole width x depth inside is free.\n    # The strip is 50 mm wide; 2 mm of room on each side.\n    \"depth\": {\"default\": 54.0, \"min\": 30.0, \"max\": 80.0, \"unit\": \"mm\",\n              \"label\": \"Inside depth\", \"provenance\": \"measured\"},\n    # Under 20 mm the cable slot cuts away the wall the lid's locating rails bear on.\n    # The strip is 35 mm high: a 2 mm floor, the strip, 1 mm of air, then the lid's\n    # rails, which hang 8 mm into the box.\n    \"height\": {\"default\": 46.0, \"min\": 26.0, \"max\": 80.0, \"unit\": \"mm\",\n               \"label\": \"Height\", \"provenance\": \"measured\"},\n    # At 1.2 mm and below the wall behind the snap groove is thinner than the 0.8 mm minimum\n    # (at 1.2 mm only for the tightest printer the calibration allows).\n    \"wall\": {\"default\": 2.0, \"min\": 1.6, \"max\": 3.0, \"unit\": \"mm\",\n             \"label\": \"Wall thickness\", \"provenance\": \"style\"},\n    # The thickest cable measures 9 mm; the maker confirmed a 12 mm slot.\n    \"cable\": {\"default\": 12.0, \"unit\": \"mm\", \"label\": \"Cable slot\", \"provenance\": \"measured\"},\n}\n\nCONTRACT = {\n    \"protocol\": 0,\n    \"name\": \"Desk cable box\",\n    \"parts\": [\"box\", \"lid\"],\n    \"requirements\": [\n        {\"id\": \"holds_power_strip\", \"kind\": \"cavity_min\", \"part\": \"box\",\n         \"size\": [180.0, 50.0, 35.0], \"provenance\": \"measured\",\n         \"params\": [\"width\", \"depth\", \"height\"]},\n        {\"id\": \"cables_pass\", \"kind\": \"dimension\", \"part\": \"box\", \"name\": \"cable slot width\",\n         \"value\": 12.0, \"provenance\": \"measured\", \"params\": [\"cable\"],\n         \"note\": \"the thickest cable measures 9 mm\"},\n        {\"id\": \"lid_snaps\", \"kind\": \"fit\", \"card\": \"snap_lid\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"snap\", \"provenance\": \"guessed\"},\n        {\"id\": \"lid_screwed\", \"kind\": \"fit\", \"card\": \"screw_boss\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"thread_tap\", \"provenance\": \"standard\"},\n        {\"id\": \"walls_print\", \"kind\": \"wall_min\", \"part\": \"box\", \"value\": 0.8,\n         \"provenance\": \"style\", \"params\": [\"wall\"]},\n    ],\n}\n\nFLOOR = 2.0\nLID = 2.4\nCORNER = 3.0\n# The screw post stands on the outside of one end wall, near a corner: its centre is this far\n# beyond the inside along X, so the boss (6.6 mm across for an M3) stays clear of the inside,\n# and this far in from the inside corner along Y, so the post stays within the box's depth.\n# The post is POST_SKIN wider than the boss all round.\nPOST_OUT = 3.5\nPOST_IN = 3.0\nPOST_SKIN = 1.2\n\n\ndef build(p, ctx):\n    bottom = (Align.CENTER, Align.CENTER, Align.MIN)\n    outer_x, outer_y = p.width + 2 * p.wall, p.depth + 2 * p.wall\n    snap = cards.snap_lid(opening=(p.width, p.depth), wall=p.wall, ctx=ctx)\n    screw = cards.screw_boss(\"M3\", \"self_tap\", height=p.height - FLOOR, plate=LID, ctx=ctx)\n    post_x, post_y = p.width / 2 + POST_OUT, p.depth / 2 - POST_IN\n    post_radius = screw.boss_diameter / 2 + POST_SKIN\n\n    shell = Box(outer_x, outer_y, p.height, align=bottom)\n    shell = fillet(shell.edges().filter_by(Axis.Z), radius=CORNER)\n    shell += Pos(post_x, post_y, 0) * Cylinder(post_radius, p.height, align=bottom)\n    # The inside is cut last, so it is the full width x depth whatever stands round it.\n    box = shell - Pos(0, 0, FLOOR) * Box(p.width, p.depth, p.height, align=bottom)\n    # One slot through both end walls, low enough to stay clear of the lid's rails.\n    box -= Pos(0, 0, FLOOR + 2.0) * Box(outer_x + 2.0, p.cable, p.cable, align=bottom)\n\n    lid = Pos(0, 0, p.height) * Box(outer_x, outer_y, LID, align=bottom)\n    lid = fillet(lid.edges().filter_by(Axis.Z), radius=CORNER)\n    lid += Pos(post_x, post_y, p.height) * Cylinder(post_radius, LID, align=bottom)\n\n    rim = Pos(0, 0, p.height)\n    box = snap.apply_a(box, at=rim)\n    lid = snap.apply_b(lid, at=rim)\n\n    # The screw boss in the post, standing on the floor, outside the inside.\n    corner = Pos(post_x, post_y, p.height)\n    box = screw.apply_a(box, at=corner)\n    lid = screw.apply_b(lid, at=corner)\n    return {\"box\": box, \"lid\": lid}\n",
+      "note": "Cable slot confirmed: thickest cable 9 mm, slot 12 mm"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "status: ok",
+    "checks: 0 fail",
+    "questions for the user (1",
+    "NOT CHECKABLE contract [box]"
+   ],
+   "say": "One question is left, about the lid's snap fit; I will come to it after the slice. The contract check cannot measure a slot (it reports that requirement as not checkable, which proves nothing), so I am measuring it myself: how far the nearest wall of the slot is from the centre of a 9 mm cable lying in it. Then I am slicing with the 0.20 mm demo profile.",
+   "calls": [
+    {
+     "tool": "measure",
+     "args": {
+      "queries": [
+       {
+        "kind": "distance",
+        "a": {
+         "point": [
+          93.0,
+          0.0,
+          8.5
+         ]
+        },
+        "b": {
+         "part": "box"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "tool": "slice",
+     "args": {
+      "profile": "demo-0.20mm"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "\"distance\":4.5",
+    "status: ok",
+    "needs support",
+    "plate check warn overhangs"
+   ],
+   "say": "The cable passes: the nearest wall is 4.5 mm from its centre, which is its radius, so it rests on the bottom of the slot and nothing else touches it.\n\nThe plate summary shows one thing to fix before printing: the box prints as modelled, and the flat top of each cable slot would need support. I am giving the slot a pointed top, like a roof, steeper than 45 degrees, so it prints without support. The slot stays 12 mm wide and 12 mm high at its peak.",
+   "calls": [
+    {
+     "tool": "write_model_code",
+     "args": {
+      "code": "\"\"\"Desk cable box: a two-part box that hides a power strip, with a lid that snaps on and one\nscrew that locks it. The end-to-end Proven Fit example: both joints come from feature cards,\nso every clearance is resolved from the printer's calibration.\n\nSized for the maker's power strip, measured 180 x 50 x 35 mm with the plugs in.\n\"\"\"\n\nfrom build123d import *\nfrom hotend_fit import cards\n\nPARAMS = {\n    # Inside sizes. From about 253 mm the box no longer fits the X2D's main nozzle; 200 mm\n    # also keeps it inside the auxiliary nozzle's reach.\n    # The strip is 180 mm long; 2 mm of room at each end.\n    \"width\": {\"default\": 184.0, \"min\": 60.0, \"max\": 200.0, \"unit\": \"mm\",\n              \"label\": \"Inside width\", \"provenance\": \"measured\"},\n    # Under about 7.5 mm the lid's rails no longer fit the opening. The screw boss stands in\n    # a post outside one end wall, so the whole width x depth inside is free.\n    # The strip is 50 mm wide; 2 mm of room on each side.\n    \"depth\": {\"default\": 54.0, \"min\": 30.0, \"max\": 80.0, \"unit\": \"mm\",\n              \"label\": \"Inside depth\", \"provenance\": \"measured\"},\n    # Under 20 mm the cable slot cuts away the wall the lid's locating rails bear on.\n    # The strip is 35 mm high: a 2 mm floor, the strip, 1 mm of air, then the lid's\n    # rails, which hang 8 mm into the box.\n    \"height\": {\"default\": 46.0, \"min\": 26.0, \"max\": 80.0, \"unit\": \"mm\",\n               \"label\": \"Height\", \"provenance\": \"measured\"},\n    # At 1.2 mm and below the wall behind the snap groove is thinner than the 0.8 mm minimum\n    # (at 1.2 mm only for the tightest printer the calibration allows).\n    \"wall\": {\"default\": 2.0, \"min\": 1.6, \"max\": 3.0, \"unit\": \"mm\",\n             \"label\": \"Wall thickness\", \"provenance\": \"style\"},\n    # The thickest cable measures 9 mm; the maker confirmed a 12 mm slot.\n    \"cable\": {\"default\": 12.0, \"unit\": \"mm\", \"label\": \"Cable slot\", \"provenance\": \"measured\"},\n}\n\nCONTRACT = {\n    \"protocol\": 0,\n    \"name\": \"Desk cable box\",\n    \"parts\": [\"box\", \"lid\"],\n    \"requirements\": [\n        {\"id\": \"holds_power_strip\", \"kind\": \"cavity_min\", \"part\": \"box\",\n         \"size\": [180.0, 50.0, 35.0], \"provenance\": \"measured\",\n         \"params\": [\"width\", \"depth\", \"height\"]},\n        {\"id\": \"cables_pass\", \"kind\": \"dimension\", \"part\": \"box\", \"name\": \"cable slot width\",\n         \"value\": 12.0, \"provenance\": \"measured\", \"params\": [\"cable\"],\n         \"note\": \"the thickest cable measures 9 mm\"},\n        {\"id\": \"lid_snaps\", \"kind\": \"fit\", \"card\": \"snap_lid\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"snap\", \"provenance\": \"guessed\"},\n        {\"id\": \"lid_screwed\", \"kind\": \"fit\", \"card\": \"screw_boss\", \"between\": [\"box\", \"lid\"],\n         \"fit_class\": \"thread_tap\", \"provenance\": \"standard\"},\n        {\"id\": \"walls_print\", \"kind\": \"wall_min\", \"part\": \"box\", \"value\": 0.8,\n         \"provenance\": \"style\", \"params\": [\"wall\"]},\n    ],\n}\n\nFLOOR = 2.0\nLID = 2.4\nCORNER = 3.0\n# The screw post stands on the outside of one end wall, near a corner: its centre is this far\n# beyond the inside along X, so the boss (6.6 mm across for an M3) stays clear of the inside,\n# and this far in from the inside corner along Y, so the post stays within the box's depth.\n# The post is POST_SKIN wider than the boss all round.\nPOST_OUT = 3.5\nPOST_IN = 3.0\nPOST_SKIN = 1.2\n\n\ndef build(p, ctx):\n    bottom = (Align.CENTER, Align.CENTER, Align.MIN)\n    outer_x, outer_y = p.width + 2 * p.wall, p.depth + 2 * p.wall\n    snap = cards.snap_lid(opening=(p.width, p.depth), wall=p.wall, ctx=ctx)\n    screw = cards.screw_boss(\"M3\", \"self_tap\", height=p.height - FLOOR, plate=LID, ctx=ctx)\n    post_x, post_y = p.width / 2 + POST_OUT, p.depth / 2 - POST_IN\n    post_radius = screw.boss_diameter / 2 + POST_SKIN\n\n    shell = Box(outer_x, outer_y, p.height, align=bottom)\n    shell = fillet(shell.edges().filter_by(Axis.Z), radius=CORNER)\n    shell += Pos(post_x, post_y, 0) * Cylinder(post_radius, p.height, align=bottom)\n    # The inside is cut last, so it is the full width x depth whatever stands round it.\n    box = shell - Pos(0, 0, FLOOR) * Box(p.width, p.depth, p.height, align=bottom)\n    # One slot through both end walls, low enough to stay clear of the lid's rails. Its top\n    # is a roof steeper than 45 degrees, so the box prints without support.\n    half = p.cable / 2\n    shoulder = p.cable - 1.2 * half\n    outline = Polygon((-half, 0), (half, 0), (half, shoulder), (0, p.cable),\n                      (-half, shoulder), align=None)\n    slot = extrude(Plane.YZ * outline, amount=outer_x / 2 + 1.0, both=True)\n    box -= Pos(0, 0, FLOOR + 2.0) * slot\n\n    lid = Pos(0, 0, p.height) * Box(outer_x, outer_y, LID, align=bottom)\n    lid = fillet(lid.edges().filter_by(Axis.Z), radius=CORNER)\n    lid += Pos(post_x, post_y, p.height) * Cylinder(post_radius, LID, align=bottom)\n\n    rim = Pos(0, 0, p.height)\n    box = snap.apply_a(box, at=rim)\n    lid = snap.apply_b(lid, at=rim)\n\n    # The screw boss in the post, standing on the floor, outside the inside.\n    corner = Pos(post_x, post_y, p.height)\n    box = screw.apply_a(box, at=corner)\n    lid = screw.apply_b(lid, at=corner)\n    return {\"box\": box, \"lid\": lid}\n",
+      "note": "Roof-shaped top on the cable slot, so the box needs no support"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "status: ok",
+    "checks: 0 fail, 2 warn"
+   ],
+   "say": "The overhang warning is gone. The slot changed shape, so I am measuring it again, and slicing again.",
+   "calls": [
+    {
+     "tool": "measure",
+     "args": {
+      "queries": [
+       {
+        "kind": "distance",
+        "a": {
+         "point": [
+          93.0,
+          0.0,
+          8.5
+         ]
+        },
+        "b": {
+         "part": "box"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "tool": "slice",
+     "args": {
+      "profile": "demo-0.20mm"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "\"distance\":4.5",
+    "nothing needs support",
+    "every piece fits a plate",
+    "plate check warn fit_orientation",
+    "warning fake_slicer"
+   ],
+   "say": "The 9 mm cable still passes under the roof, and nothing on the plate needs support now: the box prints as modelled and the lid is turned upside down, flat on the bed. Both fit on one plate. The slice says about 1 hour 24 minutes and 43 g of filament, but it comes from Hotend's stand-in slicer with an untuned demo profile: take it as a rough estimate, and slice again with your real slicer before you print anything.\n\nOne thing I cannot design away: printed flat, the lid's snap rails stand upright, across the layers, which is their weaker direction. Push the lid on gently.\n\nThat leaves my last question, and it is about your printer, not the box. Nobody has measured how a snap fit comes out on it, so its fit numbers are still guesses: on a printer at the tight end the lid could bind, at the loose end it would not hold. Before the whole box, I suggest printing the fit gauge: four small pieces, a short piece of the snap joint and the screw boss with its plate. You export it from Hotend (`hotend gauge` on the command line) and record what you measure with calipers (`hotend calibrate`); then I rebuild the box so that its clearances follow your printer. Would you like to print the gauge first, or shall I queue the box for your review as it is?"
+  },
+  {
+   "expect": [
+    "gauge first",
+    "Queue"
+   ],
+   "say": "Good. I am putting the box into your review queue, with a note that the gauge comes first.",
+   "calls": [
+    {
+     "tool": "propose_print",
+     "args": {
+      "note": "Cable box for a 180 x 50 x 35 mm power strip, PLA, 0.20 mm demo profile. Sliced by the stand-in slicer: review only, slice again before printing. Print and measure the fit gauge first."
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "pending print job"
+   ],
+   "say": "The box is queued as a print job that waits for your review. I have not started a print and I cannot: only you can confirm a job, in Hotend's own confirmation.\n\nWhere things stand:\n- Made: a cable box for your 180 x 50 x 35 mm power strip, 188 x 62 mm outside and 46 mm high (48.4 mm with the lid on), with a cable slot at both ends and a lid that snaps on and takes one M3 screw.\n- Checked: both parts are valid solids, fit the printer, have no wall under 0.8 mm and do not collide; a block the size of your strip goes into the box; a 9 mm cable passes the slot; nothing on the plate needs support.\n- Still open: the snap fit on your printer. Print the fit gauge, record what you measure and tell me. I will rebuild the box with those numbers; it must then be sliced again, with your real slicer, before anything is printed."
+  }
+ ]
+}

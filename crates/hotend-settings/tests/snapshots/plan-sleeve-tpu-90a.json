@@ -1,0 +1,1066 @@
+{
+  "settings": {
+    "schema": 1,
+    "filaments": [
+      {
+        "spool": "external_main",
+        "nozzle_id": 1,
+        "colour": "#898989",
+        "material_id": "tpu-90a",
+        "family": "TPU"
+      }
+    ],
+    "fields": {
+      "setup.plate_type": "textured-pei",
+      "filament.spool": "external_main",
+      "filament.nozzle_id": 1,
+      "filament.colour": "#898989",
+      "intent": "balanced",
+      "adhesion.level": 0,
+      "adhesion.brim_kind": "none",
+      "adhesion.brim_width_mm": 0,
+      "adhesion.brim_gap_mm": 0.1,
+      "adhesion.skirt_loops": 0,
+      "adhesion.elephant_foot_mm": null,
+      "first_layer.height_mm": null,
+      "first_layer.line_width_mm": null,
+      "first_layer.wall_speed_mm_s": 15,
+      "first_layer.infill_speed_mm_s": 20,
+      "first_layer.accel_mm_s2": null,
+      "first_layer.bed_c": 35,
+      "layers.bed_c": 35,
+      "first_layer.nozzle_c": null,
+      "layers.nozzle_c": null,
+      "cooling.part_fan_off_layers": 3,
+      "cooling.aux_fan_first_layers_pct": 0,
+      "cooling.aux_fan_max_pct": null,
+      "shell.process": "standard-0.20mm",
+      "shell.wall_loops": 2,
+      "shell.infill_pct": 15,
+      "shell.infill_pattern": "grid",
+      "shell.seam": "aligned",
+      "supports.enabled": false,
+      "supports.kind": "tree",
+      "supports.threshold_deg": 30,
+      "supports.where": "bed_only",
+      "motion.outer_wall_speed_cap_mm_s": 30,
+      "motion.speed_cap_mm_s": null,
+      "motion.accel_cap_mm_s2": null,
+      "motion.outer_wall_accel_cap_mm_s2": null,
+      "motion.max_flow_cap_mm3_s": 2.5,
+      "motion.jerk_cap_mm_s": null,
+      "prime_tower.enabled": false
+    }
+  },
+  "decisions": [
+    {
+      "field": "setup.plate_type",
+      "value": "textured-pei",
+      "unit": "enum",
+      "source": "person",
+      "rule": "SET-1",
+      "basis": "measured",
+      "sentence_id": "setup.plate",
+      "sentence": "You told Hotend that the Textured PEI plate is on the bed.",
+      "envelope": {
+        "locked": {
+          "rule": "SET-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "textured-pei",
+      "rule_source": "person",
+      "rule_rule": "SET-1",
+      "answer": null
+    },
+    {
+      "field": "filament.spool",
+      "value": "external_main",
+      "unit": "",
+      "source": "rule",
+      "rule": "SET-1",
+      "basis": "measured",
+      "sentence_id": "setup.spool.external",
+      "sentence": "The print uses the TPU spool on the outside holder of the main nozzle.",
+      "envelope": {
+        "locked": {
+          "rule": "SET-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "external_main",
+      "rule_source": "rule",
+      "rule_rule": "SET-1",
+      "answer": null
+    },
+    {
+      "field": "filament.nozzle_id",
+      "value": 1,
+      "unit": "",
+      "source": "rule",
+      "rule": "NOZ-1",
+      "basis": "measured",
+      "sentence_id": "setup.nozzle",
+      "sentence": "That spool feeds the main nozzle, the only one Hotend prints with for now.",
+      "envelope": {
+        "locked": {
+          "rule": "NOZ-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 1,
+      "rule_source": "rule",
+      "rule_rule": "NOZ-1",
+      "answer": null
+    },
+    {
+      "field": "filament.colour",
+      "value": "#898989",
+      "unit": "",
+      "source": "person",
+      "rule": "SET-1",
+      "basis": "measured",
+      "sentence_id": "setup.colour",
+      "sentence": "The colour of the spool, so that the slicer shows the right filament.",
+      "envelope": {
+        "locked": {
+          "rule": "SET-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "#898989",
+      "rule_source": "person",
+      "rule_rule": "SET-1",
+      "answer": null
+    },
+    {
+      "field": "intent",
+      "value": "balanced",
+      "unit": "enum",
+      "source": "rule",
+      "rule": "INT-1",
+      "basis": "stock",
+      "sentence_id": "intent.default",
+      "sentence": "Nobody asked for anything special, so the balanced settings are used.",
+      "envelope": {
+        "set": {
+          "allowed": [
+            "balanced",
+            "strong",
+            "best_surface",
+            "fast",
+            "fit_critical"
+          ]
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "balanced",
+      "rule_source": "rule",
+      "rule_rule": "INT-1",
+      "answer": null
+    },
+    {
+      "field": "adhesion.level",
+      "value": 0,
+      "unit": "step",
+      "source": "rule",
+      "rule": "LVL-0",
+      "basis": "judgment",
+      "sentence_id": "level.0",
+      "sentence": "No piece on this plate is at risk of coming loose, so the normal first layer is used.",
+      "envelope": {
+        "range": {
+          "min": 0.0,
+          "max": 2.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 0,
+      "rule_source": "rule",
+      "rule_rule": "LVL-0",
+      "answer": null
+    },
+    {
+      "field": "adhesion.brim_kind",
+      "value": "none",
+      "unit": "enum",
+      "source": "rule",
+      "rule": "AD-6",
+      "basis": "measured",
+      "sentence_id": "brim.kind.none",
+      "sentence": "No piece needs a brim.",
+      "envelope": {
+        "set": {
+          "allowed": [
+            "none",
+            "outer"
+          ]
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "none",
+      "rule_source": "rule",
+      "rule_rule": "AD-6",
+      "answer": null
+    },
+    {
+      "field": "adhesion.brim_width_mm",
+      "value": 0,
+      "unit": "mm",
+      "source": "rule",
+      "rule": "AD-6",
+      "basis": "judgment",
+      "sentence_id": "brim.width.flexible",
+      "sentence": "TPU sticks strongly to the plate, so the brim is 0 mm.",
+      "envelope": {
+        "range": {
+          "min": 0.0,
+          "max": 10.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 0,
+      "rule_source": "rule",
+      "rule_rule": "AD-6",
+      "answer": null
+    },
+    {
+      "field": "adhesion.brim_gap_mm",
+      "value": 0.1,
+      "unit": "mm",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "judgment",
+      "sentence_id": "brim.gap.flexible",
+      "sentence": "A flexible part keeps 0.1 mm between brim and part, because its brim is hard to cut off.",
+      "envelope": {
+        "locked": {
+          "rule": "CARD"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 0.1,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "adhesion.skirt_loops",
+      "value": 0,
+      "unit": "count",
+      "source": "rule",
+      "rule": "FIX-1",
+      "basis": "stock",
+      "sentence_id": "fixed.skirt",
+      "sentence": "No skirt is drawn.",
+      "envelope": {
+        "locked": {
+          "rule": "FIX-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 0,
+      "rule_source": "rule",
+      "rule_rule": "FIX-1",
+      "answer": null
+    },
+    {
+      "field": "adhesion.elephant_foot_mm",
+      "value": null,
+      "unit": "mm",
+      "source": "profile",
+      "rule": "STK-1",
+      "basis": "stock",
+      "sentence_id": "stock.kept",
+      "sentence": "Left as the installed standard preset has it. The check of the sliced file expects 0.15.",
+      "envelope": {
+        "locked": {
+          "rule": "STK-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "STK-1",
+      "answer": null
+    },
+    {
+      "field": "first_layer.height_mm",
+      "value": null,
+      "unit": "mm",
+      "source": "profile",
+      "rule": "STK-1",
+      "basis": "stock",
+      "sentence_id": "stock.kept",
+      "sentence": "Left as the installed standard preset has it. The check of the sliced file expects 0.2.",
+      "envelope": {
+        "locked": {
+          "rule": "STK-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "STK-1",
+      "answer": null
+    },
+    {
+      "field": "first_layer.line_width_mm",
+      "value": null,
+      "unit": "mm",
+      "source": "profile",
+      "rule": "STK-1",
+      "basis": "stock",
+      "sentence_id": "stock.kept",
+      "sentence": "Left as the installed standard preset has it. The check of the sliced file expects 0.5.",
+      "envelope": {
+        "locked": {
+          "rule": "STK-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "STK-1",
+      "answer": null
+    },
+    {
+      "field": "first_layer.wall_speed_mm_s",
+      "value": 15,
+      "unit": "mm/s",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "judgment",
+      "sentence_id": "first_layer.wall_speed",
+      "sentence": "The walls of the first layer print at 15 mm/s, the TPU value for level 0.",
+      "envelope": {
+        "range": {
+          "min": 10.0,
+          "max": 15.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 15,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "first_layer.infill_speed_mm_s",
+      "value": 20,
+      "unit": "mm/s",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "judgment",
+      "sentence_id": "first_layer.infill_speed",
+      "sentence": "The infill of the first layer prints at 20 mm/s, the TPU value for level 0.",
+      "envelope": {
+        "range": {
+          "min": 15.0,
+          "max": 20.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 20,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "first_layer.accel_mm_s2",
+      "value": null,
+      "unit": "mm/s2",
+      "source": "profile",
+      "rule": "STK-1",
+      "basis": "stock",
+      "sentence_id": "stock.kept",
+      "sentence": "Left as the installed standard preset has it. The check of the sliced file expects 500.",
+      "envelope": {
+        "range": {
+          "min": 250.0,
+          "max": 500.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "STK-1",
+      "answer": null
+    },
+    {
+      "field": "first_layer.bed_c",
+      "value": 35,
+      "unit": "C",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "judgment",
+      "sentence_id": "bed.first.card",
+      "sentence": "The bed is 35 C during the first layer, the TPU value on this plate for level 0.",
+      "envelope": {
+        "range": {
+          "min": 35.0,
+          "max": 45.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 35,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "layers.bed_c",
+      "value": 35,
+      "unit": "C",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "judgment",
+      "sentence_id": "bed.other.card",
+      "sentence": "After the first layer the bed is 35 C.",
+      "envelope": {
+        "locked": {
+          "rule": "CARD"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 35,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "first_layer.nozzle_c",
+      "value": null,
+      "unit": "C",
+      "source": "profile",
+      "rule": "FIX-1",
+      "basis": "stock",
+      "sentence_id": "stock.nozzle",
+      "sentence": "The nozzle temperature stays as the installed filament profile has it.",
+      "envelope": {
+        "locked": {
+          "rule": "FIX-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "FIX-1",
+      "answer": null
+    },
+    {
+      "field": "layers.nozzle_c",
+      "value": null,
+      "unit": "C",
+      "source": "profile",
+      "rule": "FIX-1",
+      "basis": "stock",
+      "sentence_id": "stock.nozzle",
+      "sentence": "The nozzle temperature stays as the installed filament profile has it.",
+      "envelope": {
+        "locked": {
+          "rule": "FIX-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "FIX-1",
+      "answer": null
+    },
+    {
+      "field": "cooling.part_fan_off_layers",
+      "value": 3,
+      "unit": "layers",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "sourced",
+      "sentence_id": "fan.off_layers",
+      "sentence": "The part fan stays off for the first 3 layers, so that they bond to the bed.",
+      "envelope": {
+        "range": {
+          "min": 3.0,
+          "max": 5.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 3,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "cooling.aux_fan_first_layers_pct",
+      "value": 0,
+      "unit": "percent",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "measured",
+      "sentence_id": "fan.aux_first",
+      "sentence": "The auxiliary fan runs at 0 percent on the first layers.",
+      "envelope": {
+        "locked": {
+          "rule": "CARD"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 0,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "cooling.aux_fan_max_pct",
+      "value": null,
+      "unit": "percent",
+      "source": "profile",
+      "rule": "CARD",
+      "basis": "stock",
+      "sentence_id": "fan.aux_max.none",
+      "sentence": "The auxiliary fan stays as the installed filament profile has it.",
+      "envelope": {
+        "range": {
+          "min": 0.0,
+          "max": 100.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "shell.process",
+      "value": "standard-0.20mm",
+      "unit": "enum",
+      "source": "intent",
+      "rule": "INT-1",
+      "basis": "stock",
+      "sentence_id": "shell.process",
+      "sentence": "The balanced settings print layers of 0.2 mm.",
+      "envelope": {
+        "locked": {
+          "rule": "INT-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "standard-0.20mm",
+      "rule_source": "intent",
+      "rule_rule": "INT-1",
+      "answer": null
+    },
+    {
+      "field": "shell.wall_loops",
+      "value": 2,
+      "unit": "count",
+      "source": "intent",
+      "rule": "INT-1",
+      "basis": "stock",
+      "sentence_id": "shell.walls",
+      "sentence": "2 wall loops, the balanced value.",
+      "envelope": {
+        "range": {
+          "min": 2.0,
+          "max": 6.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 2,
+      "rule_source": "intent",
+      "rule_rule": "INT-1",
+      "answer": null
+    },
+    {
+      "field": "shell.infill_pct",
+      "value": 15,
+      "unit": "percent",
+      "source": "intent",
+      "rule": "INT-1",
+      "basis": "stock",
+      "sentence_id": "shell.infill",
+      "sentence": "15 percent infill, the balanced value.",
+      "envelope": {
+        "range": {
+          "min": 5.0,
+          "max": 50.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 15,
+      "rule_source": "intent",
+      "rule_rule": "INT-1",
+      "answer": null
+    },
+    {
+      "field": "shell.infill_pattern",
+      "value": "grid",
+      "unit": "enum",
+      "source": "intent",
+      "rule": "INT-1",
+      "basis": "stock",
+      "sentence_id": "shell.pattern",
+      "sentence": "The infill pattern of the balanced settings.",
+      "envelope": {
+        "set": {
+          "allowed": [
+            "grid"
+          ]
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "grid",
+      "rule_source": "intent",
+      "rule_rule": "INT-1",
+      "answer": null
+    },
+    {
+      "field": "shell.seam",
+      "value": "aligned",
+      "unit": "enum",
+      "source": "intent",
+      "rule": "INT-1",
+      "basis": "stock",
+      "sentence_id": "shell.seam",
+      "sentence": "The seam position of the balanced settings.",
+      "envelope": {
+        "set": {
+          "allowed": [
+            "aligned"
+          ]
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "aligned",
+      "rule_source": "intent",
+      "rule_rule": "INT-1",
+      "answer": null
+    },
+    {
+      "field": "supports.enabled",
+      "value": false,
+      "unit": "flag",
+      "source": "rule",
+      "rule": "SUP-1",
+      "basis": "judgment",
+      "sentence_id": "supports.off.none",
+      "sentence": "Nothing overhangs far enough to need supports.",
+      "envelope": {
+        "set": {
+          "allowed": [
+            false
+          ]
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": false,
+      "rule_source": "rule",
+      "rule_rule": "SUP-1",
+      "answer": null
+    },
+    {
+      "field": "supports.kind",
+      "value": "tree",
+      "unit": "enum",
+      "source": "rule",
+      "rule": "SUP-4",
+      "basis": "stock",
+      "sentence_id": "supports.kind.tree",
+      "sentence": "Tree supports, the standard kind.",
+      "envelope": {
+        "set": {
+          "allowed": [
+            "tree"
+          ]
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "tree",
+      "rule_source": "rule",
+      "rule_rule": "SUP-4",
+      "answer": null
+    },
+    {
+      "field": "supports.threshold_deg",
+      "value": 30,
+      "unit": "degrees",
+      "source": "rule",
+      "rule": "SUP-2",
+      "basis": "stock",
+      "sentence_id": "supports.threshold",
+      "sentence": "Faces flatter than 30 degrees from horizontal get support, the standard value.",
+      "envelope": {
+        "range": {
+          "min": 20.0,
+          "max": 45.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 30,
+      "rule_source": "rule",
+      "rule_rule": "SUP-2",
+      "answer": null
+    },
+    {
+      "field": "supports.where",
+      "value": "bed_only",
+      "unit": "enum",
+      "source": "rule",
+      "rule": "SUP-3",
+      "basis": "judgment",
+      "sentence_id": "supports.where.bed_only",
+      "sentence": "Supports stand on the bed only.",
+      "envelope": {
+        "set": {
+          "allowed": [
+            "everywhere",
+            "bed_only"
+          ]
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": "bed_only",
+      "rule_source": "rule",
+      "rule_rule": "SUP-3",
+      "answer": null
+    },
+    {
+      "field": "motion.outer_wall_speed_cap_mm_s",
+      "value": 30,
+      "unit": "mm/s",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "judgment",
+      "sentence_id": "motion.outer_wall.card",
+      "sentence": "TPU prints its outer wall at 30 mm/s at most.",
+      "envelope": {
+        "range": {
+          "min": 20.0,
+          "max": 30.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 30,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "motion.speed_cap_mm_s",
+      "value": null,
+      "unit": "mm/s",
+      "source": "profile",
+      "rule": "SPD-1",
+      "basis": "stock",
+      "sentence_id": "motion.none",
+      "sentence": "No limit: the speeds of the installed preset apply.",
+      "envelope": {
+        "range": {
+          "min": 20.0,
+          "max": 300.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "SPD-1",
+      "answer": null
+    },
+    {
+      "field": "motion.accel_cap_mm_s2",
+      "value": null,
+      "unit": "mm/s2",
+      "source": "profile",
+      "rule": "SPD-1",
+      "basis": "stock",
+      "sentence_id": "motion.none",
+      "sentence": "No limit: the speeds of the installed preset apply.",
+      "envelope": {
+        "range": {
+          "min": 500.0,
+          "max": 10000.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "SPD-1",
+      "answer": null
+    },
+    {
+      "field": "motion.outer_wall_accel_cap_mm_s2",
+      "value": null,
+      "unit": "mm/s2",
+      "source": "profile",
+      "rule": "SPD-1",
+      "basis": "stock",
+      "sentence_id": "motion.none",
+      "sentence": "No limit: the speeds of the installed preset apply.",
+      "envelope": {
+        "range": {
+          "min": 500.0,
+          "max": 5000.0,
+          "step": 1.0
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "SPD-1",
+      "answer": null
+    },
+    {
+      "field": "motion.max_flow_cap_mm3_s",
+      "value": 2.5,
+      "unit": "mm3/s",
+      "source": "rule",
+      "rule": "CARD",
+      "basis": "judgment",
+      "sentence_id": "motion.flow.card",
+      "sentence": "This filament is pushed at 2.5 mm3/s at most.",
+      "envelope": {
+        "range": {
+          "min": 1.0,
+          "max": 2.5,
+          "step": 0.01
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": 2.5,
+      "rule_source": "rule",
+      "rule_rule": "CARD",
+      "answer": null
+    },
+    {
+      "field": "motion.jerk_cap_mm_s",
+      "value": null,
+      "unit": "mm/s",
+      "source": "profile",
+      "rule": "FIX-1",
+      "basis": "stock",
+      "sentence_id": "motion.jerk",
+      "sentence": "Reserved. Hotend does not change jerk until a test shows that it has an effect.",
+      "envelope": {
+        "locked": {
+          "rule": "FIX-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": null,
+      "rule_source": "profile",
+      "rule_rule": "FIX-1",
+      "answer": null
+    },
+    {
+      "field": "prime_tower.enabled",
+      "value": false,
+      "unit": "flag",
+      "source": "rule",
+      "rule": "PT-1",
+      "basis": "measured",
+      "sentence_id": "prime_tower.off",
+      "sentence": "One filament, so no prime tower is built.",
+      "envelope": {
+        "locked": {
+          "rule": "PT-1"
+        }
+      },
+      "asked": null,
+      "scope": "plate",
+      "rule_value": false,
+      "rule_source": "rule",
+      "rule_rule": "PT-1",
+      "answer": null
+    }
+  ],
+  "facts": {
+    "family": "TPU",
+    "piece_count": 1,
+    "total_contact_mm2": 1200.0,
+    "pieces": [
+      {
+        "contact_mm2": 1200.0,
+        "contact_perimeter_mm": 480.0,
+        "strip_width_mm": 5.0,
+        "contact_span_mm": 160.0,
+        "height_mm": 12.0,
+        "slenderness": 0.3464101615137754,
+        "overhang_mm2": 0.0,
+        "fit_overhang_mm2": 0.0,
+        "overhang_over_part_mm2": 0.0,
+        "overhang_regions": [],
+        "inner_loops": [],
+        "fit_at_bed": [],
+        "min_wall_mm": null
+      }
+    ]
+  },
+  "derived": {
+    "fired": [
+      "AD-6"
+    ],
+    "rule_level": 0,
+    "asked_brim_width_mm": 0,
+    "brim_required": false,
+    "brim_width_max_mm": 10,
+    "warp_class": "low",
+    "fit_plate": false,
+    "bed_window_c": [
+      35,
+      45
+    ],
+    "nozzle_range_c": [
+      200,
+      250
+    ],
+    "wall_loops_floor": 2,
+    "support_mm2": 0.0,
+    "support_regions": 0,
+    "support_largest_mm2": 0.0,
+    "gentle_motion": false,
+    "calibrated": false,
+    "elephant_foot_mm": 0.15
+  },
+  "questions": [],
+  "warnings": [],
+  "notes": [
+    {
+      "code": "chamber_fan",
+      "sentence": "During the first layer the printer runs its chamber fan at half speed. No setting changes that, and Hotend leaves it to the printer."
+    },
+    {
+      "code": "dedicated_hotend",
+      "sentence": "The vendor recommends a hot end kept for flexible filament."
+    }
+  ],
+  "blocked": null,
+  "checklist": {
+    "items": [
+      {
+        "id": "plate.textured-pei",
+        "class": 1,
+        "text": "Put the Textured PEI plate on the bed, rough side, either way up. Wash it with warm water and dish soap first, dry it, and do not touch the top.",
+        "condition": null
+      },
+      {
+        "id": "glue.none",
+        "class": 1,
+        "text": "Do not put glue on this plate for this filament.",
+        "condition": null
+      },
+      {
+        "id": "spool.external",
+        "class": 2,
+        "text": "This print uses your grey TPU from the outside holder of the main nozzle. In the send window choose the outside spool, not an AMS slot.",
+        "condition": null
+      },
+      {
+        "id": "tpu.dry",
+        "class": 2,
+        "text": "Dry the spool at 65 to 75 C for 8 hours before printing, and put it higher than the printer's filament inlet.",
+        "condition": null
+      },
+      {
+        "id": "tpu.load",
+        "class": 2,
+        "text": "Load the filament by hand with the nozzle hot, until plastic flows evenly. The printer cannot unload it by itself: afterwards cut it and pull it out by hand while the nozzle is hot.",
+        "condition": null
+      },
+      {
+        "id": "open_sliced",
+        "class": 3,
+        "text": "To print, open the file ending in `-sliced.gcode.3mf`. It is already sliced, so nothing in it can change.",
+        "condition": null
+      },
+      {
+        "id": "project",
+        "class": 3,
+        "text": "If you print from the project, first export the plate sliced file from Bambu Studio and drop it on Hotend.",
+        "condition": "project_delivered"
+      },
+      {
+        "id": "no_sync",
+        "class": 4,
+        "text": "If Bambu Studio offers to take the filaments from the printer, answer no.",
+        "condition": null
+      },
+      {
+        "id": "bed_levelling",
+        "class": 4,
+        "text": "Leave bed levelling ticked in the send window.",
+        "condition": null
+      },
+      {
+        "id": "after.flexible",
+        "class": 6,
+        "text": "Let the plate cool, then lift a corner of the part.",
+        "condition": null
+      },
+      {
+        "id": "outcome",
+        "class": 6,
+        "text": "Then tell Hotend whether every piece stayed down.",
+        "condition": null
+      }
+    ],
+    "limit": 10
+  },
+  "revisions": {
+    "print_rules": "2026-11-18.1",
+    "print_cards": "2026-11-18.3",
+    "intents": "2026-11-18.1",
+    "sentences": "2026-11-18.6"
+  }
+}

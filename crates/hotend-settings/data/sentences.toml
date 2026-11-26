@@ -1,0 +1,360 @@
+# The catalogue of every sentence Hotend says about print settings: one per decision, the
+# refusals, warnings, notes and questions, and the lines of the before-you-print list.
+#
+# A sentence is fixed text with numbered or named places such as {width}. A place is filled
+# with a number of the plan or with a word of the [word.*] tables below, never with text from
+# a person, a model or a file. No sentence names a slicer profile key.
+#
+# The code declares which sentences exist and which places each one has (src/explain.rs);
+# a sentence that is missing here, unknown here, or has other places fails the load.
+
+schema = 1
+revision = "2026-11-18.6"
+
+[word.plate]
+cool = "Cool Plate"
+textured-pei = "Textured PEI plate"
+high-temp = "High Temp Plate"
+engineering = "Engineering Plate"
+cool-supertack = "Cool Plate SuperTack"
+
+[word.intent]
+balanced = "balanced"
+strong = "strong"
+best_surface = "best surface"
+fast = "fast"
+fit_critical = "fit-critical"
+
+# Who asked for a change. The word opens a sentence.
+[word.asker]
+agent = "The assistant"
+person = "You"
+
+[word.colour]
+black = "black"
+white = "white"
+grey = "grey"
+red = "red"
+orange = "orange"
+yellow = "yellow"
+green = "green"
+blue = "blue"
+purple = "purple"
+pink = "pink"
+brown = "brown"
+
+# ---------------------------------------------------------------------------------------
+# One sentence per way a field can be decided.
+# ---------------------------------------------------------------------------------------
+[decision]
+"setup.plate" = "You told Hotend that the {plate} is on the bed."
+"setup.spool.ams" = "The print uses the {family} spool in slot {slot}."
+"setup.spool.external" = "The print uses the {family} spool on the outside holder of the main nozzle."
+"setup.nozzle" = "That spool feeds the main nozzle, the only one Hotend prints with for now."
+"setup.colour" = "The colour of the spool, so that the slicer shows the right filament."
+"intent.default" = "Nobody asked for anything special, so the balanced settings are used."
+"intent.chosen" = "The {intent} settings were asked for."
+"intent.gauge" = "A fit gauge is always printed with the fit-critical settings, so that later parts can be printed the same way."
+"level.0" = "No piece on this plate is at risk of coming loose, so the normal first layer is used."
+"level.1" = "A piece on this plate could come loose (rule {rule}), so the first layer is slower and the bed is hotter."
+"level.1.slower" = "A piece on this plate could come loose (rule {rule}), so the first layer is slower."
+"level.1.hotter" = "A piece on this plate could come loose (rule {rule}), so the bed is hotter."
+"level.1.same" = "A piece on this plate could come loose (rule {rule}). The first layer speed and the bed are already the careful ones for this filament on this plate, so they stay."
+"level.2" = "A piece is very tall for its footing, so the slowest first layer and a wider brim are used."
+"level.silk" = "Silk filament sticks less well, so the level is raised by one step to {level}."
+"level.history" = "An earlier print on this plate with this material came loose, so the level is {level}."
+"level.asked" = "Level {level} was asked for, to make the print stick harder."
+"level.3" = "The settings are at their safest. What is left can only be done at the printer."
+"level.proven" = "A print on this printer, plate and material held at level {level} and was reported good ({date}), so the level is at least {level}."
+"brim.kind.none" = "No piece needs a brim."
+"brim.kind.outer" = "The brim goes round the outside of every piece. Hotend always states the brim itself and never leaves it to an automatic choice."
+"brim.kind.asked" = "A brim width was asked for, so the brim goes round the outside of every piece."
+"brim.width.none" = "No rule asks for a brim."
+"brim.width.thin_strip" = "The brim is {width} mm wide because the thinnest strip on the bed is only {strip} mm wide."
+"brim.width.small_foot" = "The brim is {width} mm wide because a piece touches the bed with only {contact} mm2."
+"brim.width.slender" = "The brim is {width} mm wide because a piece is {ratio} times as tall as its footing is wide."
+"brim.width.long" = "The brim is {width} mm wide because a piece is {span} mm long, and long parts lift at the ends."
+"brim.width.warping" = "The brim is {width} mm wide because {family} pulls its corners off the bed."
+"brim.width.flexible" = "{family} sticks strongly to the plate, so the brim is {width} mm."
+"brim.width.level2" = "Level 2 widens the brim to {width} mm."
+"brim.gap.attached" = "The brim touches the part, so that it can hold a corner that tries to lift."
+"brim.gap.loose" = "A brim that no rule requires keeps {gap} mm away from the part, so that it comes off cleanly."
+"brim.gap.flexible" = "A flexible part keeps {gap} mm between brim and part, because its brim is hard to cut off."
+"fixed.skirt" = "No skirt is drawn."
+"stock.kept" = "Left as the installed standard preset has it. The check of the sliced file expects {value}."
+"stock.written" = "Written as {value}, the value of the standard preset, so that the chosen preset cannot change how the first layer sticks."
+"calibration.locked" = "Set to {value}, the value the fit gauge was printed with."
+"level2.first_layer_height" = "A first layer of {value} mm holds better on the textured plate."
+"first_layer.wall_speed" = "The walls of the first layer print at {value} mm/s, the {family} value for level {level}."
+"first_layer.infill_speed" = "The infill of the first layer prints at {value} mm/s, the {family} value for level {level}."
+"bed.first.card" = "The bed is {value} C during the first layer, the {family} value on this plate for level {level}."
+"bed.other.card" = "After the first layer the bed is {value} C."
+"bed.other.fit" = "Mating faces stand on the bed, so the bed returns to {value} C after the first layer to keep their bottom edge true."
+"bed.calibration" = "The bed is {value} C, as it was for the fit gauge, so that the fit comes out as calibrated."
+"bed.raised_over_calibration" = "The bed is {value} C, the least this plate gets at level {level}. That is hotter than for the fit gauge, so the fit may come out a little tighter at the bottom."
+"bed.limited" = "The bed is held to {value} C, the highest value the printer and the filament allow."
+"stock.nozzle" = "The nozzle temperature stays as the installed filament profile has it."
+"fan.off_layers" = "The part fan stays off for the first {value} layers, so that they bond to the bed."
+"fan.off_layers.level2" = "At level 2 the part fan stays off for the first {value} layers."
+"fan.aux_first" = "The auxiliary fan runs at {value} percent on the first layers."
+"fan.aux_max" = "The auxiliary fan is held to {value} percent, the {family} value for level {level}."
+"fan.aux_max.none" = "The auxiliary fan stays as the installed filament profile has it."
+"shell.process" = "The {intent} settings print layers of {layer} mm."
+"shell.process.fallback" = "The preset of the {intent} settings is not installed, so layers of {layer} mm are printed."
+"shell.walls" = "{value} wall loops, the {intent} value."
+"shell.walls.thin" = "{value} wall loops, so that thin walls print as solid walls."
+"shell.infill" = "{value} percent infill, the {intent} value."
+"shell.pattern" = "The infill pattern of the {intent} settings."
+"shell.seam" = "The seam position of the {intent} settings."
+"shell.fallback" = "The {intent} settings ask for a value this slicer has not been checked with, so the balanced value is used."
+"supports.off.none" = "Nothing overhangs far enough to need supports."
+"supports.off.small" = "About {area} mm2 overhang. That usually prints without supports; they may be switched on."
+"supports.on" = "Supports are on because of {count} overhanging areas, the largest about {largest} mm2. Bambu Studio decides the exact places."
+"supports.on.one" = "Supports are on because of one overhanging area of about {largest} mm2. Bambu Studio decides the exact places."
+"supports.on.unclassified" = "Supports are on because about {area} mm2 overhang. Bambu Studio decides the exact places."
+"supports.kind.tree" = "Tree supports, the standard kind."
+"supports.kind.normal" = "Normal supports, because a mating face rests on them and their top is flatter."
+"supports.threshold" = "Faces flatter than {value} degrees from horizontal get support, the standard value."
+"supports.where.bed_only" = "Supports stand on the bed only."
+"supports.where.everywhere" = "Part of the overhang lies above the part itself, so supports may stand on the part. Some may be built inside holes."
+"motion.none" = "No limit: the speeds of the installed preset apply."
+"motion.outer_wall.intent" = "The outer wall prints at {value} mm/s at most, the {intent} value."
+"motion.outer_wall.card" = "{family} prints its outer wall at {value} mm/s at most."
+"motion.gentle" = "A piece is tall and slender, so this is held to {value} to keep the printer from shaking it loose."
+"motion.outer_accel.intent" = "The outer wall accelerates at {value} mm/s2 at most, the {intent} value."
+"motion.flow.card" = "This filament is pushed at {value} mm3/s at most."
+"motion.jerk" = "Reserved. Hotend does not change jerk until a test shows that it has an effect."
+"prime_tower.off" = "One filament, so no prime tower is built."
+"proven.brim_kind" = "An outer brim held the print proven on your printer ({date}), so the brim goes round the outside of every piece."
+"proven.brim_width" = "A {value} mm brim held the print proven on your printer ({date}), so the brim is at least that wide."
+"proven.wall_speed" = "The walls of the first layer print at {value} mm/s, as in the print proven on your printer ({date}), and no faster."
+"proven.infill_speed" = "The infill of the first layer prints at {value} mm/s, as in the print proven on your printer ({date}), and no faster."
+"proven.bed_first" = "The bed is {value} C during the first layer, as in the print proven on your printer ({date}), and no cooler."
+"proven.bed_other" = "After the first layer the bed is {value} C, as in the print proven on your printer ({date}), and no cooler."
+"proven.fan_off" = "The part fan stays off for the first {value} layers, as in the print proven on your printer ({date})."
+"proven.aux" = "The auxiliary fan runs at {value} percent at most here, as in the print proven on your printer ({date})."
+"proven.walls" = "{value} wall loops, as in the print proven on your printer ({date}), and no fewer."
+"proven.limited" = "The print proven on your printer ({date}) used {asked}; this plate allows {value} at most, so {value} is used."
+"change.accepted" = "{who} asked for this value, and it lies inside what Hotend allows on this plate."
+"change.clamped" = "{who} asked for {asked}. Hotend went as far as {value}, the nearest value it allows on this plate (rule {rule})."
+
+# ---------------------------------------------------------------------------------------
+# Refusals, questions, warnings and notes, by code.
+# ---------------------------------------------------------------------------------------
+[notice]
+bed_type_not_chosen = "Hotend does not know which plate is on the bed. Tell it which one."
+plate_not_supported = "Hotend has no proven settings for this plate yet. Put the Textured PEI plate on."
+spools_not_declared = "Hotend does not know of a loaded {family} spool. Tell it what is loaded."
+spool_not_chosen = "More than one loaded spool is {family}. Choose the spool for this print."
+plate_material_conflict = "{family} must not be printed on the {plate}. Put the Textured PEI plate on and tell Hotend."
+material_not_printable = "Flexible filament as soft as {shore}A cannot be printed with a {nozzle} mm nozzle. Use a 90A or 95A filament."
+material_not_allowed = "{family} can only be fed from the outside holder of the main nozzle, not from the AMS. Put the spool there and tell Hotend."
+nozzle_choice_unproven = "This spool feeds the auxiliary nozzle, and Hotend has not proven prints on that nozzle yet. Load the filament so that it feeds the main nozzle."
+nozzle_size_unproven = "Hotend's print settings are proven for the 0.4 mm nozzle only, and this printer is set up with a {nozzle} mm nozzle. Fit the 0.4 mm nozzle and choose it in the printer settings."
+bed_limit_below_window = "{family} needs a bed of at least {low} C on the {plate}, and the printer or this filament allows {limit} C at most. Use a plate this filament can be printed on, or correct the bed limit in the printer data."
+facts_invalid = "The measurements of this plate could not be used. Prepare the plate again."
+"question.plate_type" = "Which plate is on the bed?"
+"question.spools" = "What is loaded?"
+"question.spool_choice" = "Which spool for this print?"
+plate_not_recommended = "{family} is not recommended on the {plate}. It may not hold."
+turn_or_split = "A piece is more than {limit} times as tall as its footing is wide. Turn the part or split it."
+too_many_flexible_pieces = "{count} flexible pieces are on one plate. Flexible filament prints best with {max} pieces or fewer."
+intent_value_unavailable = "Part of the {intent} settings is not available with this slicer yet, so the balanced values are used for it."
+fit_signature_differs = "This fit was calibrated with other print settings."
+settings_not_proven = "Hotend's settings for {family} are not proven on a printer."
+bed_limited = "The bed temperature was lowered to the highest value the printer and the filament allow."
+chamber_fan = "During the first layer the printer runs its chamber fan at half speed. No setting changes that, and Hotend leaves it to the printer."
+level_3 = "The settings are at their safest. Wash the plate, check which plate is on the bed, use glue where the plate allows it, and run the printer's calibration."
+dedicated_hotend = "The vendor recommends a hot end kept for flexible filament."
+proven_baseline = "The sticking settings of a print proven on your printer ({date}) are the floor of this plan: the rules may make it more careful, never less."
+proven_limited = "A setting of the print proven on your printer ({date}) lies beyond what this plate allows; the nearest allowed value is used."
+
+# ---------------------------------------------------------------------------------------
+# Answers to a proposed change. `invalid.*` refuses the whole proposal, the others answer one
+# change. No answer repeats what was sent: an unknown field name or a text where a number
+# belongs is never said back.
+# ---------------------------------------------------------------------------------------
+[answer]
+accepted = "The value is used as asked."
+clamped = "Hotend allows {value} here, not {asked}. The bound belongs to rule {rule}."
+"invalid.shape" = "The proposal does not have the shape Hotend reads: a list of changes, each with a field, a value and a reason, and nothing else."
+"invalid.empty" = "A proposal needs at least one change."
+"invalid.too_many" = "A proposal may carry {max} changes at most."
+"invalid.unknown_field" = "This is not a print setting of Hotend. Read the plan for the list of fields."
+"invalid.wrong_type" = "The value is not of the kind this field takes."
+"invalid.number" = "The value must be a plain finite number."
+"invalid.not_whole" = "This field takes a whole number."
+"invalid.out_of_range" = "The value lies outside {min} to {max}, the limits of this field."
+"invalid.unknown_value" = "This field has no such value. Read the plan for the values it takes."
+"invalid.duplicate_field" = "The field is named twice in one proposal."
+"invalid.reason" = "A reason must be one line of 1 to {max} characters without control characters."
+"invalid.summary" = "The summary must be one line of {max} characters at most without control characters."
+"invalid.other_item" = "Nothing was changed, because another change of the same proposal is not valid."
+plan_blocked = "There is no plan for this plate yet, so nothing can be changed. Answer what Hotend asks first."
+not_settable = "This setting is decided by Hotend's rules or by the printer setup and cannot be proposed."
+locked_by_calibration = "This value is locked to what the fit gauge was printed with."
+locked = "This setting is locked on this plate (rule {rule})."
+kept_by_person = "The person chose the value in the plan to make the print hold better, and this change would hold it less well. It stays until the person changes it; ask for the same or for more."
+"not_allowed.brim_required" = "A piece on this plate needs its brim (rule {rule}), so the brim cannot be switched off."
+"not_allowed.brim_asked" = "A brim width was asked for on this plate. To remove the brim, ask for a width of 0."
+"not_allowed.brim_inner_alone" = "The brim round the outside is required on this plate (rule {rule}). A brim inside holes can only be added to it."
+"not_allowed.brim_inner_fit" = "A hole on this plate belongs to a declared fit, so no brim is drawn inside holes."
+"not_allowed.brim_inner_room" = "An inner brim needs a hole, and every hole on this plate must be wide enough for a brim of this width inside it."
+"not_allowed.unverified" = "This value has not been checked with the installed slicer yet."
+"not_allowed.supports_required" = "Too much of this plate overhangs to print it without supports."
+"not_allowed.supports_nothing" = "Nothing overhangs on this plate, so there is nothing to support."
+"not_allowed.supports_over_part" = "Part of the overhang lies above the part itself, so supports cannot stand on the bed only."
+conflict = "This change breaks a rule that ties several settings together (rule {rule}), so it was not applied."
+"conflict.brim_needs_width" = "This plate has no brim. Ask for a brim width as well; a brim kind alone draws nothing."
+
+# ---------------------------------------------------------------------------------------
+# The before-you-print list. Classes: 1 plate, 2 feed and loading, 3 which file to open,
+# 4 send window, 5 what to watch, 6 afterwards. Within a class the order here is the order
+# in the list, and when lines must go, the last line of the highest class goes first.
+# Classes 1 to 3 are never dropped, and neither are the lines of `ALWAYS_SHOWN` in
+# src/checklist.rs.
+# ---------------------------------------------------------------------------------------
+[[line]]
+id = "unproven"
+class = 1
+text = "These settings are not proven on a printer yet. Stay near the printer for the first layers."
+
+[[line]]
+id = "plate.textured-pei"
+class = 1
+text = "Put the Textured PEI plate on the bed, rough side, either way up. Wash it with warm water and dish soap first, dry it, and do not touch the top."
+
+[[line]]
+id = "plate.cool"
+class = 1
+text = "Put the Cool Plate on the bed. Wash it with warm water and dish soap first, dry it, and do not touch the top."
+
+[[line]]
+id = "plate.high-temp"
+class = 1
+text = "Put the High Temp Plate on the bed, smooth side up. Wash it with warm water and dish soap first, dry it, and do not touch the top."
+
+[[line]]
+id = "plate.engineering"
+class = 1
+text = "Put the Engineering Plate on the bed. Wash it with warm water and dish soap first, dry it, and do not touch the top."
+
+[[line]]
+id = "plate.check"
+class = 1
+text = "Check that the plate on the bed is the one Hotend was told."
+
+[[line]]
+id = "plate.not_recommended"
+class = 1
+text = "{family} is not recommended on this plate. If the print does not hold, use the Textured PEI plate."
+
+[[line]]
+id = "glue.required"
+class = 1
+text = "Spread a thin, even layer of glue stick where the parts will stand."
+
+[[line]]
+id = "glue.allowed"
+class = 1
+text = "Glue stick is allowed on this plate with this filament and helps it hold. Spread a thin, even layer where the parts will stand."
+
+[[line]]
+id = "glue.none"
+class = 1
+text = "Do not put glue on this plate for this filament."
+
+[[line]]
+id = "spool.ams"
+class = 2
+text = "This print uses your {colour} {family} from slot {slot}. In the send window, check that filament 1 points to slot {slot}."
+
+[[line]]
+id = "spool.external"
+class = 2
+text = "This print uses your {colour} {family} from the outside holder of the main nozzle. In the send window choose the outside spool, not an AMS slot."
+
+[[line]]
+id = "tpu.dry"
+class = 2
+text = "Dry the spool at 65 to 75 C for 8 hours before printing, and put it higher than the printer's filament inlet."
+
+[[line]]
+id = "tpu.load"
+class = 2
+text = "Load the filament by hand with the nozzle hot, until plastic flows evenly. The printer cannot unload it by itself: afterwards cut it and pull it out by hand while the nozzle is hot."
+
+[[line]]
+id = "open_sliced"
+class = 3
+text = "To print, open the file ending in `-sliced.gcode.3mf`. It is already sliced, so nothing in it can change."
+
+[[line]]
+id = "project"
+class = 3
+text = "If you print from the project, first export the plate sliced file from Bambu Studio and drop it on Hotend."
+
+[[line]]
+id = "no_sync"
+class = 4
+text = "If Bambu Studio offers to take the filaments from the printer, answer no."
+
+[[line]]
+id = "bed_levelling"
+class = 4
+text = "Leave bed levelling ticked in the send window."
+
+[[line]]
+id = "calibration"
+class = 4
+text = "If the printer was moved or serviced, run its calibration from the printer's screen once, and leave the calibration options ticked in the send window."
+
+[[line]]
+id = "run_calibration"
+class = 4
+text = "Run the printer's calibration from its screen before this print."
+
+[[line]]
+id = "vent"
+class = 5
+text = "Once the first layers are down, take the top glass cover off, so the printer does not overheat the filament. Keep draughts away until then."
+
+[[line]]
+id = "watch_brim"
+class = 5
+text = "During the first layer you should see about {lines} brim lines round every piece. Stop the print if there are none."
+
+[[line]]
+id = "few_pieces"
+class = 5
+text = "Flexible filament prints best with one or a few pieces at a time. Watch for strings between the pieces."
+
+[[line]]
+id = "after.brim_fit"
+class = 6
+text = "After printing, let the bed cool, flex the plate, break the brim off and scrape the bottom edge of the mating faces flush before you measure or assemble."
+
+[[line]]
+id = "after.brim"
+class = 6
+text = "After printing, let the bed cool, flex the plate and break the brim off."
+
+[[line]]
+id = "after.cool"
+class = 6
+text = "Let the bed cool before you take the parts off."
+
+[[line]]
+id = "after.flexible"
+class = 6
+text = "Let the plate cool, then lift a corner of the part."
+
+[[line]]
+id = "after.flexible_brim"
+class = 6
+text = "Let the plate cool, then lift a corner of the part. Its brim does not snap off: cut it away with scissors or a sharp knife, flush with the part."
+
+[[line]]
+id = "outcome"
+class = 6
+text = "Then tell Hotend whether every piece stayed down."

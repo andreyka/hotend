@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-print-project-make"
+description = "Enables the print_project_make command without any pre-configured scope."
+commands.allow = ["print_project_make"]
+
+[[permission]]
+identifier = "deny-print-project-make"
+description = "Denies the print_project_make command without any pre-configured scope."
+commands.deny = ["print_project_make"]

@@ -1,0 +1,127 @@
+/* Hotend's design tokens: the block of docs/ux/DESIGN_SPEC.md section 7.1, verbatim.
+ * That section is the source of truth; tests/tokens.test.ts fails when this file and the
+ * specification differ, and docs/ux/contrast_check.py reads the colours from here.
+ * Host tokens are --app-*; tokens that only Hotend's screens use are --hotend-*.
+ * The theme is the attribute data-theme on the root element. */
+
+:root,
+[data-theme="dark"] {
+  /* surfaces */
+  --app-bg: #0E1114;                 /* window, title bar, Home, Settings */
+  --app-panel: #151A1E;              /* the columns, the version rail */
+  --app-raised: #1B2126;             /* cards, fields, popovers, stage furniture */
+  --app-subtle: #1B2126;             /* the maker's message block, inset areas */
+  --app-hover: #222930;              /* a row or a quiet button under the pointer */
+  --app-active: #2A323A;             /* pressed; the selected segment */
+  --app-line: #252C33;               /* separators and card borders (decorative) */
+  --app-control: #6C7883;            /* borders of fields, sliders, steppers, segments */
+  --app-scrim: rgb(0 0 0 / 0.5);
+  /* text */
+  --app-text: #E9ECEE;
+  --app-text-2: #98A2AB;
+  --app-text-3: #8E98A1;
+  /* accent */
+  --app-accent: #FFB45C;             /* links, the focus ring, the version on the stage */
+  --app-accent-fill: #E9ECEE;        /* ink: the one primary button, the slider's filled part */
+  --app-accent-fill-hover: #C9D0D6;
+  --app-on-fill: #0E1114;
+  --app-accent-wash: #2B2013;
+  /* state */
+  --app-ok: #45D08F;
+  --app-ok-wash: #12281F;
+  --app-warn: #EFD34A;
+  --app-warn-wash: #29250F;
+  --app-fail: #FF7A7A;
+  --app-fail-wash: #2E1717;
+  --app-fail-fill: #F26464;          /* the second click of Stop */
+  --app-fail-fill-hover: #FF7A7A;
+  --app-sim: #C0A6FF;                /* simulated and stand-in, nothing else */
+  --app-sim-wash: #221B36;
+  /* elevation */
+  --app-shadow-1: 0 1px 2px rgb(0 0 0 / 0.24);
+  --app-shadow-2: 0 8px 24px rgb(0 0 0 / 0.40);
+  /* the stage */
+  --hotend-stage-top: #151A1E;
+  --hotend-stage-bottom: #0E1114;
+  --hotend-stage-plate: #6C7883;    /* plate outline */
+  --hotend-stage-edge: #0B0C0E;     /* edges of the parts */
+  --hotend-part-1: #C9D0D6;         /* aluminium */
+  --hotend-part-2: #7A818A;         /* graphite */
+  --hotend-part-3: #C58F73;         /* clay */
+  --hotend-part-4: #9AA39A;         /* stone */
+  --hotend-part-5: #CDBE9E;         /* oat */
+  --hotend-part-6: #8F7362;         /* cocoa */
+  --hotend-part-7: #D8D2C4;         /* bone */
+  --hotend-part-8: #8B879B;         /* dusk */
+}
+
+[data-theme="light"] {
+  --app-bg: #EDEFF0;
+  --app-panel: #F7F8F9;
+  --app-raised: #F7F8F9;
+  --app-subtle: #EDEFF0;
+  --app-hover: #E6E9EB;
+  --app-active: #D9DEE1;
+  --app-line: #D2D7DB;
+  --app-control: #76808A;
+  --app-scrim: rgb(22 24 28 / 0.25);
+  --app-text: #12161A;
+  --app-text-2: #56606A;
+  --app-text-3: #5D6771;
+  --app-accent: #9A4A0E;
+  --app-accent-fill: #12161A;
+  --app-accent-fill-hover: #2B3238;
+  --app-on-fill: #F7F8F9;
+  --app-accent-wash: #F6E8DB;
+  --app-ok: #0B6E43;
+  --app-ok-wash: #DFF1E7;
+  --app-warn: #6B5900;
+  --app-warn-wash: #F3ECC4;
+  --app-fail: #B82222;
+  --app-fail-wash: #FAE3E3;
+  --app-fail-fill: #C02626;
+  --app-fail-fill-hover: #A81F1F;
+  --app-sim: #5F35C4;
+  --app-sim-wash: #EBE5FA;
+  --app-shadow-1: 0 1px 2px rgb(0 0 0 / 0.06);
+  --app-shadow-2: 0 8px 24px rgb(0 0 0 / 0.14);
+  --hotend-stage-top: #E9ECED;
+  --hotend-stage-bottom: #D9DEE1;
+  --hotend-stage-plate: #69727E;
+  --hotend-stage-edge: #12161A;
+  --hotend-part-1: #C9D0D6;
+  --hotend-part-2: #8C929B;
+  --hotend-part-3: #C98F73;
+  --hotend-part-4: #A3ADA3;
+  --hotend-part-5: #D2C4A2;
+  --hotend-part-6: #9A7C69;
+  --hotend-part-7: #D9D2C2;
+  --hotend-part-8: #948FA6;
+}
+
+:root {
+  /* type */
+  --app-font-sans: "Instrument Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --app-font-display: "Archivo Variable", "Helvetica Neue", Arial, sans-serif;
+  --app-font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", "Cascadia Mono", "DejaVu Sans Mono", monospace;
+  /* heat: the mark's bead and the work that runs now, nothing else (7.2) */
+  --app-heat-1: #FFC46B;
+  --app-heat-2: #FF7A2E;
+  --app-heat-3: #E8304A;
+  /* radius */
+  --app-radius-tag: 4px;             /* tags, chips */
+  --app-radius-control: 6px;         /* buttons, fields, segments */
+  --app-radius-card: 10px;           /* cards, popovers, menus */
+  --app-radius-pill: 999px;          /* the verdict bar and its button, slider thumbs */
+  /* sizes */
+  --app-titlebar: 44px;
+  --app-h-sm: 28px;                  /* buttons in the verdict bar and on the stage */
+  --app-h: 32px;                     /* buttons, fields, rows of controls */
+  --app-h-lg: 40px;                  /* the composer, the prompt, the verdict bar */
+  /* motion */
+  --app-dur-fast: 120ms;
+  --app-dur-base: 180ms;
+  --app-dur-slow: 240ms;
+  --app-ease: cubic-bezier(0.2, 0, 0, 1);       /* entering and moving */
+  --app-ease-out: cubic-bezier(0.4, 0, 1, 1);   /* leaving */
+}

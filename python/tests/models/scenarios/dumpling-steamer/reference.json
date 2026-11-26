@@ -1,0 +1,16 @@
+{
+  "about": "What the scenario of a soft figure in a steamer basket is built around. The model asks for one reference named 'dumpling'. Tests make the stand-in below themselves. Real files are other people's designs, so neither they nor anything about them is in the repository: tests use them only when HOTEND_REFS_DIR points at a folder that holds them and their list (tests/local_references.py).",
+  "reference": {"name": "dumpling", "kind": "soft"},
+  "stand_in": {
+    "made_by": "tests/reference_stand_in.py: stand_in_mesh",
+    "args": {"radius": 31.0, "height": 46.0, "pleats": 9},
+    "format": "stl",
+    "note": "A pleated dome written from a formula, 63.9 x 64.7 x 46 mm. The sizes are invented: no object was measured for them and it is nobody's model."
+  },
+  "printer": {"id": "bambu-x2d", "nozzles": [
+    {"id": 1, "role": "main", "diameter": 0.4, "reach": {"x": [0, 256], "y": [0, 256], "z": [0, 260]}},
+    {"id": 0, "role": "auxiliary", "diameter": 0.4, "reach": {"x": [20.5, 256], "y": [0, 256], "z": [0, 256]}}]},
+  "material": {"id": "pla-matte", "family": "PLA"},
+  "checks": {"enabled": true, "min_wall": 0.8, "orientation": "prepared", "contract": true,
+             "undeclared_joints": true}
+}

@@ -1,0 +1,74 @@
+[package]
+name = "hotend-desktop"
+description = "Hotend's desktop shell: the Tauri window, the commands the window may call, the native print confirmation and the development bridge"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+# The program `cargo run` and `pnpm tauri dev` start.
+default-run = "hotend-desktop"
+
+[lints]
+workspace = true
+
+[lib]
+name = "hotend_desktop"
+path = "src/lib.rs"
+
+[[bin]]
+name = "hotend-desktop"
+path = "src/main.rs"
+
+# The development bridge as its own program, so that no path through the shipped binary
+# reaches it. It cannot be built without the feature, and the feature cannot be built in a
+# release profile (build.rs and src/lib.rs).
+[[bin]]
+name = "hotend-bridge"
+path = "src/bin/hotend-bridge.rs"
+required-features = ["dev-bridge"]
+
+[[bin]]
+name = "hotend-confirm-dialog"
+path = "src/bin/hotend-confirm-dialog.rs"
+required-features = ["dev-bridge"]
+
+[features]
+default = []
+# A loopback HTTP server that exposes the window's commands to a normal browser, for
+# building and testing the interface. Debug builds only.
+dev-bridge = ["dep:axum", "dep:futures-util", "dep:getrandom", "dep:tempfile", "tokio/net", "tokio/signal"]
+
+[build-dependencies]
+tauri-build = { version = "2.7.5", features = [] }
+
+[dependencies]
+axum = { version = "0.8.9", default-features = false, features = ["http1", "json", "tokio"], optional = true }
+futures-util = { version = "0.3.34", optional = true }
+getrandom = { version = "0.4.3", optional = true }
+hotend-core = { path = "../../../crates/hotend-core" }
+hotend-slicer = { path = "../../../crates/hotend-slicer" }
+# The programs that open a link in the system browser (src/app.rs).
+open = "5.4.5"
+# The print confirmation on Windows and macOS (src/dialog.rs). The same build of rfd that
+# tauri-plugin-dialog uses.
+rfd = { version = "0.17.2", default-features = false, features = ["common-controls-v6"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+specta = { version = "=2.0.0-rc.28", features = ["derive", "serde_json"] }
+specta-typescript = "=0.0.15"
+tauri = { version = "2.12.6", features = [] }
+tauri-plugin-dialog = "2.8.4"
+tauri-specta = { version = "=2.0.0-rc.29", features = ["derive", "typescript"] }
+tempfile = { version = "3.27.0", optional = true }
+thiserror = "2.0.21"
+tokio = { version = "1.54.1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+url = "2.5.8"
+
+# The print confirmation where the toolkit is GTK (src/dialog.rs). The same gtk that tauri
+# links.
+[target.'cfg(any(target_os = "linux", target_os = "dragonfly", target_os = "freebsd", target_os = "netbsd", target_os = "openbsd"))'.dependencies]
+gtk = "0.18.2"
+
+[dev-dependencies]
+tempfile = "3.27.0"

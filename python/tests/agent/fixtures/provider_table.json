@@ -1,0 +1,66 @@
+{
+  "global_request_headers": ["accept", "content-type"],
+  "providers": [
+    {
+      "name": "anthropic",
+      "origin": "https://api.anthropic.com",
+      "sdk_base_url": "https://api.anthropic.com",
+      "routes": [
+        {"method": "POST", "path": {"exact": "/v1/messages"}, "queries": ["beta=true"], "generates": true},
+        {"method": "POST", "path": {"exact": "/v1/messages/count_tokens"}, "queries": ["beta=true"], "generates": false}
+      ],
+      "pass_headers": ["anthropic-version", "anthropic-beta"],
+      "token_fields": [["max_tokens"]],
+      "require_token_limit": true
+    },
+    {
+      "name": "openai",
+      "origin": "https://api.openai.com",
+      "sdk_base_url": "https://api.openai.com/v1",
+      "routes": [
+        {"method": "POST", "path": {"exact": "/v1/chat/completions"}, "queries": [], "generates": true},
+        {"method": "POST", "path": {"exact": "/v1/responses"}, "queries": [], "generates": true}
+      ],
+      "pass_headers": [],
+      "token_fields": [["max_output_tokens"], ["max_completion_tokens"], ["max_tokens"]],
+      "require_token_limit": true
+    },
+    {
+      "name": "google",
+      "origin": "https://generativelanguage.googleapis.com",
+      "sdk_base_url": "https://generativelanguage.googleapis.com",
+      "routes": [
+        {"method": "POST",
+         "path": {"model_action": {"prefix": "/v1beta/models/",
+                                   "actions": [":generateContent", ":streamGenerateContent"]}},
+         "queries": ["alt=sse"], "generates": true}
+      ],
+      "pass_headers": [],
+      "token_fields": [["generationConfig", "maxOutputTokens"]],
+      "require_token_limit": true
+    },
+    {
+      "name": "openrouter",
+      "origin": "https://openrouter.ai",
+      "sdk_base_url": "https://openrouter.ai/api/v1",
+      "routes": [
+        {"method": "POST", "path": {"exact": "/api/v1/chat/completions"}, "queries": [], "generates": true}
+      ],
+      "pass_headers": [],
+      "token_fields": [["max_completion_tokens"], ["max_tokens"]],
+      "require_token_limit": true
+    },
+    {
+      "name": "ollama",
+      "origin": "http://127.0.0.1:11434",
+      "sdk_base_url": "http://127.0.0.1:11434/v1",
+      "routes": [
+        {"method": "POST", "path": {"exact": "/v1/chat/completions"}, "queries": [], "generates": true},
+        {"method": "POST", "path": {"exact": "/api/chat"}, "queries": [], "generates": true}
+      ],
+      "pass_headers": [],
+      "token_fields": [["max_completion_tokens"], ["max_tokens"], ["options", "num_predict"]],
+      "require_token_limit": false
+    }
+  ]
+}

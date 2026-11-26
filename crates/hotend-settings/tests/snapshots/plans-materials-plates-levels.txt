@@ -1,0 +1,75 @@
+PLA cool L0: level 0 brim none 0 gap 0.1 | first layer 30/50 mm/s h - | bed 35/35 window [35, 45] | fan off 3 aux 0/50 | list plate.cool,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | 
+PLA cool L1: level 1 brim none 0 gap 0.1 | first layer 20/30 mm/s h - | bed 40/40 window [35, 45] | fan off 3 aux 0/30 | list plate.cool,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | 
+PLA cool L2: level 2 brim outer 5 gap 0.0 | first layer 15/25 mm/s h - | bed 40/40 window [35, 45] | fan off 5 aux 0/30 | list plate.cool,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | 
+PLA textured-pei L0: level 0 brim none 0 gap 0.1 | first layer 30/50 mm/s h - | bed 60/55 window [55, 65] | fan off 3 aux 0/50 | list plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,vent,outcome | 
+PLA textured-pei L1: level 1 brim none 0 gap 0.1 | first layer 20/30 mm/s h - | bed 65/60 window [55, 65] | fan off 3 aux 0/30 | list plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,vent,outcome | 
+PLA textured-pei L2: level 2 brim outer 5 gap 0.0 | first layer 15/25 mm/s h 0.25 | bed 65/60 window [55, 65] | fan off 5 aux 0/30 | list plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,vent,watch_brim,outcome | 
+PLA high-temp L0: level 0 brim none 0 gap 0.1 | first layer 30/50 mm/s h - | bed 55/55 window [45, 65] | fan off 3 aux 0/50 | list plate.high-temp,spool.ams,open_sliced,no_sync,bed_levelling,vent,outcome | 
+PLA high-temp L1: level 1 brim none 0 gap 0.1 | first layer 20/30 mm/s h - | bed 60/60 window [45, 65] | fan off 3 aux 0/30 | list plate.high-temp,spool.ams,open_sliced,no_sync,bed_levelling,vent,outcome | 
+PLA high-temp L2: level 2 brim outer 5 gap 0.0 | first layer 15/25 mm/s h - | bed 60/60 window [45, 65] | fan off 5 aux 0/30 | list plate.high-temp,spool.ams,open_sliced,no_sync,bed_levelling,vent,watch_brim,outcome | 
+PLA engineering L0: level 0 brim none 0 gap 0.1 | first layer 30/50 mm/s h - | bed 55/55 window [55, 55] | fan off 3 aux 0/50 | list plate.engineering,plate.not_recommended,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | plate_not_recommended
+PLA engineering L1: level 1 brim none 0 gap 0.1 | first layer 20/30 mm/s h - | bed 55/55 window [55, 55] | fan off 3 aux 0/30 | list plate.engineering,plate.not_recommended,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | plate_not_recommended
+PLA engineering L2: level 2 brim outer 5 gap 0.0 | first layer 15/25 mm/s h - | bed 55/55 window [55, 55] | fan off 5 aux 0/30 | list plate.engineering,plate.not_recommended,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | plate_not_recommended
+PLA cool-supertack L0: blocked plate_not_supported
+PLA cool-supertack L1: blocked plate_not_supported
+PLA cool-supertack L2: blocked plate_not_supported
+PETG cool L0: blocked plate_material_conflict
+PETG cool L1: blocked plate_material_conflict
+PETG cool L2: blocked plate_material_conflict
+PETG textured-pei L0: level 0 brim none 0 gap 0.1 | first layer 25/40 mm/s h - | bed 70/70 window [65, 80] | fan off 3 aux 0/20 | list plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,after.cool,outcome | 
+PETG textured-pei L1: level 1 brim none 0 gap 0.1 | first layer 20/30 mm/s h - | bed 75/70 window [65, 80] | fan off 3 aux 0/20 | list plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,vent,after.cool,outcome | 
+PETG textured-pei L2: level 2 brim outer 5 gap 0.0 | first layer 15/25 mm/s h 0.25 | bed 75/70 window [65, 80] | fan off 5 aux 0/20 | list plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,vent,watch_brim,outcome | 
+PETG high-temp L0: level 0 brim none 0 gap 0.1 | first layer 25/40 mm/s h - | bed 70/70 window [60, 80] | fan off 3 aux 0/20 | list plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,after.cool,outcome | 
+PETG high-temp L1: level 1 brim none 0 gap 0.1 | first layer 20/30 mm/s h - | bed 70/70 window [60, 80] | fan off 3 aux 0/20 | list plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,after.cool,outcome | 
+PETG high-temp L2: level 2 brim outer 5 gap 0.0 | first layer 15/25 mm/s h - | bed 70/70 window [60, 80] | fan off 5 aux 0/20 | list plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | 
+PETG engineering L0: level 0 brim none 0 gap 0.1 | first layer 25/40 mm/s h - | bed 70/70 window [60, 80] | fan off 3 aux 0/20 | list plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,after.cool,outcome | 
+PETG engineering L1: level 1 brim none 0 gap 0.1 | first layer 20/30 mm/s h - | bed 70/70 window [60, 80] | fan off 3 aux 0/20 | list plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,after.cool,outcome | 
+PETG engineering L2: level 2 brim outer 5 gap 0.0 | first layer 15/25 mm/s h - | bed 70/70 window [60, 80] | fan off 5 aux 0/20 | list plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | 
+PETG cool-supertack L0: blocked plate_not_supported
+PETG cool-supertack L1: blocked plate_not_supported
+PETG cool-supertack L2: blocked plate_not_supported
+TPU cool L0: blocked plate_material_conflict
+TPU cool L1: blocked plate_material_conflict
+TPU cool L2: blocked plate_material_conflict
+TPU textured-pei L0: level 0 brim none 0 gap 0.1 | first layer 15/20 mm/s h - | bed 35/35 window [35, 45] | fan off 3 aux 0/- | list plate.textured-pei,glue.none,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible,outcome | 
+TPU textured-pei L1: level 1 brim none 0 gap 0.1 | first layer 15/20 mm/s h - | bed 40/40 window [35, 45] | fan off 3 aux 0/- | list plate.textured-pei,glue.none,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible,outcome | 
+TPU textured-pei L2: level 2 brim outer 5 gap 0.1 | first layer 15/20 mm/s h 0.25 | bed 40/40 window [35, 45] | fan off 5 aux 0/- | list plate.textured-pei,glue.none,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible_brim,outcome | 
+TPU high-temp L0: level 0 brim none 0 gap 0.1 | first layer 15/20 mm/s h - | bed 35/35 window [35, 45] | fan off 3 aux 0/- | list plate.high-temp,glue.required,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible,outcome | 
+TPU high-temp L1: level 1 brim none 0 gap 0.1 | first layer 15/20 mm/s h - | bed 35/35 window [35, 45] | fan off 3 aux 0/- | list plate.high-temp,glue.required,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible,outcome | 
+TPU high-temp L2: level 2 brim outer 5 gap 0.1 | first layer 15/20 mm/s h - | bed 35/35 window [35, 45] | fan off 5 aux 0/- | list plate.high-temp,glue.required,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible_brim,outcome | 
+TPU engineering L0: level 0 brim none 0 gap 0.1 | first layer 15/20 mm/s h - | bed 35/35 window [30, 35] | fan off 3 aux 0/- | list plate.engineering,glue.required,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible,outcome | 
+TPU engineering L1: level 1 brim none 0 gap 0.1 | first layer 15/20 mm/s h - | bed 35/35 window [30, 35] | fan off 3 aux 0/- | list plate.engineering,glue.required,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible,outcome | 
+TPU engineering L2: level 2 brim outer 5 gap 0.1 | first layer 15/20 mm/s h - | bed 35/35 window [30, 35] | fan off 5 aux 0/- | list plate.engineering,glue.required,spool.external,tpu.dry,tpu.load,open_sliced,no_sync,bed_levelling,after.flexible_brim,outcome | 
+TPU cool-supertack L0: blocked plate_not_supported
+TPU cool-supertack L1: blocked plate_not_supported
+TPU cool-supertack L2: blocked plate_not_supported
+ABS cool L0: blocked plate_material_conflict
+ABS cool L1: blocked plate_material_conflict
+ABS cool L2: blocked plate_material_conflict
+ABS textured-pei L0: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | settings_not_proven
+ABS textured-pei L1: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | settings_not_proven
+ABS textured-pei L2: level 2 brim outer 8 gap 0.0 | first layer 15/25 mm/s h 0.25 | bed 100/100 window [90, 100] | fan off 5 aux 0/0 | list unproven,plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | settings_not_proven
+ABS high-temp L0: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ABS high-temp L1: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ABS high-temp L2: level 2 brim outer 8 gap 0.0 | first layer 15/25 mm/s h - | bed 100/100 window [90, 100] | fan off 5 aux 0/0 | list unproven,plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ABS engineering L0: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ABS engineering L1: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ABS engineering L2: level 2 brim outer 8 gap 0.0 | first layer 15/25 mm/s h - | bed 100/100 window [90, 100] | fan off 5 aux 0/0 | list unproven,plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ABS cool-supertack L0: blocked plate_not_supported
+ABS cool-supertack L1: blocked plate_not_supported
+ABS cool-supertack L2: blocked plate_not_supported
+ASA cool L0: blocked plate_material_conflict
+ASA cool L1: blocked plate_material_conflict
+ASA cool L2: blocked plate_material_conflict
+ASA textured-pei L0: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | settings_not_proven
+ASA textured-pei L1: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | settings_not_proven
+ASA textured-pei L2: level 2 brim outer 8 gap 0.0 | first layer 15/25 mm/s h 0.25 | bed 100/100 window [90, 100] | fan off 5 aux 0/0 | list unproven,plate.textured-pei,spool.ams,open_sliced,no_sync,bed_levelling,watch_brim,outcome | settings_not_proven
+ASA high-temp L0: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ASA high-temp L1: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ASA high-temp L2: level 2 brim outer 8 gap 0.0 | first layer 15/25 mm/s h - | bed 100/100 window [90, 100] | fan off 5 aux 0/0 | list unproven,plate.high-temp,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ASA engineering L0: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ASA engineering L1: level 1 brim outer 5 gap 0.0 | first layer 20/30 mm/s h - | bed 100/100 window [90, 100] | fan off 3 aux 0/0 | list unproven,plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ASA engineering L2: level 2 brim outer 8 gap 0.0 | first layer 15/25 mm/s h - | bed 100/100 window [90, 100] | fan off 5 aux 0/0 | list unproven,plate.engineering,glue.required,spool.ams,open_sliced,no_sync,bed_levelling,outcome | settings_not_proven
+ASA cool-supertack L0: blocked plate_not_supported
+ASA cool-supertack L1: blocked plate_not_supported
+ASA cool-supertack L2: blocked plate_not_supported

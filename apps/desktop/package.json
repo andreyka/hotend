@@ -1,0 +1,66 @@
+{
+  "name": "hotend-desktop",
+  "private": true,
+  "license": "Apache-2.0",
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:bridge": "vite --mode bridge",
+    "build": "tsc -b && vite build && node scripts/check-dist.mjs",
+    "build:bridge": "tsc -b && vite build --mode bridge --outDir dist-bridge",
+    "typecheck": "tsc -b",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "preview:bridge": "vite preview --mode bridge --outDir dist-bridge",
+    "e2e": "playwright test",
+    "screenshots": "HOTEND_SCREENSHOTS=1 playwright test e2e/screens.spec.ts",
+    "bindings": "HOTEND_REGENERATE_BINDINGS=1 cargo test --locked -p hotend-desktop --test bindings",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@base-ui/react": "1.9.0",
+    "@fontsource-variable/archivo": "5.3.0",
+    "@fontsource-variable/instrument-sans": "5.3.0",
+    "@fontsource-variable/jetbrains-mono": "5.3.0",
+    "@tauri-apps/api": "2.12.5",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "1.74.0",
+    "motion": "14.14.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router": "8.5.1",
+    "tailwind-merge": "3.7.0",
+    "three-cad-viewer": "5.1.3",
+    "zustand": "5.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
+    "@tailwindcss/vite": "4.3.5",
+    "@tauri-apps/cli": "2.12.5",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.3.0",
+    "eslint": "10.15.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0",
+    "jsdom": "31.0.1",
+    "tailwindcss": "4.3.5",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.73.0",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  }
+}

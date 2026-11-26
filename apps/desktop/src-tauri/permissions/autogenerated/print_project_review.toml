@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-print-project-review"
+description = "Enables the print_project_review command without any pre-configured scope."
+commands.allow = ["print_project_review"]
+
+[[permission]]
+identifier = "deny-print-project-review"
+description = "Denies the print_project_review command without any pre-configured scope."
+commands.deny = ["print_project_review"]

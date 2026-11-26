@@ -1,4 +1,61 @@
 Hotend
 Copyright 2026 Andrey Kovalev
 
-Licensed under the Apache License, Version 2.0 (see LICENSE).
+Licensed under the Apache License, Version 2.0 (see the file LICENSE).
+
+This repository contains material from the projects below. docs/DEPENDENCIES.md lists the
+separate programs and libraries Hotend uses; they are not part of this repository.
+
+A built interface also ships three font families under the SIL Open Font License 1.1 (npm
+packages @fontsource-variable/archivo, -instrument-sans and -jetbrains-mono; no font file is
+in this repository): Archivo, Copyright 2020 The Archivo Project Authors; Instrument Sans,
+Copyright 2022 The Instrument Sans Project Authors; JetBrains Mono, Copyright 2020 The
+JetBrains Mono Project Authors.
+
+------------------------------------------------------------------------------------------
+shadcn/ui (https://github.com/shadcn-ui/ui), MIT License
+Copyright (c) 2023 shadcn
+Used in: apps/desktop/src/components/ui, apps/desktop/src/styles/shadcn.css
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------
+ha-bambulab (https://github.com/greghesp/ha-bambulab), MIT License
+Copyright (c) 2023 ha-bambulab contributors
+Tables and message formats in crates/hotend-printer/src/status.rs,
+crates/hotend-printer/src/protocol and crates/hotend-printer/profiles/bambu.toml follow it.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+

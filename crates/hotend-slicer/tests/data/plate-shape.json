@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "about": "The only shape a plate 3MF may have: an allowlist, not a list of forbidden things. The engine writes plate files in exactly this shape (python/hotend_engine/plate3mf.py) and the slicer adapter accepts nothing else. One table, read by the tests of both sides, so that they cannot drift apart. See docs/PRINT_SETTINGS.md, 'Engine: print facts and plate files'.",
+  "archive": {
+    "entries": ["[Content_Types].xml", "_rels/.rels", "3D/3dmodel.model"],
+    "constant_parts": {
+      "[Content_Types].xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\"><Default Extension=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"/><Default Extension=\"model\" ContentType=\"application/vnd.ms-package.3dmanufacturing-3dmodel+xml\"/></Types>\n",
+      "_rels/.rels": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Target=\"/3D/3dmodel.model\" Id=\"rel0\" Type=\"http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel\"/></Relationships>\n"
+    },
+    "model_part": "3D/3dmodel.model",
+    "max_model_bytes": 67108864
+  },
+  "model": {
+    "encoding": "UTF-8",
+    "namespace": "http://schemas.microsoft.com/3dmanufacturing/core/2015/02",
+    "root": "model",
+    "elements": [
+      "model", "resources", "object", "mesh", "vertices", "vertex", "triangles", "triangle",
+      "build", "item"
+    ],
+    "attributes": [
+      "unit", "xml:lang", "xmlns", "id", "type", "name", "x", "y", "z", "v1", "v2", "v3",
+      "objectid"
+    ],
+    "syntax_note": "What the model part's text may hold besides the elements and attributes above. false means: its presence refuses the file.",
+    "syntax": {
+      "byte_order_mark": false,
+      "encoding_declaration_other_than_utf8": false,
+      "doctype": false,
+      "entity_declaration": false,
+      "processing_instruction": false,
+      "cdata": false,
+      "comment": false,
+      "reference_in_attribute_value": false,
+      "element_prefix": false,
+      "text_other_than_whitespace": false
+    },
+    "structure_note": "Per element: the attributes it may carry, those it must carry, and its child elements in order. count is 'one' or 'one_or_more'.",
+    "structure": {
+      "model": {
+        "attributes": ["unit", "xml:lang", "xmlns"],
+        "required": ["unit", "xmlns"],
+        "children": [
+          {"element": "resources", "count": "one"},
+          {"element": "build", "count": "one"}
+        ]
+      },
+      "resources": {
+        "attributes": [],
+        "required": [],
+        "children": [{"element": "object", "count": "one_or_more"}]
+      },
+      "object": {
+        "attributes": ["id", "type", "name"],
+        "required": ["id", "type", "name"],
+        "children": [{"element": "mesh", "count": "one"}]
+      },
+      "mesh": {
+        "attributes": [],
+        "required": [],
+        "children": [
+          {"element": "vertices", "count": "one"},
+          {"element": "triangles", "count": "one"}
+        ]
+      },
+      "vertices": {
+        "attributes": [],
+        "required": [],
+        "children": [{"element": "vertex", "count": "one_or_more"}]
+      },
+      "vertex": {"attributes": ["x", "y", "z"], "required": ["x", "y", "z"], "children": []},
+      "triangles": {
+        "attributes": [],
+        "required": [],
+        "children": [{"element": "triangle", "count": "one_or_more"}]
+      },
+      "triangle": {
+        "attributes": ["v1", "v2", "v3"],
+        "required": ["v1", "v2", "v3"],
+        "children": []
+      },
+      "build": {
+        "attributes": [],
+        "required": [],
+        "children": [{"element": "item", "count": "one_or_more"}]
+      },
+      "item": {"attributes": ["objectid"], "required": ["objectid"], "children": []}
+    },
+    "values": {
+      "unit": ["millimeter"],
+      "xml:lang": ["en-US"],
+      "type": ["model"],
+      "name": {
+        "pattern": "^[a-z][a-z0-9_.]{0,63}$",
+        "rule": "equals exactly one piece name of the job; the object count equals the piece count"
+      },
+      "id": {
+        "pattern": "^[1-9][0-9]{0,8}$",
+        "rule": "unique among the objects"
+      },
+      "objectid": {
+        "pattern": "^[1-9][0-9]{0,8}$",
+        "rule": "names an object; every object is named by exactly one item"
+      },
+      "coordinate": {
+        "attributes": ["x", "y", "z"],
+        "pattern": "^-?(0|[1-9][0-9]{0,3})(\\.[0-9]{1,6})?$",
+        "limit_mm": 1000.0,
+        "rule": "a plain decimal in millimetres, final bed coordinates, within limit_mm of the origin"
+      },
+      "index": {
+        "attributes": ["v1", "v2", "v3"],
+        "pattern": "^(0|[1-9][0-9]{0,8})$",
+        "rule": "below the vertex count of its mesh; the three of a triangle differ"
+      },
+      "box_tolerance_mm": 0.01
+    }
+  }
+}

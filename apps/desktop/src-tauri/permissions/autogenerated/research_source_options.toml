@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-research-source-options"
+description = "Enables the research_source_options command without any pre-configured scope."
+commands.allow = ["research_source_options"]
+
+[[permission]]
+identifier = "deny-research-source-options"
+description = "Denies the research_source_options command without any pre-configured scope."
+commands.deny = ["research_source_options"]

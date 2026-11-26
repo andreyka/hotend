@@ -1,0 +1,116 @@
+/* The stage behind the 3D view (DESIGN_SPEC 10.2): a vertical gradient under a
+ * transparent canvas. Only tokens, no colour literals. */
+.hotend-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--hotend-stage-top), var(--hotend-stage-bottom));
+}
+
+.hotend-viewport-host {
+  position: absolute;
+  inset: 0;
+  /* The viewer paints its own background through this variable. */
+  --tcv-bg-color: transparent;
+}
+
+/* The viewer sets its view 6 px in from its container (two margins of its own). Hotend
+ * draws over and under the view in the container's coordinates, and frames the part for
+ * the container's size: the view starts where the container starts. */
+.hotend-viewport-host .tcv_cad_viewer,
+.hotend-viewport-host .tcv_cad_view {
+  margin: 0 !important;
+}
+
+.hotend-viewport-note {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--app-text-2);
+  pointer-events: none;
+}
+
+/* The viewer writes what is under the pointer ("plane: area ...") into its own status
+ * line. Hotend says what was picked in its own words, so the viewer's line stays off;
+ * the viewer sets `display` on the element itself, hence !important. */
+.hotend-viewport-host .tcv_status_line {
+  display: none !important;
+}
+
+/* What Hotend draws over the view: its marks on the part and the axis marker. Neither
+ * takes the pointer; both are drawn for the camera on every frame (Viewport.tsx). */
+.hotend-viewport-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The plate's surface (DESIGN_SPEC 10.4): the text colour, barely there. It lies under
+ * the canvas, so the parts and the grid are drawn over it. */
+.hotend-plate-surface {
+  fill: var(--app-text);
+  fill-opacity: 0.05;
+}
+
+:root[data-theme="light"] .hotend-plate-surface {
+  fill-opacity: 0.04;
+}
+
+.hotend-mark-ring {
+  fill: none;
+  stroke: var(--app-accent);
+  stroke-width: 2;
+}
+
+.hotend-mark-line {
+  stroke: var(--app-accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.hotend-mark-box {
+  fill: none;
+  stroke: var(--app-accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.hotend-mark-label {
+  fill: var(--app-text);
+  stroke: var(--app-raised);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  font-family: var(--app-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.hotend-viewport-compass {
+  position: absolute;
+  bottom: 44px;
+  left: 12px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hotend-viewport-compass line {
+  stroke: var(--app-text-2);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.hotend-viewport-compass text {
+  fill: var(--app-text-2);
+  font-family: var(--app-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+}

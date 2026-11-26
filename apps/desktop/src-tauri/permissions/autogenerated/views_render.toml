@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-views-render"
+description = "Enables the views_render command without any pre-configured scope."
+commands.allow = ["views_render"]
+
+[[permission]]
+identifier = "deny-views-render"
+description = "Denies the views_render command without any pre-configured scope."
+commands.deny = ["views_render"]

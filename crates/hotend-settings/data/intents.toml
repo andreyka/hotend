@@ -1,0 +1,59 @@
+# What each intent sets (docs/PRINT_SETTINGS.md). An intent sets shell and motion values
+# only; it never touches a field of the sticking group. A preset that is not installed, or a
+# pattern or seam the slicer side has not verified, falls back to the `balanced` value.
+
+schema = 1
+revision = "2026-11-18.1"
+
+[[intent]]
+id = "balanced"
+process = "standard-0.20mm"
+wall_loops = 2
+infill_pct = 15
+infill_pattern = "grid"
+seam = "aligned"
+mark = "stock"
+source = "the stock values of the standard preset"
+
+[[intent]]
+id = "strong"
+process = "standard-0.20mm"
+wall_loops = 5
+infill_pct = 25
+infill_pattern = "gyroid"
+seam = "aligned"
+mark = "sourced"
+source = "5 walls and about 25 percent are the vendor's advice for structural parts (page on warping)"
+
+[[intent]]
+id = "best_surface"
+process = "fine-0.12mm"
+wall_loops = 3
+infill_pct = 15
+infill_pattern = "gyroid"
+seam = "back"
+outer_wall_speed_cap_mm_s = 60
+outer_wall_accel_cap_mm_s2 = 2000
+mark = "judgment"
+source = "judgment; the preset name is unverified"
+
+[[intent]]
+id = "fast"
+process = "draft-0.24mm"
+wall_loops = 2
+infill_pct = 10
+infill_pattern = "grid"
+seam = "aligned"
+mark = "judgment"
+source = "judgment; the preset name is unverified"
+
+[[intent]]
+id = "fit_critical"
+process = "standard-0.20mm"
+wall_loops = 3
+infill_pct = 15
+infill_pattern = "grid"
+seam = "aligned"
+outer_wall_speed_cap_mm_s = 60
+mark = "judgment"
+source = "3 walls were used by the proof project; the cap is judgment"

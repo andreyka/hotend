@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-parameter-set"
+description = "Enables the parameter_set command without any pre-configured scope."
+commands.allow = ["parameter_set"]
+
+[[permission]]
+identifier = "deny-parameter-set"
+description = "Denies the parameter_set command without any pre-configured scope."
+commands.deny = ["parameter_set"]

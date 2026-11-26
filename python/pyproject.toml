@@ -1,0 +1,44 @@
+[project]
+name = "hotend-python"
+version = "0.1.0"
+description = "Hotend Python workers: CAD engine, Proven Fit runtime, agent loop"
+requires-python = ">=3.13,<3.14"
+license = "Apache-2.0"
+dependencies = [
+  "build123d==0.13.0",
+  "ocp-tessellate",
+  "bd-warehouse",
+  "manifold3d",
+  "lib3mf",
+  "numpy",
+  "pydantic>=2",
+  "pydantic-ai-slim[anthropic,openai,google]",
+  "pillow>=13.0.0",
+  "httpx2>=2.16.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-timeout",
+    "ruff",
+]
+
+# cryptography (through google-auth, for the google provider) publishes no Intel macOS wheel
+# from 49.0.0 on, and `uv sync --frozen` would then need a Rust toolchain and OpenSSL headers
+# there. On that platform only, stay on the last line that has one (docs/DEPENDENCIES.md).
+[tool.uv]
+constraint-dependencies = [
+    "cryptography<49 ; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+]
+
+# The workers are started as `python -I -m <package>`; isolated mode ignores the current
+# directory, so the packages must be installed (editable) into the environment by `uv sync`.
+# Add each new top-level package (hotend_fit, hotend_agent) to module-name.
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = ["hotend_engine", "hotend_fit", "hotend_agent"]
+module-root = ""

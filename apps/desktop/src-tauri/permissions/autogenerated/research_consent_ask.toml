@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-research-consent-ask"
+description = "Enables the research_consent_ask command without any pre-configured scope."
+commands.allow = ["research_consent_ask"]
+
+[[permission]]
+identifier = "deny-research-consent-ask"
+description = "Denies the research_consent_ask command without any pre-configured scope."
+commands.deny = ["research_consent_ask"]

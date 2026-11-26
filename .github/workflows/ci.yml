@@ -1,0 +1,75 @@
+# Runs the same two scripts a developer runs on a new machine: scripts/setup-wsl.sh (with
+# --apt, so the clean-machine path is exercised on every run) and scripts/test-all.sh.
+#
+# The setup step also installs what the desktop application needs: the WebKitGTK and GTK
+# packages, Xvfb and xdotool, Node 22 when the runner's is older, pnpm, the interface's
+# packages and Playwright's Chromium with its system libraries. The tests on local
+# reference files are reported as skipped here: those files are not in the repository.
+#
+# The runner's kernel must offer Landlock ABI 3 or newer (`hotend doctor` in the setup step
+# prints it). Without a usable sandbox the tests fail by design rather than skip.
+
+name: CI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  test:
+    name: Linux (Ubuntu 24.04)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Rust toolchain version (for the cache key)
+        id: rust
+        run: echo "version=$(rustc --version | tr ' ' '-')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache cargo downloads and build outputs
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target
+          key: cargo-${{ runner.os }}-${{ steps.rust.outputs.version }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-${{ steps.rust.outputs.version }}-
+
+      - name: Cache uv downloads and its Python
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.cache/uv
+            ~/.local/share/uv/python
+          key: uv-${{ runner.os }}-${{ hashFiles('python/uv.lock') }}
+          restore-keys: |
+            uv-${{ runner.os }}-
+
+      - name: Set up the machine (scripts/setup-wsl.sh --apt)
+        run: bash scripts/setup-wsl.sh --apt
+
+      - name: Put user-level tools on PATH for the next steps
+        run: |
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: All tests, then the offline demo (scripts/test-all.sh)
+        run: bash scripts/test-all.sh
+
+      - name: Trim the uv cache before it is saved
+        if: always()
+        run: uv cache prune --ci || true

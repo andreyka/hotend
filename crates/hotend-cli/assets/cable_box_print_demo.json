@@ -1,0 +1,43 @@
+{
+ "protocol": 0,
+ "name": "cable_box_print_demo",
+ "description": "Offline demo for `hotend demo`: the turns the demo adds to the cable box conversation of builtin:cable_box_demo. `hotend` is built with that conversation's turns, all but its closing one, in front of these (crates/hotend-cli/src/demo.rs): the agent then slices the result, proposes a print for the user's review and sums up what the checks and the plate say.",
+ "turns": [
+  {
+   "expect": [
+    "views of version"
+   ],
+   "say": "It looks right from outside and in the section. You asked me to slice it and queue it for your review, so I am slicing it with the 0.20 mm demo profile to see the print time and the filament.",
+   "calls": [
+    {
+     "tool": "slice",
+     "args": {
+      "profile": "demo-0.20mm"
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "status: ok",
+    "print time:",
+    "warning fake_slicer"
+   ],
+   "say": "The slice went through. The slicer warned that it is Hotend's stand-in slicer with an untuned demo profile, so the time and the filament are rough estimates and the file is not printable. I am adding it to your review queue anyway so you can see that step. I cannot start a print; only you can, in Hotend's own confirmation.",
+   "calls": [
+    {
+     "tool": "propose_print",
+     "args": {
+      "note": "Cable box, version 2, PLA, 0.20 mm demo profile. Sliced by the stand-in slicer: review only, do not print this file."
+     }
+    }
+   ]
+  },
+  {
+   "expect": [
+    "pending print job"
+   ],
+   "say": "Your cable box is ready to look at: a box with 2 mm walls, a cable slot at both ends and a lid that snaps on and takes one M3 screw.\n\nChecked: both parts are valid solids, fit the printer, have no wall under 0.8 mm and do not collide. On the plate the box prints as modelled and the lid is turned upside down, flat on the bed, so the lid needs no support.\n\nNot settled, and I need you for it:\n- The room inside is my guess (120 x 60 mm). The check confirms that a block of that size goes in as built, but that only proves my guess. Please measure your power strip (length, width, height with the plugs in) and the thickest cable, and I will size the box around them.\n- Your printer is not calibrated yet, so the snap fit is not sure to hold. Print the fit gauge and tell me whether the lid snaps, is too tight or too loose.\n\nSliced and queued: a print job is waiting for your review. It came from the stand-in slicer, so slice it again with your real slicer before you print anything."
+  }
+ ]
+}

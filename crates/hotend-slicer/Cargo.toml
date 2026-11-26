@@ -1,0 +1,49 @@
+[package]
+name = "hotend-slicer"
+description = "Hotend's slicer integration: detects vendor slicers, runs their command lines inside the sandbox and reads the result as hostile input"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[lib]
+name = "hotend_slicer"
+path = "src/lib.rs"
+
+# Stand-in for a vendor slicer in tests and in the offline demo. Its output is not printable.
+[[bin]]
+name = "hotend-fake-slicer"
+path = "src/bin/hotend-fake-slicer.rs"
+
+# Reads the system profiles of an installed Bambu Studio and writes them flattened into the
+# job folder. It parses files Hotend did not write, so it only ever runs inside the sandbox.
+[[bin]]
+name = "hotend-profile-flatten"
+path = "src/bin/hotend-profile-flatten.rs"
+
+[dependencies]
+futures-util = "0.3.34"
+hotend-core = { path = "../hotend-core" }
+hotend-sandbox = { path = "../hotend-sandbox" }
+hotend-settings = { path = "../hotend-settings" }
+png = "0.18.1"
+roxmltree = "0.21.2"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0.154", features = ["raw_value"] }
+sha2 = "0.11.1"
+thiserror = "2.0.21"
+tokio = { version = "1.54.1", features = ["rt"] }
+toml = { version = "1.2.1", default-features = false, features = ["parse", "serde"] }
+zip = { version = "9.6.1", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+
+tempfile = "3.27.0"
+
+[target."cfg(unix)".dependencies]
+libc = "0.2.191"
+
+[dev-dependencies]
+tokio = { version = "1.54.1", features = ["rt", "macros"] }

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-printer-certificate-check"
+description = "Enables the printer_certificate_check command without any pre-configured scope."
+commands.allow = ["printer_certificate_check"]
+
+[[permission]]
+identifier = "deny-printer-certificate-check"
+description = "Denies the printer_certificate_check command without any pre-configured scope."
+commands.deny = ["printer_certificate_check"]

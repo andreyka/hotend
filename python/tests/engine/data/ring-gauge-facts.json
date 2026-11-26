@@ -1,0 +1,32 @@
+{
+  "family": "PLA",
+  "piece_count": 1,
+  "total_contact_mm2": 418.08316,
+  "pieces": [
+    {
+      "contact_mm2": 418.08316,
+      "contact_perimeter_mm": 418.08316,
+      "strip_width_mm": 2.0,
+      "contact_span_mm": 68.540002,
+      "height_mm": 5.0,
+      "slenderness": 0.244534,
+      "overhang_mm2": 0.0,
+      "fit_overhang_mm2": 0.0,
+      "overhang_over_part_mm2": 0.0,
+      "overhang_regions": [],
+      "inner_loops": [
+        {
+          "min_width_mm": 64.54,
+          "fit": true
+        }
+      ],
+      "fit_at_bed": [
+        {
+          "pair": "sample_rim",
+          "side": "inside"
+        }
+      ],
+      "min_wall_mm": 1.977
+    }
+  ]
+}

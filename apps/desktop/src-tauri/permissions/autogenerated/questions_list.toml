@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-questions-list"
+description = "Enables the questions_list command without any pre-configured scope."
+commands.allow = ["questions_list"]
+
+[[permission]]
+identifier = "deny-questions-list"
+description = "Denies the questions_list command without any pre-configured scope."
+commands.deny = ["questions_list"]

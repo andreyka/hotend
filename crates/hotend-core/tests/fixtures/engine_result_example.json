@@ -1,0 +1,529 @@
+{
+  "artifacts": {
+    "brep": "model.step",
+    "mesh": "model.step",
+    "parts_index": "model.step",
+    "step": "model.step",
+    "stl": {
+      "lid": "model.step"
+    },
+    "threemf": "model.step",
+    "views": {
+      "top": "model.step"
+    }
+  },
+  "changes": [
+    {
+      "after": 1.5,
+      "before": 1.5,
+      "quantity": "lid",
+      "readings": 1,
+      "sigma": 1.5
+    }
+  ],
+  "checks": [
+    {
+      "data": {
+        "anything": [
+          1,
+          "two"
+        ]
+      },
+      "id": "lid",
+      "message": "lid",
+      "part": "lid",
+      "severity": "error",
+      "status": "pass"
+    }
+  ],
+  "components": [
+    {
+      "body": {
+        "anything": [
+          1,
+          "two"
+        ]
+      },
+      "features": [
+        {
+          "anything": [
+            1,
+            "two"
+          ]
+        }
+      ],
+      "frame": "lid",
+      "id": "lid",
+      "kind": "lid",
+      "name": "lid",
+      "numbers": 1,
+      "proven": true,
+      "provenance": "measured",
+      "questions": [
+        {
+          "guessed_params": [
+            "lid"
+          ],
+          "requirement": "lid",
+          "text": "lid"
+        }
+      ],
+      "size": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "sources": {
+        "anything": [
+          1,
+          "two"
+        ]
+      },
+      "unverified": [
+        {
+          "anything": [
+            1,
+            "two"
+          ]
+        }
+      ],
+      "used_features": [
+        "lid"
+      ]
+    }
+  ],
+  "docs": [
+    {
+      "doc": "lid",
+      "kind": "lid",
+      "module": "lid",
+      "name": "lid",
+      "score": 1.5,
+      "signature": "lid"
+    }
+  ],
+  "entry_provenance": "measured",
+  "error": null,
+  "facts": {
+    "family": "PLA",
+    "piece_count": 1,
+    "pieces": [
+      {
+        "contact_mm2": 100.0,
+        "contact_perimeter_mm": 40.0,
+        "contact_span_mm": 10.0,
+        "fit_at_bed": [
+          {
+            "pair": "lid",
+            "side": "inside"
+          }
+        ],
+        "fit_overhang_mm2": 0.0,
+        "height_mm": 10.0,
+        "inner_loops": [
+          {
+            "fit": true,
+            "min_width_mm": 1.5
+          }
+        ],
+        "min_wall_mm": 1.5,
+        "overhang_mm2": 1.0,
+        "overhang_over_part_mm2": 0.0,
+        "overhang_regions": [
+          {
+            "area_mm2": 1.0,
+            "diameter_mm": null,
+            "kind": "bridge",
+            "over_part": false,
+            "reach_mm": null,
+            "span_mm": 1.5
+          }
+        ],
+        "slenderness": 1.0,
+        "strip_width_mm": 5.0
+      }
+    ],
+    "total_contact_mm2": 100.0
+  },
+  "gauges": [
+    {
+      "args": {
+        "key": {
+          "anything": [
+            1,
+            "two"
+          ]
+        }
+      },
+      "card": "lid",
+      "clearances": [
+        {
+          "fit_class": "lid",
+          "gap": 1.5,
+          "pair": "lid",
+          "provenance": "lid"
+        }
+      ],
+      "dimensions": [
+        {
+          "drawn": 1.5,
+          "feature": "hole",
+          "half": "lid",
+          "id": "lid",
+          "object": "lid.1",
+          "what": "lid"
+        }
+      ],
+      "facts": {
+        "lid.1": {
+          "contact_mm2": 100.0,
+          "contact_perimeter_mm": 40.0,
+          "contact_span_mm": 10.0,
+          "fit_at_bed": [
+            {
+              "pair": "lid",
+              "side": "inside"
+            }
+          ],
+          "fit_overhang_mm2": 0.0,
+          "height_mm": 10.0,
+          "inner_loops": [
+            {
+              "fit": true,
+              "min_width_mm": 1.5
+            }
+          ],
+          "min_wall_mm": 1.5,
+          "overhang_mm2": 1.0,
+          "overhang_over_part_mm2": 0.0,
+          "overhang_regions": [
+            {
+              "area_mm2": 1.0,
+              "diameter_mm": null,
+              "kind": "bridge",
+              "over_part": false,
+              "reach_mm": null,
+              "span_mm": 1.5
+            }
+          ],
+          "slenderness": 1.0,
+          "strip_width_mm": 5.0
+        }
+      },
+      "name": "lid.1",
+      "parts": [
+        "lid.1"
+      ],
+      "size": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    }
+  ],
+  "op": "build",
+  "orientations": [
+    {
+      "as_modelled": {
+        "anything": [
+          1,
+          "two"
+        ]
+      },
+      "candidates": [
+        {
+          "anything": [
+            1,
+            "two"
+          ]
+        }
+      ],
+      "copies": 1,
+      "explanation": "lid",
+      "facts": {
+        "contact_mm2": 100.0,
+        "contact_perimeter_mm": 40.0,
+        "contact_span_mm": 10.0,
+        "fit_at_bed": [
+          {
+            "pair": "lid",
+            "side": "inside"
+          }
+        ],
+        "fit_overhang_mm2": 0.0,
+        "height_mm": 10.0,
+        "inner_loops": [
+          {
+            "fit": true,
+            "min_width_mm": 1.5
+          }
+        ],
+        "min_wall_mm": 1.5,
+        "overhang_mm2": 1.0,
+        "overhang_over_part_mm2": 0.0,
+        "overhang_regions": [
+          {
+            "area_mm2": 1.0,
+            "diameter_mm": null,
+            "kind": "bridge",
+            "over_part": false,
+            "reach_mm": null,
+            "span_mm": 1.5
+          }
+        ],
+        "slenderness": 1.0,
+        "strip_width_mm": 5.0
+      },
+      "measures": {
+        "anything": [
+          1,
+          "two"
+        ]
+      },
+      "nozzle_id": 1,
+      "overridden": "lid",
+      "part": "lid",
+      "preferred_by": "lid",
+      "score": 1.5,
+      "source": "as_modelled",
+      "terms": {
+        "key": 1.5
+      },
+      "turned": "lid",
+      "up": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    }
+  ],
+  "param_specs": {
+    "lid": {
+      "default": 1.5,
+      "label": "lid",
+      "max": 1.5,
+      "min": 1.5,
+      "provenance": "web",
+      "source": "r1",
+      "unit": "mm"
+    }
+  },
+  "params": {
+    "lid": 1.5
+  },
+  "parts": [
+    {
+      "area": 1.5,
+      "bbox": {
+        "max": [
+          1.5,
+          1.5,
+          1.5
+        ],
+        "min": [
+          1.5,
+          1.5,
+          1.5
+        ]
+      },
+      "color": "#4c78a8",
+      "faces": 1,
+      "is_manifold": true,
+      "is_valid": true,
+      "mass_estimate_g": 1.5,
+      "name": "lid",
+      "solids": 1,
+      "volume": 1.5
+    }
+  ],
+  "plates": [
+    {
+      "facts": {
+        "family": "PLA",
+        "piece_count": 1,
+        "pieces": [
+          {
+            "contact_mm2": 100.0,
+            "contact_perimeter_mm": 40.0,
+            "contact_span_mm": 10.0,
+            "fit_at_bed": [
+              {
+                "pair": "lid",
+                "side": "inside"
+              }
+            ],
+            "fit_overhang_mm2": 0.0,
+            "height_mm": 10.0,
+            "inner_loops": [
+              {
+                "fit": true,
+                "min_width_mm": 1.5
+              }
+            ],
+            "min_wall_mm": 1.5,
+            "overhang_mm2": 1.0,
+            "overhang_over_part_mm2": 0.0,
+            "overhang_regions": [
+              {
+                "area_mm2": 1.0,
+                "diameter_mm": null,
+                "kind": "bridge",
+                "over_part": false,
+                "reach_mm": null,
+                "span_mm": 1.5
+              }
+            ],
+            "slenderness": 1.0,
+            "strip_width_mm": 5.0
+          }
+        ],
+        "total_contact_mm2": 100.0
+      },
+      "index": 1,
+      "items": [
+        {
+          "bbox": {
+            "max": [
+              1.5,
+              1.5,
+              1.5
+            ],
+            "min": [
+              1.5,
+              1.5,
+              1.5
+            ]
+          },
+          "copy": 1,
+          "name": "lid.1",
+          "nozzle_id": 1,
+          "part": "lid.1",
+          "quarter_turn": true,
+          "transform": [
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5,
+            1.5
+          ]
+        }
+      ],
+      "layout": {
+        "anchor": "front_left",
+        "clearance": 1.5,
+        "margin": 1.5,
+        "offset": [
+          1.5,
+          1.5
+        ]
+      },
+      "size": [
+        1.5,
+        1.5
+      ],
+      "threemf": "plates/1/plate.3mf",
+      "views": {
+        "top": "plates/1/views/top.png"
+      }
+    }
+  ],
+  "protocol": 0,
+  "questions": [
+    {
+      "guessed_params": [
+        "lid"
+      ],
+      "requirement": "lid",
+      "text": "lid"
+    }
+  ],
+  "references": [
+    {
+      "anything": [
+        1,
+        "two"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "anything": [
+        1,
+        "two"
+      ]
+    }
+  ],
+  "stage": "all",
+  "status": "ok",
+  "stdout": "lid",
+  "stdout_truncated": true,
+  "sweep": {
+    "builds": 1,
+    "checks": [
+      "lid"
+    ],
+    "protocol": 0,
+    "samples": [
+      {
+        "failed": [
+          {
+            "check": "lid",
+            "message": "lid"
+          }
+        ],
+        "params": {
+          "lid": 1.5
+        },
+        "parts": {
+          "lid": [
+            1.5,
+            1.5,
+            1.5
+          ]
+        },
+        "requirements": [
+          {
+            "id": "lid",
+            "message": "lid",
+            "met": true,
+            "not_checkable": true,
+            "status": "pass"
+          }
+        ],
+        "status": "ok"
+      }
+    ],
+    "truncated": true
+  },
+  "table": {
+    "anything": [
+      1,
+      "two"
+    ]
+  },
+  "timings": {
+    "key": 1.5
+  },
+  "unplaced": [
+    {
+      "cause": "clearance",
+      "copy": 1,
+      "name": "lid.1",
+      "part": "lid.1",
+      "reason": "lid"
+    }
+  ],
+  "versions": {
+    "key": "lid"
+  },
+  "warnings": [
+    "lid"
+  ]
+}

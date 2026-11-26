@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-printer-lan-set"
+description = "Enables the printer_lan_set command without any pre-configured scope."
+commands.allow = ["printer_lan_set"]
+
+[[permission]]
+identifier = "deny-printer-lan-set"
+description = "Denies the printer_lan_set command without any pre-configured scope."
+commands.deny = ["printer_lan_set"]

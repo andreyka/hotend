@@ -1,0 +1,636 @@
+# Which Bambu Studio profile key carries each of Hotend's print settings (fields of
+# `crates/hotend-settings`), and how a value is written into it. Data, not code: the loader
+# (`src/keymap.rs`) checks every row against the field's constant hard range, the character
+# rules of keys and tokens and the constant deny list `keymap::DENIED`, so editing this table
+# cannot open a key that holds G-code, a path or a name, nor a value outside a field's range.
+#
+# Columns:
+# - `field`: the Hotend field; `role`: `process` or `filament` (machine rows are refused; the
+#   nozzle inventory has its own path, `[printer.nozzle_inventory]` of system-profiles.toml);
+# - `key`: the profile key; `shape`: `scalar`, `per_filament` (a list of one in a filament
+#   file) or `per_variant` (one entry per extruder variant, six on the X2D);
+# - `form`: how the text is made: `integer`, `decimal2`, `percent`, `flag01`, `enum` (through
+#   `tokens`, Hotend's token = the slicer's token), `colour` or `plate` (the plate's
+#   `slicer_value` of system-profiles.toml);
+# - `op`: `set` writes the text into every entry, `cap` lowers every entry to at most the
+#   value and raises none (`zero_is_off`: an entry of 0 means "off", the safest value);
+# - `absent`: `refuse` (a key the installed profile lacks is not invented) or `add` (only for
+#   the keys a measured run showed absent and working when added, `keymap::ADD_ALLOWED`);
+# - `min`, `max`: the field's hard range, checked again here;
+# - `verified`: the key was changed in a real test slice and the sliced file stated the
+#   asked value (Bambu Studio 02.09.01.70, `measured_on`). `verified_texts` narrows that
+#   to the values that were measured. A row or value that is not verified is only used when
+#   the asked value equals what the installed profile already holds; then nothing is written.
+#   Any other value is refused (`setting_unmeasured`), never written unseen;
+# - `plate`: the bed temperature rows hold for this plate only;
+# - `enabled = false`: reserved, neither written nor judged (the jerk rows).
+#
+# Measured: a test slice of a holder was made in the window with exactly
+# these keys changed: process `brim_object_gap`,
+# `brim_type`, `curr_bed_type`, `enable_prime_tower`, `initial_layer_infill_speed`,
+# `initial_layer_speed`, `wall_loops`; filament `additional_cooling_fan_speed`,
+# `close_fan_the_first_x_layers`, `first_x_layer_fan_speed`, `textured_plate_temp`,
+# `textured_plate_temp_initial_layer` (and the two `optional` fan keys, which the window
+# writes beside the auxiliary fan keys). A hand-made gauge project (17 November 2026) set
+# `brim_width`, `skirt_loops`, `enable_support` (0) and `filament_colour` on the command line
+# and its proof run echoed them.
+
+schema = 1
+revision = "2026-11-18.1"
+measured_on = "Bambu Studio 02.09.01.70 (Windows window and Linux command line), 17 and 18 November 2026"
+
+[[map]]
+field = "setup.plate_type"
+role = "process"
+key = "curr_bed_type"
+shape = "scalar"
+form = "plate"
+op = "set"
+absent = "add"
+verified = true
+
+[[map]]
+field = "adhesion.brim_kind"
+role = "process"
+key = "brim_type"
+shape = "scalar"
+form = "enum"
+op = "set"
+absent = "add"
+verified = true
+# `outer_only`: the holder test slice. `no_brim`: measured on 18 November 2026 with the
+# Linux command line 02.09.01.70 in Hotend's sandbox (the calm plan on the placed box): the
+# file's settings say `no_brim` and no layer has a brim feature
+# (tests/real_bambu_studio.rs, the_real_bambu_studio_slices_without_a_brim_when_the_plan_has_none).
+verified_texts = ["outer_only", "no_brim"]
+tokens = { none = "no_brim", outer = "outer_only", inner = "inner_only", outer_and_inner = "outer_and_inner" }
+
+[[map]]
+field = "adhesion.brim_width_mm"
+role = "process"
+key = "brim_width"
+shape = "scalar"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 0
+max = 15
+verified = true
+
+[[map]]
+field = "adhesion.brim_gap_mm"
+role = "process"
+key = "brim_object_gap"
+shape = "scalar"
+form = "decimal2"
+op = "set"
+absent = "refuse"
+min = 0.0
+max = 0.3
+verified = true
+
+[[map]]
+field = "adhesion.skirt_loops"
+role = "process"
+key = "skirt_loops"
+shape = "scalar"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 0
+max = 0
+verified = true
+
+[[map]]
+field = "adhesion.elephant_foot_mm"
+role = "process"
+key = "elefant_foot_compensation"
+shape = "scalar"
+form = "decimal2"
+op = "set"
+absent = "refuse"
+min = 0.0
+max = 0.3
+verified = false
+
+[[map]]
+field = "first_layer.height_mm"
+role = "process"
+key = "initial_layer_print_height"
+shape = "scalar"
+form = "decimal2"
+op = "set"
+absent = "refuse"
+min = 0.16
+max = 0.28
+verified = false
+
+[[map]]
+field = "first_layer.line_width_mm"
+role = "process"
+key = "initial_layer_line_width"
+shape = "scalar"
+form = "decimal2"
+op = "set"
+absent = "refuse"
+min = 0.42
+max = 0.60
+verified = false
+
+[[map]]
+field = "first_layer.line_width_mm"
+role = "process"
+key = "initial_layer_infill_line_width"
+shape = "scalar"
+form = "decimal2"
+op = "set"
+absent = "refuse"
+min = 0.42
+max = 0.60
+verified = false
+
+[[map]]
+field = "first_layer.wall_speed_mm_s"
+role = "process"
+key = "initial_layer_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 10
+max = 50
+verified = true
+
+[[map]]
+field = "first_layer.infill_speed_mm_s"
+role = "process"
+key = "initial_layer_infill_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 15
+max = 105
+verified = true
+
+[[map]]
+field = "first_layer.accel_mm_s2"
+role = "process"
+key = "initial_layer_acceleration"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 250
+max = 500
+verified = false
+
+[[map]]
+field = "first_layer.bed_c"
+role = "filament"
+key = "cool_plate_temp_initial_layer"
+plate = "cool"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = false
+
+[[map]]
+field = "layers.bed_c"
+role = "filament"
+key = "cool_plate_temp"
+plate = "cool"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = false
+
+[[map]]
+field = "first_layer.bed_c"
+role = "filament"
+key = "textured_plate_temp_initial_layer"
+plate = "textured-pei"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = true
+
+[[map]]
+field = "layers.bed_c"
+role = "filament"
+key = "textured_plate_temp"
+plate = "textured-pei"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = true
+
+[[map]]
+field = "first_layer.bed_c"
+role = "filament"
+key = "hot_plate_temp_initial_layer"
+plate = "high-temp"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = false
+
+[[map]]
+field = "layers.bed_c"
+role = "filament"
+key = "hot_plate_temp"
+plate = "high-temp"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = false
+
+[[map]]
+field = "first_layer.bed_c"
+role = "filament"
+key = "eng_plate_temp_initial_layer"
+plate = "engineering"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = false
+
+[[map]]
+field = "layers.bed_c"
+role = "filament"
+key = "eng_plate_temp"
+plate = "engineering"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 30
+max = 120
+verified = false
+
+[[map]]
+field = "first_layer.nozzle_c"
+role = "filament"
+key = "nozzle_temperature_initial_layer"
+shape = "per_variant"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 170
+max = 300
+verified = false
+
+[[map]]
+field = "layers.nozzle_c"
+role = "filament"
+key = "nozzle_temperature"
+shape = "per_variant"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 170
+max = 300
+verified = false
+
+[[map]]
+field = "cooling.part_fan_off_layers"
+role = "filament"
+key = "close_fan_the_first_x_layers"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 1
+max = 10
+verified = true
+
+[[map]]
+field = "cooling.aux_fan_first_layers_pct"
+role = "filament"
+key = "first_x_layer_fan_speed"
+shape = "per_filament"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 0
+max = 40
+verified = true
+
+[[map]]
+field = "cooling.aux_fan_max_pct"
+role = "filament"
+key = "additional_cooling_fan_speed"
+shape = "per_filament"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 0
+max = 100
+verified = true
+zero_is_off = true
+
+[[map]]
+field = "shell.wall_loops"
+role = "process"
+key = "wall_loops"
+shape = "scalar"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 2
+max = 6
+verified = true
+
+[[map]]
+field = "shell.infill_pct"
+role = "process"
+key = "sparse_infill_density"
+shape = "scalar"
+form = "percent"
+op = "set"
+absent = "refuse"
+min = 5
+max = 50
+verified = false
+
+[[map]]
+field = "shell.infill_pattern"
+role = "process"
+key = "sparse_infill_pattern"
+shape = "scalar"
+form = "enum"
+op = "set"
+absent = "refuse"
+verified = false
+tokens = { grid = "grid", gyroid = "gyroid" }
+
+[[map]]
+field = "shell.seam"
+role = "process"
+key = "seam_position"
+shape = "scalar"
+form = "enum"
+op = "set"
+absent = "refuse"
+verified = false
+tokens = { aligned = "aligned", back = "back" }
+
+[[map]]
+field = "supports.enabled"
+role = "process"
+key = "enable_support"
+shape = "scalar"
+form = "flag01"
+op = "set"
+absent = "refuse"
+verified = true
+verified_texts = ["0"]
+
+[[map]]
+field = "supports.kind"
+role = "process"
+key = "support_type"
+shape = "scalar"
+form = "enum"
+op = "set"
+absent = "refuse"
+verified = false
+tokens = { tree = "tree(auto)", normal = "normal(auto)" }
+
+[[map]]
+field = "supports.threshold_deg"
+role = "process"
+key = "support_threshold_angle"
+shape = "scalar"
+form = "integer"
+op = "set"
+absent = "refuse"
+min = 20
+max = 45
+verified = false
+
+[[map]]
+field = "supports.where"
+role = "process"
+key = "support_on_build_plate_only"
+shape = "scalar"
+form = "enum"
+op = "set"
+absent = "refuse"
+verified = false
+tokens = { everywhere = "0", bed_only = "1" }
+
+[[map]]
+field = "motion.outer_wall_speed_cap_mm_s"
+role = "process"
+key = "outer_wall_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 20
+max = 200
+verified = false
+
+[[map]]
+field = "motion.speed_cap_mm_s"
+role = "process"
+key = "inner_wall_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 20
+max = 300
+verified = false
+
+[[map]]
+field = "motion.speed_cap_mm_s"
+role = "process"
+key = "sparse_infill_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 20
+max = 300
+verified = false
+
+[[map]]
+field = "motion.speed_cap_mm_s"
+role = "process"
+key = "internal_solid_infill_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 20
+max = 300
+verified = false
+
+[[map]]
+field = "motion.speed_cap_mm_s"
+role = "process"
+key = "top_surface_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 20
+max = 300
+verified = false
+
+[[map]]
+field = "motion.speed_cap_mm_s"
+role = "process"
+key = "gap_infill_speed"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 20
+max = 300
+verified = false
+
+[[map]]
+field = "motion.accel_cap_mm_s2"
+role = "process"
+key = "default_acceleration"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 500
+max = 10000
+verified = false
+
+[[map]]
+field = "motion.outer_wall_accel_cap_mm_s2"
+role = "process"
+key = "outer_wall_acceleration"
+shape = "per_variant"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 500
+max = 5000
+verified = false
+
+[[map]]
+field = "motion.max_flow_cap_mm3_s"
+role = "filament"
+key = "filament_max_volumetric_speed"
+shape = "per_variant"
+form = "decimal2"
+op = "cap"
+absent = "refuse"
+min = 1.0
+max = 25.0
+verified = false
+
+[[map]]
+field = "motion.jerk_cap_mm_s"
+role = "process"
+key = "outer_wall_jerk"
+shape = "scalar"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 1
+max = 9
+verified = false
+enabled = false
+
+[[map]]
+field = "motion.jerk_cap_mm_s"
+role = "process"
+key = "inner_wall_jerk"
+shape = "scalar"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 1
+max = 9
+verified = false
+enabled = false
+
+[[map]]
+field = "motion.jerk_cap_mm_s"
+role = "process"
+key = "top_surface_jerk"
+shape = "scalar"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 1
+max = 9
+verified = false
+enabled = false
+
+[[map]]
+field = "motion.jerk_cap_mm_s"
+role = "process"
+key = "infill_jerk"
+shape = "scalar"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 1
+max = 9
+verified = false
+enabled = false
+
+[[map]]
+field = "motion.jerk_cap_mm_s"
+role = "process"
+key = "initial_layer_jerk"
+shape = "scalar"
+form = "integer"
+op = "cap"
+absent = "refuse"
+min = 1
+max = 9
+verified = false
+enabled = false
+
+[[map]]
+field = "prime_tower.enabled"
+role = "process"
+key = "enable_prime_tower"
+shape = "scalar"
+form = "flag01"
+op = "set"
+absent = "refuse"
+verified = true
+verified_texts = ["0"]
+
+[[map]]
+field = "filament.colour"
+role = "filament"
+key = "filament_colour"
+shape = "per_filament"
+form = "colour"
+op = "set"
+absent = "add"
+verified = true

@@ -1,0 +1,99 @@
+/* shadcn/ui, Base UI variant, style "nova".
+ *
+ * 1. shadcn's variable names mapped onto Hotend's tokens (DESIGN_SPEC 7.1), once.
+ * 2. The class sheet of the vendored components: the `cn-*` rules of
+ *    apps/v4/registry/styles/style-nova.css of the shadcn-ui repository (MIT), only for the
+ *    components that are in src/components/ui, with the two changes the specification
+ *    names: the default button's hover is --app-accent-fill-hover (not primary/80), and the
+ *    focus ring is the window's solid 2 px ring (not ring/50, 3 px). A half-transparent
+ *    fill or ring has no provable contrast.
+ *
+ * When a component is added to src/components/ui, add its `cn-*` rules here. */
+
+:root {
+  --background: var(--app-bg);            --foreground: var(--app-text);
+  --card: var(--app-raised);              --card-foreground: var(--app-text);
+  --popover: var(--app-raised);           --popover-foreground: var(--app-text);
+  --primary: var(--app-accent-fill);      --primary-foreground: var(--app-on-fill);
+  --secondary: var(--app-subtle);         --secondary-foreground: var(--app-text);
+  --muted: var(--app-subtle);             --muted-foreground: var(--app-text-2);
+  --accent: var(--app-hover);             --accent-foreground: var(--app-text);
+  --destructive: var(--app-fail-fill);
+  --border: var(--app-line);              --input: var(--app-control);
+  --ring: var(--app-accent);              --radius: 6px;
+}
+
+@layer components {
+  /* MARK: Button */
+  .cn-button {
+    @apply rounded-control border border-transparent bg-clip-padding text-[0.8125rem] leading-[1.125rem] font-medium aria-invalid:border-destructive active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4;
+  }
+
+  .cn-button-variant-default {
+    @apply bg-primary text-primary-foreground hover:bg-app-accent-fill-hover;
+  }
+
+  /* A button, not a field: the quiet line of a card, a raised fill and the small shadow.
+   * --app-control stays the border of what is typed into or dragged. */
+  .cn-button-variant-outline {
+    @apply border-app-line bg-app-raised shadow-1 hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground;
+  }
+
+  .cn-button-variant-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-accent aria-expanded:bg-secondary aria-expanded:text-secondary-foreground;
+  }
+
+  .cn-button-variant-ghost {
+    @apply hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground;
+  }
+
+  .cn-button-variant-destructive {
+    @apply bg-destructive text-app-on-fill hover:bg-app-fail-fill-hover;
+  }
+
+  .cn-button-variant-link {
+    @apply text-app-accent underline-offset-4 hover:underline;
+  }
+
+  .cn-button-size-xs {
+    @apply h-6 gap-1 px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3;
+  }
+
+  .cn-button-size-sm {
+    @apply h-7 gap-1 px-2.5 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5;
+  }
+
+  .cn-button-size-default {
+    @apply h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2;
+  }
+
+  .cn-button-size-lg {
+    @apply h-10 gap-1.5 px-3 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2;
+  }
+
+  .cn-button-size-icon-xs {
+    @apply size-6 [&_svg:not([class*='size-'])]:size-3;
+  }
+
+  .cn-button-size-icon-sm {
+    @apply size-7;
+  }
+
+  .cn-button-size-icon {
+    @apply size-8;
+  }
+
+  .cn-button-size-icon-lg {
+    @apply size-10;
+  }
+
+  /* MARK: Input */
+  .cn-input {
+    @apply border-input aria-invalid:border-destructive disabled:bg-muted h-8 rounded-control border bg-app-raised px-2.5 py-1 text-[0.8125rem] leading-[1.125rem] transition-colors file:h-6 file:text-sm file:font-medium;
+  }
+
+  /* MARK: Textarea */
+  .cn-textarea {
+    @apply border-input aria-invalid:border-destructive disabled:bg-muted rounded-control border bg-app-raised px-2.5 py-2 text-[0.875rem] leading-[1.3125rem] transition-colors;
+  }
+}

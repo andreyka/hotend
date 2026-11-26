@@ -1,0 +1,72 @@
+{
+  "description": "Record one number you read on the web with web_search or web_fetch, before you use it in the model. Hotend checks that the page is one your research found, that the quote contains the number and, when it holds the page's text, that the quote is on the page. Returns a note id (r1, r2, ...) to put into the parameter's spec as \"provenance\": \"web\", \"source\": \"<id>\". The maker sees the value with its page and quote and is asked to confirm it.",
+  "input_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "key": {
+        "description": "A short name for the number, e.g. phone_width.",
+        "pattern": "^[a-z][a-z0-9_]{0,31}$",
+        "type": "string"
+      },
+      "label": {
+        "description": "What the number is, in plain words, at most 80 characters in all. When the page is not the product maker's own, end it with (secondary source).",
+        "maxLength": 80,
+        "minLength": 1,
+        "type": "string"
+      },
+      "locator": {
+        "description": "Where on the page: a heading or a table name.",
+        "maxLength": 80,
+        "type": "string"
+      },
+      "quote": {
+        "description": "The sentence or table row of the page that states the number, word for word.",
+        "maxLength": 200,
+        "minLength": 3,
+        "type": "string"
+      },
+      "quoted_unit": {
+        "enum": [
+          "mm",
+          "cm",
+          "m",
+          "in"
+        ]
+      },
+      "quoted_value": {
+        "description": "Only when the page gives a length in another unit: the number as the page writes it. `value` is then its conversion to mm.",
+        "type": "number"
+      },
+      "unit": {
+        "enum": [
+          "mm",
+          "deg",
+          "count",
+          "ratio",
+          "g"
+        ]
+      },
+      "url": {
+        "description": "The page's address, exactly as the search result or the fetch gave it.",
+        "maxLength": 2000,
+        "minLength": 8,
+        "type": "string"
+      },
+      "value": {
+        "description": "The number as the model will use it, in `unit`.",
+        "type": "number"
+      }
+    },
+    "required": [
+      "key",
+      "label",
+      "value",
+      "unit",
+      "url",
+      "quote"
+    ],
+    "type": "object"
+  },
+  "name": "record_source"
+}

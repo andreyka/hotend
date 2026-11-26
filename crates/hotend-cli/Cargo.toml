@@ -1,0 +1,38 @@
+[package]
+name = "hotend-cli"
+description = "The `hotend` command: a headless driver for everything Hotend's core can do, plus `doctor` and the offline `demo`"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "hotend"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.6.8", features = ["derive"] }
+hotend-core = { path = "../hotend-core" }
+hotend-sandbox = { path = "../hotend-sandbox" }
+hotend-slicer = { path = "../hotend-slicer" }
+rpassword = "7.5.5"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+thiserror = "2.0.21"
+tokio = { version = "1.54.1", features = ["rt-multi-thread", "macros", "signal", "time"] }
+zeroize = "1.9.1"
+
+# Discarding what was typed before the confirmation question (src/print.rs).
+[target.'cfg(unix)'.dependencies]
+libc = "0.2.191"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_System_Console"] }
+
+[dev-dependencies]
+base64 = "0.23.1"
+tempfile = "3.27.0"

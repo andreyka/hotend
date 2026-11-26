@@ -1,0 +1,28 @@
+{
+  "taken": "November 2026",
+  "source": "the providers' public model lists as they were known then; not re-read when this build was made",
+  "providers": {
+    "anthropic": { "models": ["claude-fable-5-2", "claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"], "link": "anthropic_keys" },
+    "openai": { "models": ["gpt-5.1", "gpt-5", "gpt-5-mini"], "link": "openai_keys" },
+    "google": { "models": ["gemini-3-pro-preview", "gemini-2.5-pro", "gemini-2.5-flash"], "link": "google_keys" },
+    "openrouter": { "models": ["anthropic/claude-sonnet-4.5", "openai/gpt-5.1", "google/gemini-2.5-pro"], "link": "openrouter_keys" },
+    "ollama": { "models": [], "link": "ollama_download" }
+  },
+  "anthropic_effort": {
+    "claude-fable-5-2": ["low", "medium", "high", "xhigh", "max"],
+    "claude-fable-5-1": ["low", "medium", "high", "xhigh", "max"],
+    "claude-fable-5": ["low", "medium", "high", "xhigh", "max"],
+    "claude-mythos-5-2": ["low", "medium", "high", "xhigh", "max"],
+    "claude-mythos-5-1": ["low", "medium", "high", "xhigh", "max"],
+    "claude-opus-5-5": ["low", "medium", "high", "xhigh", "max"],
+    "claude-opus-5": ["low", "medium", "high", "xhigh", "max"],
+    "claude-opus-4-8": ["low", "medium", "high", "xhigh", "max"],
+    "claude-opus-4-7": ["low", "medium", "high", "xhigh", "max"],
+    "claude-sonnet-5-5": ["low", "medium", "high", "xhigh", "max"],
+    "claude-sonnet-5": ["low", "medium", "high", "xhigh", "max"],
+    "claude-haiku-5-5": ["low", "medium", "high", "xhigh", "max"],
+    "claude-opus-4-6": ["low", "medium", "high", "max"],
+    "claude-sonnet-4-6": ["low", "medium", "high", "max"],
+    "claude-opus-4-5": ["low", "medium", "high"]
+  }
+}

@@ -1,0 +1,54 @@
+[package]
+name = "hotend-printer"
+description = "Hotend's printer layer: Printer trait, delivery paths, Bambu LAN message model, command allowlist, start token, G-code linter and the simulated printer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[lib]
+name = "hotend_printer"
+path = "src/lib.rs"
+
+[features]
+default = []
+# The real LAN transport. Both features are off by default: default builds contain no code
+# that opens a socket.
+# `lan-status`: the read-only status listener (`lan::StatusListener`) and its certificate
+# checks. It connects to one private-range address the person configured and never
+# publishes. This is the only one the application (`hotend-core`) enables.
+lan-status = ["dep:rumqttc", "dep:rustls", "dep:x509-parser", "dep:bytes"]
+# `lan`: adds the transport that sends commands and files (`lan::LanPrinter`, FTPS upload),
+# which connects to loopback only. Used by this crate's own tests; nothing else enables it.
+lan = ["lan-status", "dep:suppaftp"]
+
+[dependencies]
+percent-encoding = "2.3.2"
+roxmltree = "0.21.2"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sha2 = "0.11.1"
+thiserror = "2.0.21"
+toml = { version = "1.2.1", default-features = false, features = ["parse", "serde"] }
+zeroize = "1.9.1"
+zip = { version = "9.6.1", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+
+# The buffer type of rumqttc's packet codec, which the status listener uses directly.
+bytes = { version = "1.12.1", optional = true }
+rumqttc = { version = "0.25.1", optional = true, default-features = false, features = ["use-rustls"] }
+rustls = { version = "0.23.46", optional = true }
+suppaftp = { version = "13.0.0", optional = true, default-features = false, features = ["rustls-aws-lc-rs", "deprecated"] }
+x509-parser = { version = "0.18.1", optional = true }
+
+[target."cfg(unix)".dependencies]
+libc = "0.2.191"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+# For the loopback stand-in broker and FTPS server of the `lan` tests.
+bytes = "1.12.1"
+rcgen = "0.14.10"

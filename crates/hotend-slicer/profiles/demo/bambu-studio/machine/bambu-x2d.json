@@ -1,0 +1,7 @@
+{
+  "name": "Hotend demo machine (fake slicer only)",
+  "printer_model": "Bambu Lab X2D",
+  "nozzle_diameter": ["0.4", "0.4"],
+  "printable_area": ["0x0", "256x0", "256x256", "0x256"],
+  "printable_height": "260"
+}

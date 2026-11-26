@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-version-revert"
+description = "Enables the version_revert command without any pre-configured scope."
+commands.allow = ["version_revert"]
+
+[[permission]]
+identifier = "deny-version-revert"
+description = "Denies the version_revert command without any pre-configured scope."
+commands.deny = ["version_revert"]

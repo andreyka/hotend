@@ -1,0 +1,9 @@
+# Text is stored and checked out with LF on every platform, so a Windows checkout
+# (Git for Windows defaults to CRLF) builds and tests the same bytes as Linux.
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary
+*.3mf binary
+*.stl binary
+*.step binary

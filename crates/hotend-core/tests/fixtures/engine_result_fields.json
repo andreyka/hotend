@@ -1,0 +1,350 @@
+{
+  "about": [
+    "Every field the engine worker may write into result.json, by object, and what the core's",
+    "strict types accept for it. Checked from both sides: crates/hotend-core/tests/",
+    "engine_result_contract.rs holds the Rust types to this list (no field more, none less),",
+    "and python/tests/result_contract.py holds every result of the worker's tests to it. See",
+    "docs/PROTOCOL.md section 3.3, 'How a result is validated'.",
+    "Types: text, path, name, piece, question_id, check_id, short_id, color, view, number,",
+    "integer, count (0 or more), bool, object (opaque JSON object), any (opaque JSON),",
+    "one_of:a,b, @object, [T], [T;n] (exactly n), {K:T}. '|null': may be null. A final '?':",
+    "may be absent. core_only: part of the type, but the worker never writes it.",
+    "max_items: the most entries of a list or map the core accepts. max_json_bytes: the longest",
+    "compact JSON text of a field; max_result_bytes: of the whole file. other_bounds: lists and",
+    "maps without a count of their own, and what bounds them. Free text has no maximum here: the",
+    "core cuts it. JSON inside `any` and `object` is bounded by its field's max_json_bytes, or",
+    "by the whole file alone (checks[].data, results, candidates, gauge args)."
+  ],
+  "ops": ["build", "measure", "export", "views", "docs", "prepare", "gauge", "calibrate", "sweep"],
+  "ops_the_core_never_requests": ["references"],
+  "objects": {
+    "result": {
+      "protocol": "count",
+      "op": "text|null?",
+      "status": "one_of:ok,model_error,check_error,timeout,internal_error",
+      "error": "@error|null?",
+      "timings": "{text:number}?",
+      "stdout": "text?",
+      "stdout_truncated": "bool?",
+      "params": "{name:number}?",
+      "param_specs": "{name:@param_spec}?",
+      "parts": "[@part]?",
+      "checks": "[@check]?",
+      "artifacts": "@artifacts?",
+      "warnings": "[text]?",
+      "results": "[object]?",
+      "versions": "{text:text|null}?",
+      "docs": "[@doc]?",
+      "questions": "[@question]|null?",
+      "components": "[@component]?",
+      "references": "[object]?",
+      "orientations": "[@orientation]?",
+      "stage": "one_of:all,orient,plate|null?",
+      "facts": "@plate_facts|null?",
+      "plates": "[@plate]?",
+      "unplaced": "[@unplaced]?",
+      "gauges": "[@gauge]?",
+      "table": "object|null?",
+      "changes": "[@change]?",
+      "entry_provenance": "one_of:measured,standard,calibrated,guessed,style|null?",
+      "sweep": "@sweep|null?"
+    },
+    "error": {
+      "type": "text",
+      "message": "text",
+      "line": "count|null?",
+      "traceback": "text?"
+    },
+    "param_spec": {
+      "default": "number",
+      "min": "number|null?",
+      "max": "number|null?",
+      "unit": "one_of:mm,deg,count,ratio",
+      "label": "text",
+      "provenance": "one_of:measured,standard,calibrated,guessed,style,web",
+      "source": "text|null?"
+    },
+    "bbox": {
+      "min": "[number;3]",
+      "max": "[number;3]"
+    },
+    "part": {
+      "name": "name",
+      "volume": "number",
+      "area": "number",
+      "mass_estimate_g": "number|null?",
+      "bbox": "@bbox",
+      "solids": "count",
+      "faces": "count",
+      "is_valid": "bool",
+      "is_manifold": "bool",
+      "color": "color"
+    },
+    "check": {
+      "id": "check_id",
+      "status": "one_of:pass,warn,fail,skipped",
+      "severity": "one_of:error,warning",
+      "message": "text",
+      "part": "name|null?",
+      "data": "any"
+    },
+    "artifacts": {
+      "step": "path|null?",
+      "brep": "path|null?",
+      "parts_index": "path|null?",
+      "mesh": "path|null?",
+      "views": "{view:path}?",
+      "threemf": "path|null?",
+      "stl": "{name:path}?"
+    },
+    "doc": {
+      "name": "text",
+      "kind": "text",
+      "module": "text",
+      "signature": "text",
+      "doc": "text",
+      "score": "number"
+    },
+    "question": {
+      "requirement": "question_id",
+      "text": "text",
+      "guessed_params": "[name]",
+      "web": "core_only"
+    },
+    "component": {
+      "id": "name",
+      "name": "text",
+      "kind": "text",
+      "frame": "text",
+      "size": "[number;3]",
+      "provenance": "one_of:measured,standard,calibrated,guessed,style",
+      "sources": "object",
+      "numbers": "count",
+      "features": "[object]",
+      "used_features": "[name]",
+      "proven": "bool",
+      "unverified": "[object]",
+      "questions": "[@question]",
+      "body": "object"
+    },
+    "orientation": {
+      "part": "name",
+      "source": "one_of:as_modelled,face,preferred",
+      "up": "[number;3]",
+      "turned": "text",
+      "score": "number",
+      "terms": "{text:number}",
+      "measures": "any",
+      "as_modelled": "any",
+      "preferred_by": "text|null?",
+      "overridden": "text|null?",
+      "candidates": "[any]",
+      "explanation": "text",
+      "copies": "count",
+      "nozzle_id": "integer",
+      "facts": "@piece_facts|null?"
+    },
+    "plate": {
+      "index": "count",
+      "size": "[number;2]",
+      "items": "[@plate_item]",
+      "threemf": "path|null?",
+      "views": "{view:path}?",
+      "facts": "@plate_facts|null?",
+      "layout": "@layout|null?"
+    },
+    "plate_item": {
+      "name": "piece",
+      "part": "piece",
+      "copy": "count",
+      "nozzle_id": "integer",
+      "quarter_turn": "bool",
+      "transform": "[number;12]",
+      "bbox": "@bbox"
+    },
+    "layout": {
+      "clearance": "number",
+      "margin": "number",
+      "anchor": "one_of:front_left,centre",
+      "offset": "[number;2]"
+    },
+    "unplaced": {
+      "name": "piece",
+      "part": "piece",
+      "copy": "count",
+      "reason": "text",
+      "cause": "one_of:clearance,keepout,too_large,no_reach|null?"
+    },
+    "gauge": {
+      "card": "name",
+      "name": "piece",
+      "args": "{text:any}",
+      "parts": "[piece]",
+      "size": "[number;3]",
+      "dimensions": "[@gauge_dimension]",
+      "clearances": "[@gauge_clearance]",
+      "facts": "{piece:@piece_facts}|null?"
+    },
+    "gauge_dimension": {
+      "id": "name",
+      "half": "name",
+      "object": "piece",
+      "feature": "one_of:hole,peg",
+      "drawn": "number",
+      "what": "text"
+    },
+    "gauge_clearance": {
+      "pair": "text",
+      "fit_class": "text",
+      "gap": "number",
+      "provenance": "text"
+    },
+    "change": {
+      "quantity": "text",
+      "before": "number",
+      "after": "number",
+      "sigma": "number",
+      "readings": "count"
+    },
+    "sweep": {
+      "protocol": "count",
+      "builds": "count",
+      "truncated": "bool",
+      "checks": "[short_id]",
+      "samples": "[@sweep_sample]"
+    },
+    "sweep_sample": {
+      "params": "{name:number}",
+      "status": "one_of:ok,check_error,model_error,not_run",
+      "failed": "[@sweep_failure]?",
+      "requirements": "[@sweep_requirement]?",
+      "parts": "{name:[number;3]}?"
+    },
+    "sweep_failure": {
+      "check": "short_id",
+      "message": "text"
+    },
+    "sweep_requirement": {
+      "id": "short_id",
+      "status": "one_of:pass,warn,fail,skipped",
+      "met": "bool|null?",
+      "not_checkable": "bool?",
+      "message": "text"
+    },
+    "plate_facts": {
+      "family": "text|null",
+      "piece_count": "count",
+      "total_contact_mm2": "number",
+      "pieces": "[@piece_facts]"
+    },
+    "piece_facts": {
+      "contact_mm2": "number",
+      "contact_perimeter_mm": "number",
+      "strip_width_mm": "number",
+      "contact_span_mm": "number",
+      "height_mm": "number",
+      "slenderness": "number",
+      "overhang_mm2": "number",
+      "fit_overhang_mm2": "number",
+      "overhang_over_part_mm2": "number",
+      "overhang_regions": "[@overhang_region]|null",
+      "inner_loops": "[@inner_loop]",
+      "fit_at_bed": "[@fit_at_bed]",
+      "min_wall_mm": "number|null"
+    },
+    "overhang_region": {
+      "area_mm2": "number",
+      "kind": "one_of:bridge,hole_ceiling,free",
+      "span_mm": "number|null?",
+      "diameter_mm": "number|null?",
+      "reach_mm": "number|null?",
+      "over_part": "bool"
+    },
+    "inner_loop": {
+      "min_width_mm": "number",
+      "fit": "bool"
+    },
+    "fit_at_bed": {
+      "pair": "text",
+      "side": "one_of:inside,outside"
+    }
+  },
+  "max_items": {
+    "result.timings": 32,
+    "result.params": 64,
+    "result.param_specs": 64,
+    "result.parts": 64,
+    "result.checks": 2048,
+    "result.warnings": 64,
+    "result.results": 64,
+    "result.versions": 8,
+    "result.docs": 20,
+    "result.questions": 512,
+    "result.components": 32,
+    "result.references": 8,
+    "result.orientations": 64,
+    "result.plates": 64,
+    "result.unplaced": 256,
+    "result.gauges": 32,
+    "result.changes": 16,
+    "artifacts.stl": 64,
+    "question.guessed_params": 64,
+    "component.features": 64,
+    "component.used_features": 64,
+    "component.unverified": 1024,
+    "component.questions": 512,
+    "orientation.terms": 16,
+    "orientation.candidates": 16,
+    "plate.items": 256,
+    "gauge.args": 32,
+    "gauge.parts": 8,
+    "gauge.dimensions": 16,
+    "gauge.clearances": 64,
+    "gauge.facts": 8,
+    "sweep.checks": 16,
+    "sweep.samples": 16,
+    "sweep_sample.params": 8,
+    "sweep_sample.failed": 16,
+    "sweep_sample.requirements": 32,
+    "sweep_sample.parts": 64
+  },
+  "max_json_bytes": {
+    "result.components": 524288,
+    "result.references": 524288,
+    "result.table": 262144
+  },
+  "max_result_bytes": 4194304,
+  "other_bounds": {
+    "artifacts.views": "the view names",
+    "plate.views": "the view names",
+    "plate_facts.pieces": "the size of all facts",
+    "piece_facts.overhang_regions": "the size of all facts",
+    "piece_facts.inner_loops": "the size of all facts",
+    "piece_facts.fit_at_bed": "the size of all facts"
+  },
+  "examples": {
+    "result.protocol": 0,
+    "result.op": "build",
+    "result.error": null,
+    "param_spec.provenance": "web",
+    "param_spec.source": "r1",
+    "plate.threemf": "plates/1/plate.3mf",
+    "plate.views": {"top": "plates/1/views/top.png"},
+    "sweep.protocol": 0,
+    "plate_facts.family": "PLA",
+    "plate_facts.total_contact_mm2": 100.0,
+    "piece_facts.contact_mm2": 100.0,
+    "piece_facts.contact_perimeter_mm": 40.0,
+    "piece_facts.strip_width_mm": 5.0,
+    "piece_facts.contact_span_mm": 10.0,
+    "piece_facts.height_mm": 10.0,
+    "piece_facts.slenderness": 1.0,
+    "piece_facts.overhang_mm2": 1.0,
+    "piece_facts.fit_overhang_mm2": 0.0,
+    "piece_facts.overhang_over_part_mm2": 0.0,
+    "overhang_region.area_mm2": 1.0,
+    "overhang_region.diameter_mm": null,
+    "overhang_region.reach_mm": null,
+    "overhang_region.over_part": false
+  }
+}

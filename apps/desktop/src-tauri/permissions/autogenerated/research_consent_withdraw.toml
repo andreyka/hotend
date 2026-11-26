@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-research-consent-withdraw"
+description = "Enables the research_consent_withdraw command without any pre-configured scope."
+commands.allow = ["research_consent_withdraw"]
+
+[[permission]]
+identifier = "deny-research-consent-withdraw"
+description = "Denies the research_consent_withdraw command without any pre-configured scope."
+commands.deny = ["research_consent_withdraw"]

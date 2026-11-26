@@ -1,0 +1,47 @@
+{
+  "family": "PLA",
+  "piece_count": 1,
+  "total_contact_mm2": 1200.0,
+  "pieces": [
+    {
+      "contact_mm2": 1200.0,
+      "contact_perimeter_mm": 200.0,
+      "strip_width_mm": 4.285714,
+      "contact_span_mm": 60.0,
+      "height_mm": 30.0,
+      "slenderness": 1.0,
+      "overhang_mm2": 851.408166,
+      "fit_overhang_mm2": 0.0,
+      "overhang_over_part_mm2": 191.408166,
+      "overhang_regions": [
+        {
+          "area_mm2": 600.0,
+          "kind": "bridge",
+          "span_mm": 20.0,
+          "diameter_mm": null,
+          "reach_mm": null,
+          "over_part": false
+        },
+        {
+          "area_mm2": 191.408166,
+          "kind": "hole_ceiling",
+          "span_mm": null,
+          "diameter_mm": 8.0,
+          "reach_mm": null,
+          "over_part": true
+        },
+        {
+          "area_mm2": 60.0,
+          "kind": "free",
+          "span_mm": null,
+          "diameter_mm": null,
+          "reach_mm": 6.0,
+          "over_part": false
+        }
+      ],
+      "inner_loops": [],
+      "fit_at_bed": [],
+      "min_wall_mm": 4.0
+    }
+  ]
+}

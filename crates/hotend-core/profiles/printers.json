@@ -1,0 +1,22 @@
+{
+  "schema": 2,
+  "note": "Printers that Hotend's printer layer does not drive. A printer the printer layer knows (crates/hotend-printer/profiles/bambu.toml, the Bambu Lab X2D) must not be listed here: its facts are read from that file. None of these facts has been confirmed on a real printer; each nozzle carries its own `verified` flag.",
+  "printers": [
+    {
+      "id": "prusa-mk4s",
+      "name": "Original Prusa MK4S",
+      "nozzles": [
+        {
+          "id": 0,
+          "role": "main",
+          "drive": "direct",
+          "slicer_extruder": 1,
+          "reach": {"x": [0, 250], "y": [0, 210], "z": [0, 220]},
+          "max_speed_mm_s": null,
+          "verified": false,
+          "source": "Prusa's published build volume, 250 x 210 x 220 mm"
+        }
+      ]
+    }
+  ]
+}

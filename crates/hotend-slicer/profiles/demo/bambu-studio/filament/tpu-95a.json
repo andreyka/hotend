@@ -1,0 +1,11 @@
+{
+  "name": "Hotend demo filament tpu-95a (fake slicer only)",
+  "filament_type": ["TPU"],
+  "filament_density": ["1.21"],
+  "filament_diameter": ["1.75"],
+  "nozzle_temperature": ["230"],
+  "cool_plate_temp": ["35"],
+  "textured_plate_temp": ["40"],
+  "hot_plate_temp": ["40"],
+  "eng_plate_temp": ["40"]
+}

@@ -1,0 +1,9 @@
+{
+  "protocol": 0,
+  "name": "doctor_selftest",
+  "description": "One tool call and one answer, to prove that the agent process, the tool gateway and the engine talk to each other. No model is asked.",
+  "turns": [
+    {"say": "Listing the feature cards.", "calls": [{"tool": "list_cards", "args": {}}]},
+    {"expect": ["hotend_fit"], "say": "The agent, the gateway and the engine answer."}
+  ]
+}

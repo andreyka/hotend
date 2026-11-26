@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-printer-watch-latest"
+description = "Enables the printer_watch_latest command without any pre-configured scope."
+commands.allow = ["printer_watch_latest"]
+
+[[permission]]
+identifier = "deny-printer-watch-latest"
+description = "Denies the printer_watch_latest command without any pre-configured scope."
+commands.deny = ["printer_watch_latest"]

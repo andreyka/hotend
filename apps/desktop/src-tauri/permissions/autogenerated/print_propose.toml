@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-print-propose"
+description = "Enables the print_propose command without any pre-configured scope."
+commands.allow = ["print_propose"]
+
+[[permission]]
+identifier = "deny-print-propose"
+description = "Denies the print_propose command without any pre-configured scope."
+commands.deny = ["print_propose"]

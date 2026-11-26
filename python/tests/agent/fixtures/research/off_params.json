@@ -1,0 +1,9 @@
+{
+  "search": false,
+  "fetch": false,
+  "cache_ttl": "1h",
+  "notes": "",
+  "shape": null,
+  "keep_pdf": false,
+  "max_result_bytes": 261888
+}

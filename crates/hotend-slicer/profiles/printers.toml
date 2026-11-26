@@ -1,0 +1,92 @@
+# Printer facts the slicer integration depends on, as data.
+#
+# One file, versioned: bump `revision` with every change and `schema` when the layout changes.
+# Every fact carries its own `verified` flag. A fact is verified only when it has been
+# measured or captured on a real printer; none has been so far (IMPLEMENTATION_BRIEF section 7).
+# `source` says where a value comes from.
+#
+# The nozzle blocks between the GENERATED markers are not written by hand. They are rendered
+# from `hotend_core::profiles`, which reads the X2D from the printer layer's profile file
+# (crates/hotend-printer/profiles/bambu.toml) and the other printers from
+# crates/hotend-core/profiles/printers.json. A test of this crate
+# (`the_nozzle_blocks_are_generated_from_the_core_profiles`) fails when they differ; run it
+# with HOTEND_REGENERATE_PROFILES=1 to rewrite them. Everything else in this file (which
+# slicer a printer uses, material rules, the filament map options) is kept only here.
+# A generated `verified` flag is true only when the source says every fact of the nozzle was
+# verified.
+#
+# Ids: `device_extruder` is the extruder id the printer reports and accepts;
+# `slicer_extruder` is the slicer's 1-based number for the same nozzle. Code maps by these
+# numbers only, never by the words "main", "left" or "right".
+
+schema = 1
+revision = "2026-11-25.2"
+
+[[printer]]
+id = "bambu-x2d"
+name = "Bambu Lab X2D"
+slicer = "bambu-studio"
+
+# BEGIN GENERATED nozzles of bambu-x2d
+[[printer.nozzle]]
+role = "main"
+drive = "direct"
+ids = { device_extruder = 1, slicer_extruder = 1, verified = false }
+reach = { x = [0.0, 256.0], y = [0.0, 256.0], z = [0.0, 260.0], verified = false }
+source = "hotend-printer profiles/bambu.toml, revision 2026-11-25.2"
+
+[[printer.nozzle]]
+role = "auxiliary"
+drive = "bowden"
+ids = { device_extruder = 0, slicer_extruder = 2, verified = false }
+reach = { x = [20.5, 256.0], y = [0.0, 256.0], z = [0.0, 256.0], verified = false }
+max_speed = { mm_s = 200.0, verified = false }
+source = "hotend-printer profiles/bambu.toml, revision 2026-11-25.2"
+
+# END GENERATED nozzles of bambu-x2d
+
+# Material families that may only be printed by the listed nozzles. A family matches when the
+# job's material family, upper-cased and without spaces, dashes or underscores, equals the
+# entry or starts with it ("TPU 95A" matches "TPU").
+[[printer.material_rule]]
+families = ["TPU", "PLA Aero", "PPA-CF"]
+device_extruders = [1]
+verified = false
+source = "X2D FAQ (https://wiki.bambulab.com/en/x2d/manual/x2d-faq): TPU with the main hot end; PLA Aero and PPA-CF are not in its list for the auxiliary one"
+
+# The slicer's automatic filament grouping is not trusted. Hotend always asks for the manual
+# mode and gives one slicer extruder number per filament slot, in slot order.
+# The option spellings below follow the wiki's `--key=value` rule for config keys (its example
+# is `--curr-bed-type`); they are not listed on the wiki page. The names of the keys were read
+# in sliced files (plate metadata `filament_map_mode` and `filament_maps`, config keys
+# `filament_map_mode` and `filament_map`).
+# Measured with Bambu Studio 02.09.01.70: a file sliced without these options has the
+# automatic mode and the map `1`; a file sliced with them, for one filament, has
+# `filament_map_mode = Manual` and `filament_map = 1` in its config comments, while the plate
+# metadata still says the automatic mode and reports `filament_maps` as `1`. Two filaments
+# were not tried.
+[printer.filament_map]
+mode = "manual"
+mode_option = "--filament-map-mode"
+mode_value = "Manual"
+maps_option = "--filament-map"
+maps_separator = ","
+# Key in the sliced file's plate metadata that reports the map the slicer used.
+result_maps_key = "filament_maps"
+verified = false
+source = "real slices (in a slice): the keys, the mode value and the spelling, for one filament; IMPLEMENTATION_BRIEF section 7"
+
+[[printer]]
+id = "prusa-mk4s"
+name = "Original Prusa MK4S"
+slicer = "prusa-slicer"
+
+# BEGIN GENERATED nozzles of prusa-mk4s
+[[printer.nozzle]]
+role = "main"
+drive = "direct"
+ids = { device_extruder = 0, slicer_extruder = 1, verified = false }
+reach = { x = [0.0, 250.0], y = [0.0, 210.0], z = [0.0, 220.0], verified = false }
+source = "Prusa's published build volume, 250 x 210 x 220 mm"
+
+# END GENERATED nozzles of prusa-mk4s

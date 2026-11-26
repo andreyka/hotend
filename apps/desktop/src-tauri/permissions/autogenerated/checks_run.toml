@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-checks-run"
+description = "Enables the checks_run command without any pre-configured scope."
+commands.allow = ["checks_run"]
+
+[[permission]]
+identifier = "deny-checks-run"
+description = "Denies the checks_run command without any pre-configured scope."
+commands.deny = ["checks_run"]

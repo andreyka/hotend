@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "changes": {
+      "items": {
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "field": {
+                "const": "intent"
+              },
+              "value": {
+                "enum": [
+                  "balanced",
+                  "strong",
+                  "best_surface",
+                  "fast",
+                  "fit_critical"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "adhesion.level"
+              },
+              "value": {
+                "maximum": 3,
+                "minimum": 0,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "adhesion.brim_kind"
+              },
+              "value": {
+                "enum": [
+                  "none",
+                  "outer",
+                  "inner",
+                  "outer_and_inner"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "adhesion.brim_width_mm"
+              },
+              "value": {
+                "maximum": 15,
+                "minimum": 0,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "first_layer.wall_speed_mm_s"
+              },
+              "value": {
+                "maximum": 50,
+                "minimum": 10,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "first_layer.infill_speed_mm_s"
+              },
+              "value": {
+                "maximum": 105,
+                "minimum": 15,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "first_layer.accel_mm_s2"
+              },
+              "value": {
+                "maximum": 500,
+                "minimum": 250,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "first_layer.bed_c"
+              },
+              "value": {
+                "maximum": 120,
+                "minimum": 30,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "cooling.part_fan_off_layers"
+              },
+              "value": {
+                "maximum": 10,
+                "minimum": 1,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "cooling.aux_fan_max_pct"
+              },
+              "value": {
+                "maximum": 100,
+                "minimum": 0,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "shell.wall_loops"
+              },
+              "value": {
+                "maximum": 6,
+                "minimum": 2,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "shell.infill_pct"
+              },
+              "value": {
+                "maximum": 50,
+                "minimum": 5,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "shell.infill_pattern"
+              },
+              "value": {
+                "enum": [
+                  "grid",
+                  "gyroid"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "shell.seam"
+              },
+              "value": {
+                "enum": [
+                  "aligned",
+                  "back"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "supports.enabled"
+              },
+              "value": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "supports.kind"
+              },
+              "value": {
+                "enum": [
+                  "tree",
+                  "normal"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "supports.threshold_deg"
+              },
+              "value": {
+                "maximum": 45,
+                "minimum": 20,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "supports.where"
+              },
+              "value": {
+                "enum": [
+                  "everywhere",
+                  "bed_only"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "motion.outer_wall_speed_cap_mm_s"
+              },
+              "value": {
+                "maximum": 200,
+                "minimum": 20,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "motion.speed_cap_mm_s"
+              },
+              "value": {
+                "maximum": 300,
+                "minimum": 20,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "motion.accel_cap_mm_s2"
+              },
+              "value": {
+                "maximum": 10000,
+                "minimum": 500,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "motion.outer_wall_accel_cap_mm_s2"
+              },
+              "value": {
+                "maximum": 5000,
+                "minimum": 500,
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "properties": {
+              "field": {
+                "const": "motion.max_flow_cap_mm3_s"
+              },
+              "value": {
+                "maximum": 25.0,
+                "minimum": 1.0,
+                "type": "number"
+              }
+            }
+          }
+        ],
+        "properties": {
+          "field": {
+            "enum": [
+              "intent",
+              "adhesion.level",
+              "adhesion.brim_kind",
+              "adhesion.brim_width_mm",
+              "first_layer.wall_speed_mm_s",
+              "first_layer.infill_speed_mm_s",
+              "first_layer.accel_mm_s2",
+              "first_layer.bed_c",
+              "cooling.part_fan_off_layers",
+              "cooling.aux_fan_max_pct",
+              "shell.wall_loops",
+              "shell.infill_pct",
+              "shell.infill_pattern",
+              "shell.seam",
+              "supports.enabled",
+              "supports.kind",
+              "supports.threshold_deg",
+              "supports.where",
+              "motion.outer_wall_speed_cap_mm_s",
+              "motion.speed_cap_mm_s",
+              "motion.accel_cap_mm_s2",
+              "motion.outer_wall_accel_cap_mm_s2",
+              "motion.max_flow_cap_mm3_s"
+            ],
+            "type": "string"
+          },
+          "reason": {
+            "maxLength": 240,
+            "minLength": 1,
+            "pattern": "^[^\\u0000-\\u001F\\u007F-\\u009F]*$",
+            "type": "string"
+          },
+          "value": {}
+        },
+        "required": [
+          "field",
+          "value",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "type": "array"
+    },
+    "plate": {
+      "maximum": 64,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "summary": {
+      "maxLength": 300,
+      "minLength": 0,
+      "pattern": "^[^\\u0000-\\u001F\\u007F-\\u009F]*$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "changes",
+    "summary"
+  ],
+  "type": "object"
+}

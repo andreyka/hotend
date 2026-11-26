@@ -1,0 +1,6 @@
+# Model scripts follow docs/PROTOCOL.md section 2 and star-import build123d by design.
+# broken_syntax.py is a test fixture that must not parse.
+extend-exclude = ["broken_syntax.py"]
+
+[lint]
+ignore = ["F403", "F405"]

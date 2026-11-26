@@ -1,0 +1,63 @@
+{
+ "project": {
+  "created_at_ms": 1794949348168,
+  "current_version": 2,
+  "id": "01a1eb51-7b48-7046-9384-bd1bfc2b4e51",
+  "name": "Cable box",
+  "updated_at_ms": 1794949378382
+ },
+ "transcript": [
+  {
+   "at_ms": 1794949348259,
+   "id": 1,
+   "remembered": true,
+   "role": "user",
+   "run_id": "01a1eb51-7ba2-761b-8b67-1a4ef831837a",
+   "text": "A box that hides a power strip, with a snap-on lid"
+  },
+  {
+   "at_ms": 1794949387074,
+   "id": 2,
+   "remembered": true,
+   "role": "assistant",
+   "run_id": "01a1eb51-7ba2-761b-8b67-1a4ef831837a",
+   "text": "Here is what I will make.\n\n- A box that hides a power strip, open at the top, with a slot in both end walls for the cables.\n- A lid that snaps on and is locked with one M3 screw in a corner.\n\nNumbers and where they come from:\n- Inside 120 x 60 mm, 40 mm high: guessed. I do not know your power strip yet.\n- Cable slot 12 mm: guessed.\n- Wall thickness: style.\n- M3 screw: standard.\n- Every clearance of the snap lid and the screw: from your printer's calibration.\n\nYou asked to see it first, so I will start with these sizes and make them sliders. First I am checking which fit features are available.\n\nThe lid will use the snap-lid feature and the screw the screw-boss feature, so both halves of each joint come from one definition. Writing the first version.\n\nIt builds, but the min_wall check failed: behind the groove that the lid snaps into, the wall is thinner than the 0.8 mm your printer needs. A 1 mm wall is too thin for this lid. I am making the wall 2 mm and limiting its slider to 1.6 to 3 mm.\n\nAll error checks pass now. Looking at the result, outside and cut open.\n\nYour cable box is ready to look at: a box with 120 x 60 mm of room inside, 40 mm high, with 2 mm walls, a cable slot at both ends and a lid that snaps on and takes one M3 screw.\n\nChecked: both parts are valid solids, fit the printer, have no wall under 0.8 mm and do not collide, and every clearance of the snap lid and the screw is drawn as your printer's calibration asks. One warning: the flat top of each cable slot hangs over and would need a little support. I will deal with that when we come to printing.\n\nNot settled: the inside size and the cable slot are my guesses. The check confirms that a 120 x 60 x 36 mm block goes in as built (the screw sits in a post outside the inside), but that only proves my guess, not your power strip. Your printer's fits have not been measured either.\n\nSo I have three questions for you, one at a time. The first: how long, how wide and how high is your power strip with the plugs in? A ruler is enough. The cable slot and the lid's snap fit come after that, before the first print."
+  }
+ ],
+ "versions": [
+  {
+   "code_sha256": "b410165150dfcf3a5e5a797ac2eaf4aea2460031f4e89c9326a3964999752f37",
+   "created_at_ms": 1794949365794,
+   "note": "First version: box, snap lid and screw boss, 1 mm walls",
+   "number": 1,
+   "origin": "write_model_code",
+   "params": {
+    "cable": 12.0,
+    "depth": 60.0,
+    "height": 40.0,
+    "wall": 1.0,
+    "width": 120.0
+   },
+   "parent": null,
+   "project_id": "01a1eb51-7b48-7046-9384-bd1bfc2b4e51",
+   "status": "check_error"
+  },
+  {
+   "code_sha256": "e5642f5bbb771b9923f32093251c5eced43c9340d713c80a2c04bafc199e46a1",
+   "created_at_ms": 1794949378382,
+   "note": "Wall 2 mm (slider 1.6 to 3 mm) so the snap groove leaves 0.8 mm",
+   "number": 2,
+   "origin": "write_model_code",
+   "params": {
+    "cable": 12.0,
+    "depth": 60.0,
+    "height": 40.0,
+    "wall": 2.0,
+    "width": 120.0
+   },
+   "parent": 1,
+   "project_id": "01a1eb51-7b48-7046-9384-bd1bfc2b4e51",
+   "status": "ok"
+  }
+ ]
+}

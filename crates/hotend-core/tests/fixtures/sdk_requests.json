@@ -1,0 +1,493 @@
+{
+ "anthropic": {
+  "body": {
+   "max_tokens": 16000,
+   "messages": [
+    {
+     "content": [
+      {
+       "text": "make a cube",
+       "type": "text"
+      }
+     ],
+     "role": "user"
+    },
+    {
+     "content": [
+      {
+       "text": "I will write it.",
+       "type": "text"
+      },
+      {
+       "id": "toolu_1",
+       "input": {
+        "code": "from build123d import *\nPARAMS = {}\ndef ...",
+        "note": "a cube"
+       },
+       "name": "write_model_code",
+       "type": "tool_use"
+      }
+     ],
+     "role": "assistant"
+    },
+    {
+     "content": [
+      {
+       "content": [
+        {
+         "text": "status: ok",
+         "type": "text"
+        }
+       ],
+       "is_error": false,
+       "tool_use_id": "toolu_1",
+       "type": "tool_result"
+      }
+     ],
+     "role": "user"
+    }
+   ],
+   "model": "claude-sonnet-5",
+   "stream": true,
+   "system": [
+    {
+     "text": "You are Hotend's design agent: a carefu...",
+     "type": "text"
+    }
+   ],
+   "tool_choice": {
+    "type": "auto"
+   },
+   "tools": [
+    {
+     "description": "Replace the model script with `code` (on...",
+     "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+       "code": {
+        "description": "The complete model script.",
+        "maxLength": 200000,
+        "minLength": 1,
+        "type": "string"
+       },
+       "note": {
+        "description": "One line on what changed and why.",
+        "maxLength": 500,
+        "type": "string"
+       }
+      },
+      "required": [
+       "code"
+      ],
+      "type": "object"
+     },
+     "name": "write_model_code"
+    },
+    {
+     "description": "Rebuild the current version with one par...",
+     "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "pattern": "^[a-z][a-z0-9_]{0,31}$",
+        "type": "string"
+       },
+       "value": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "name",
+       "value"
+      ],
+      "type": "object"
+     },
+     "name": "set_parameter"
+    }
+   ]
+  },
+  "headers": {
+   "anthropic-version": "2026-10-21"
+  },
+  "model": "claude-sonnet-5",
+  "path": "/v1/messages"
+ },
+ "google": {
+  "body": {
+   "contents": [
+    {
+     "parts": [
+      {
+       "text": "make a cube"
+      }
+     ],
+     "role": "user"
+    },
+    {
+     "parts": [
+      {
+       "text": "I will write it."
+      },
+      {
+       "functionCall": {
+        "args": {
+         "code": "from build123d import *\nPARAMS = {}\ndef ...",
+         "note": "a cube"
+        },
+        "id": "pyd_ai_622b0e368d944ad790d009e7bedcaf7b",
+        "name": "write_model_code"
+       },
+       "thoughtSignature": "c2tpcF90aG91Z2h0X3NpZ25hdHVyZV92YWxpZGF0b3I="
+      }
+     ],
+     "role": "model"
+    },
+    {
+     "parts": [
+      {
+       "functionResponse": {
+        "id": "pyd_ai_622b0e368d944ad790d009e7bedcaf7b",
+        "name": "write_model_code",
+        "response": {
+         "return_value": "status: ok"
+        }
+       }
+      }
+     ],
+     "role": "user"
+    }
+   ],
+   "generationConfig": {
+    "maxOutputTokens": 16000,
+    "responseModalities": [
+     "TEXT"
+    ]
+   },
+   "systemInstruction": {
+    "parts": [
+     {
+      "text": "You are Hotend's design agent: a carefu..."
+     }
+    ],
+    "role": "user"
+   },
+   "toolConfig": {
+    "functionCallingConfig": {
+     "mode": "VALIDATED"
+    }
+   },
+   "tools": [
+    {
+     "functionDeclarations": [
+      {
+       "description": "Replace the model script with `code` (on...",
+       "name": "write_model_code",
+       "parameters_json_schema": {
+        "additionalProperties": false,
+        "properties": {
+         "code": {
+          "description": "The complete model script.",
+          "maxLength": 200000,
+          "minLength": 1,
+          "type": "string"
+         },
+         "note": {
+          "description": "One line on what changed and why.",
+          "maxLength": 500,
+          "type": "string"
+         }
+        },
+        "required": [
+         "code"
+        ],
+        "type": "object"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "headers": {},
+  "model": "gemini-3-pro",
+  "path": "/v1beta/models/gemini-3-pro:streamGenerateContent?alt=sse"
+ },
+ "ollama": {
+  "body": {
+   "max_tokens": 16000,
+   "messages": [
+    {
+     "content": "You are Hotend's design agent: a carefu...",
+     "role": "system"
+    },
+    {
+     "content": "make a cube",
+     "role": "user"
+    },
+    {
+     "content": "I will write it.",
+     "role": "assistant",
+     "tool_calls": [
+      {
+       "function": {
+        "arguments": "{\"code\":\"from build123d import *\\nPARAMS...",
+        "name": "write_model_code"
+       },
+       "id": "call_9",
+       "type": "function"
+      }
+     ]
+    },
+    {
+     "content": "status: ok",
+     "role": "tool",
+     "tool_call_id": "call_9"
+    }
+   ],
+   "model": "qwen3:14b",
+   "stream": true,
+   "stream_options": {
+    "include_usage": true
+   },
+   "tool_choice": "auto",
+   "tools": [
+    {
+     "function": {
+      "description": "Replace the model script with `code` (on...",
+      "name": "write_model_code",
+      "parameters": {
+       "$schema": "https://json-schema.org/draft/2020-12/schema",
+       "additionalProperties": false,
+       "properties": {
+        "code": {
+         "description": "The complete model script.",
+         "maxLength": 200000,
+         "minLength": 1,
+         "type": "string"
+        },
+        "note": {
+         "description": "One line on what changed and why.",
+         "maxLength": 500,
+         "type": "string"
+        }
+       },
+       "required": [
+        "code"
+       ],
+       "type": "object"
+      }
+     },
+     "type": "function"
+    },
+    {
+     "function": {
+      "description": "Rebuild the current version with one par...",
+      "name": "set_parameter",
+      "parameters": {
+       "$schema": "https://json-schema.org/draft/2020-12/schema",
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "pattern": "^[a-z][a-z0-9_]{0,31}$",
+         "type": "string"
+        },
+        "value": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "name",
+        "value"
+       ],
+       "type": "object"
+      }
+     },
+     "type": "function"
+    }
+   ]
+  },
+  "headers": {},
+  "model": "qwen3:14b",
+  "path": "/v1/chat/completions"
+ },
+ "openai": {
+  "body": {
+   "input": [
+    {
+     "content": "make a cube",
+     "role": "user"
+    },
+    {
+     "content": "I will write it.",
+     "role": "assistant"
+    },
+    {
+     "arguments": "{\"code\":\"from build123d import *\\nPARAMS...",
+     "call_id": "call_3",
+     "name": "write_model_code",
+     "type": "function_call"
+    },
+    {
+     "call_id": "call_3",
+     "output": "status: ok",
+     "type": "function_call_output"
+    }
+   ],
+   "instructions": "You are Hotend's design agent: a carefu...",
+   "max_output_tokens": 16000,
+   "model": "gpt-6",
+   "stream": true,
+   "tool_choice": "auto",
+   "tools": [
+    {
+     "description": "Replace the model script with `code` (on...",
+     "name": "write_model_code",
+     "parameters": {
+      "additionalProperties": false,
+      "properties": {
+       "code": {
+        "description": "The complete model script.",
+        "maxLength": 200000,
+        "minLength": 1,
+        "type": "string"
+       },
+       "note": {
+        "description": "One line on what changed and why.",
+        "maxLength": 500,
+        "type": "string"
+       }
+      },
+      "required": [
+       "code"
+      ],
+      "type": "object"
+     },
+     "strict": false,
+     "type": "function"
+    },
+    {
+     "description": "Rebuild the current version with one par...",
+     "name": "set_parameter",
+     "parameters": {
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "pattern": "^[a-z][a-z0-9_]{0,31}$",
+        "type": "string"
+       },
+       "value": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "name",
+       "value"
+      ],
+      "type": "object"
+     },
+     "strict": true,
+     "type": "function"
+    }
+   ]
+  },
+  "headers": {},
+  "model": "gpt-6",
+  "path": "/v1/responses"
+ },
+ "openrouter": {
+  "body": {
+   "max_tokens": 16000,
+   "messages": [
+    {
+     "content": "You are Hotend's design agent: a carefu...",
+     "role": "system"
+    },
+    {
+     "content": "make a cube",
+     "role": "user"
+    },
+    {
+     "content": "I will write it.",
+     "role": "assistant",
+     "tool_calls": [
+      {
+       "function": {
+        "arguments": "{\"code\":\"from build123d import *\\nPARAMS...",
+        "name": "write_model_code"
+       },
+       "id": "call_7",
+       "type": "function"
+      }
+     ]
+    },
+    {
+     "content": "status: ok",
+     "role": "tool",
+     "tool_call_id": "call_7"
+    }
+   ],
+   "model": "anthropic/claude-sonnet-5",
+   "stream": true,
+   "stream_options": {
+    "include_usage": true
+   },
+   "tool_choice": "auto",
+   "tools": [
+    {
+     "function": {
+      "description": "Replace the model script with `code` (on...",
+      "name": "write_model_code",
+      "parameters": {
+       "additionalProperties": false,
+       "properties": {
+        "code": {
+         "description": "The complete model script.",
+         "maxLength": 200000,
+         "minLength": 1,
+         "type": "string"
+        },
+        "note": {
+         "description": "One line on what changed and why.",
+         "maxLength": 500,
+         "type": "string"
+        }
+       },
+       "required": [
+        "code"
+       ],
+       "type": "object"
+      }
+     },
+     "type": "function"
+    },
+    {
+     "function": {
+      "description": "Rebuild the current version with one par...",
+      "name": "set_parameter",
+      "parameters": {
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "pattern": "^[a-z][a-z0-9_]{0,31}$",
+         "type": "string"
+        },
+        "value": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "name",
+        "value"
+       ],
+       "type": "object"
+      },
+      "strict": true
+     },
+     "type": "function"
+    }
+   ]
+  },
+  "headers": {},
+  "model": "anthropic/claude-sonnet-5",
+  "path": "/api/v1/chat/completions"
+ }
+}

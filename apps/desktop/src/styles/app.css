@@ -1,0 +1,318 @@
+/* The window's one stylesheet: Tailwind, the bundled fonts, the tokens, the mapping of
+ * shadcn's variable names onto the tokens, and the class sheet of the vendored components.
+ * No file under src/components/ui holds a colour; every colour is a token. */
+@import "tailwindcss";
+@import "@fontsource-variable/instrument-sans";
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource-variable/jetbrains-mono";
+@import "./tokens.css";
+@import "./shadcn.css";
+
+/* The theme follows the data-theme attribute, never the system setting directly: "System"
+ * is resolved by the window to one of the two. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+  --font-display: var(--app-font-display);
+
+  /* host */
+  --color-app-bg: var(--app-bg);
+  --color-app-panel: var(--app-panel);
+  --color-app-raised: var(--app-raised);
+  --color-app-subtle: var(--app-subtle);
+  --color-app-hover: var(--app-hover);
+  --color-app-active: var(--app-active);
+  --color-app-line: var(--app-line);
+  --color-app-control: var(--app-control);
+  --color-app-scrim: var(--app-scrim);
+  --color-app-text: var(--app-text);
+  --color-app-text-2: var(--app-text-2);
+  --color-app-text-3: var(--app-text-3);
+  --color-app-accent: var(--app-accent);
+  --color-app-accent-fill: var(--app-accent-fill);
+  --color-app-accent-fill-hover: var(--app-accent-fill-hover);
+  --color-app-on-fill: var(--app-on-fill);
+  --color-app-accent-wash: var(--app-accent-wash);
+  --color-app-ok: var(--app-ok);
+  --color-app-ok-wash: var(--app-ok-wash);
+  --color-app-warn: var(--app-warn);
+  --color-app-warn-wash: var(--app-warn-wash);
+  --color-app-fail: var(--app-fail);
+  --color-app-fail-wash: var(--app-fail-wash);
+  --color-app-fail-fill: var(--app-fail-fill);
+  --color-app-fail-fill-hover: var(--app-fail-fill-hover);
+  --color-app-sim: var(--app-sim);
+  --color-app-sim-wash: var(--app-sim-wash);
+  --color-app-heat-1: var(--app-heat-1);
+  --color-app-heat-2: var(--app-heat-2);
+  --color-app-heat-3: var(--app-heat-3);
+
+  /* hotend */
+  --color-hotend-stage-top: var(--hotend-stage-top);
+  --color-hotend-stage-bottom: var(--hotend-stage-bottom);
+  --color-hotend-stage-plate: var(--hotend-stage-plate);
+  --color-hotend-stage-edge: var(--hotend-stage-edge);
+
+  /* shadcn's names, for the vendored components */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-tag: var(--app-radius-tag);
+  --radius-control: var(--app-radius-control);
+  --radius-card: var(--app-radius-card);
+  --radius-pill: var(--app-radius-pill);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+
+  --shadow-1: var(--app-shadow-1);
+  --shadow-2: var(--app-shadow-2);
+
+  --ease-app: var(--app-ease);
+  --ease-app-out: var(--app-ease-out);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--app-bg);
+    color: var(--app-text);
+    font-family: var(--app-font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.125rem;
+    /* Instrument Sans has a narrow space, made for larger text. */
+    word-spacing: 0.05em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+
+/* The type roles of DESIGN_SPEC 7.4. Every text in the window uses one of these. They are
+ * in rem (13 px is 0.8125rem), so a text size set in the system or the webview applies. */
+@layer components {
+  .t-display { font-family: var(--app-font-display); font-stretch: 125%; font-size: 1.75rem; line-height: 2.125rem; letter-spacing: -0.03em; font-weight: 800; }
+  .t-title { font-family: var(--app-font-display); font-stretch: 125%; font-size: 1.25rem; line-height: 1.625rem; letter-spacing: -0.02em; font-weight: 750; }
+  .t-numeric-lg { font-size: 1.375rem; line-height: 1.75rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .t-heading { font-size: 0.9375rem; line-height: 1.25rem; font-weight: 600; }
+  .t-body { font-size: 0.875rem; line-height: 1.3125rem; font-weight: 400; }
+  .t-ui { font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; }
+  .t-ui-strong { font-size: 0.8125rem; line-height: 1.125rem; font-weight: 500; }
+  .t-caption { font-size: 0.75rem; line-height: 1rem; font-weight: 400; }
+  .t-label { font-size: 0.6875rem; line-height: 0.875rem; letter-spacing: 0.04em; font-weight: 600; text-transform: uppercase; }
+  .t-mono { font-family: var(--app-font-mono); word-spacing: 0; font-size: 0.75rem; line-height: 1rem; }
+  .num { font-variant-numeric: tabular-nums; }
+  /* A size written as a value. A field keeps the interface face: its width is counted for it. */
+  .t-ui-strong.num:not(input) { font-family: var(--app-font-mono); word-spacing: 0; }
+  /* The word of the mark, always lowercase; running text says "Hotend". */
+  .app-wordmark { font-family: var(--app-font-display); font-stretch: 125%; font-size: 1.0625rem; line-height: 1.25rem; letter-spacing: -0.035em; font-weight: 800; }
+
+  /* Popups (menus, popovers, tooltips): elevation 2, entering in 180 ms. */
+  .app-popup {
+    border: 1px solid var(--app-line);
+    border-radius: var(--app-radius-card);
+    background: var(--app-raised);
+    color: var(--app-text);
+    box-shadow: var(--app-shadow-2);
+    transform-origin: var(--transform-origin);
+    transition: opacity var(--app-dur-base) var(--app-ease), transform var(--app-dur-base) var(--app-ease);
+  }
+  .app-popup[data-starting-style],
+  .app-popup[data-ending-style] {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  /* The busy mark: one turn per 1.2 s. */
+  .app-spin { animation: app-spin 1.2s linear infinite; }
+
+  /* The 2 px progress line along the top edge of the stage: the job that runs now, the one
+   * place outside the mark that is hot. */
+  .app-progress-line {
+    position: absolute; left: 0; right: 0; top: 0; height: 2px; overflow: hidden; pointer-events: none;
+  }
+  .app-progress-line::after {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%;
+    background: linear-gradient(to right, var(--app-heat-3), var(--app-heat-2) 60%, var(--app-heat-1));
+    animation: app-line 1.2s linear infinite;
+  }
+
+  /* A number that changed: a wash that fades out once. */
+  .app-flash { animation: app-flash 600ms var(--app-ease-out) 1; }
+
+  /* New content in a place that stays (the verdict bar): it fades in. */
+  .app-swap { animation: app-swap var(--app-dur-base) var(--app-ease) 1; }
+
+  /* A card entering a list: opacity, and 4 px up. */
+  .app-enter { animation: app-enter var(--app-dur-base) var(--app-ease) 1; }
+}
+
+@keyframes app-spin { to { transform: rotate(360deg); } }
+@keyframes app-line { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@keyframes app-flash { from { background-color: var(--app-accent-wash); } }
+@keyframes app-swap { from { opacity: 0; } }
+@keyframes app-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Still marks instead of loops; opacity changes keep 120 ms (DESIGN_SPEC 6.5). */
+  .app-spin { animation: none; }
+  .app-progress-line::after { animation: none; width: 100%; }
+  .app-flash, .app-enter, .app-swap { animation: none; }
+  .app-popup { transition: opacity var(--app-dur-fast) linear !important; transform: none !important; }
+  .app-fade { transition: opacity var(--app-dur-fast) linear !important; }
+}
+
+/* Base UI marks a list that scrolls without a bar (the Select's). It would add this rule
+ * in a <style> element, which the window's content policy refuses. */
+.base-ui-disable-scrollbar { scrollbar-width: none; }
+.base-ui-disable-scrollbar::-webkit-scrollbar { display: none; }
+
+/* The focus ring of the specification (6.2): solid, 2 px, the accent, with a 2 px gap, on
+ * every surface. It is outside every layer on purpose: a rule in a layer loses to any
+ * utility class, and a ring that a class string can switch off by accident is how the
+ * window once had no visible focus at all. */
+:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
+}
+/* Where the ring would be cut by the edge of its own box it is drawn inside: rows of a
+ * menu or a list, and a column that scrolls. */
+[role="menuitem"]:focus-visible,
+[role="option"]:focus-visible,
+.app-ring-inset:focus-visible {
+  outline-offset: -2px;
+}
+/* A field whose frame draws the ring for the control inside it (number field, slider
+ * thumb), and a popup, which takes the focus only to hand it to what it holds. */
+.app-ring-group :focus-visible,
+.app-popup:focus-visible {
+  outline: none;
+}
+.app-ring-group:has(:focus-visible) {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
+}
+
+/* The browser's own surfaces (scroll bars, the native parts of a field) follow the theme
+ * the window shows, not the system's: without this a dark window grows white scroll bars.
+ * These lines live here and not in tokens.css, which is the specification's block copied
+ * character for character. */
+:root {
+  color-scheme: dark;
+  scrollbar-color: var(--app-active) transparent;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+/* A container that scrolls inside the window: a quiet bar in the theme's own colours,
+ * without arrow buttons (DESIGN_SPEC 8). The standard properties are for an engine
+ * without the pseudo-elements; where those exist they draw the bar, and the standard
+ * properties are set back so that they do not win over them. */
+.app-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--app-active) transparent;
+}
+@supports selector(::-webkit-scrollbar) {
+  .app-scroll {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+  .app-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .app-scroll::-webkit-scrollbar-button {
+    display: none;
+  }
+  .app-scroll::-webkit-scrollbar-track,
+  .app-scroll::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  .app-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background: var(--app-active);
+    background-clip: padding-box;
+  }
+  .app-scroll::-webkit-scrollbar-thumb:hover,
+  .app-scroll::-webkit-scrollbar-thumb:active {
+    background-color: var(--app-control);
+  }
+}
+
+/* While the theme changes nothing fades: a control with a colour transition would show
+ * the old theme's colour for the length of its transition (host/theme.ts sets the mark
+ * for two frames). */
+[data-theme-switching] *,
+[data-theme-switching] *::before,
+[data-theme-switching] *::after {
+  transition: none !important;
+}
+
+/* The selected segment of a segmented choice and of the stage switch: a raised chip, not
+ * a field. Dark: the pressed neutral. Light: the raised surface, lifted by the small shadow. */
+.app-segment[data-pressed],
+.app-segment-on {
+  border-color: transparent;
+  background: var(--app-active);
+  color: var(--app-text);
+  font-weight: 500;
+}
+:root[data-theme="light"] .app-segment[data-pressed],
+:root[data-theme="light"] .app-segment-on {
+  background: var(--app-raised);
+  box-shadow: var(--app-shadow-1);
+}
+
+/* The colour of a spool: a small square with a hairline of its own, so that a white or a
+ * black spool is not taken for a radio button (which is round and 16 px). */
+.app-swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25);
+}
+:root[data-theme="light"] .app-swatch {
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+/* A colour that is close to the surface it lies on gets a ring outside as well. */
+.app-swatch[data-near] {
+  outline: 1px solid var(--app-text-3);
+  outline-offset: 0;
+}

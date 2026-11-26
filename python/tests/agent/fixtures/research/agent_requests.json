@@ -1,0 +1,525 @@
+{
+ "claude-sonnet-5": {
+  "path": "/v1/messages",
+  "headers": {
+   "anthropic-version": "2026-10-21",
+   "content-type": "application/json"
+  },
+  "body": {
+   "max_tokens": 16000,
+   "messages": [
+    {
+     "role": "user",
+     "content": [
+      {
+       "text": "how wide is the Brenta 600 basket?",
+       "type": "text",
+       "cache_control": {
+        "type": "ephemeral",
+        "ttl": "1h"
+       }
+      }
+     ]
+    }
+   ],
+   "model": "claude-sonnet-5",
+   "stream": true,
+   "system": [
+    {
+     "type": "text",
+     "text": "(the instructions)",
+     "cache_control": {
+      "type": "ephemeral",
+      "ttl": "1h"
+     }
+    }
+   ],
+   "tool_choice": {
+    "type": "auto"
+   },
+   "tools": [
+    {
+     "name": "write_model_code",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "set_parameter",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "sweep_parameters",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "run_checks",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "render_views",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "measure",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "read_docs",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_cards",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_components",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_print_profiles",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "print_plan",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "slice",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "propose_print",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "snapshot_model",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "record_source",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     },
+     "cache_control": {
+      "type": "ephemeral",
+      "ttl": "1h"
+     }
+    },
+    {
+     "name": "web_search",
+     "type": "web_search_20260209",
+     "max_uses": 1,
+     "allowed_domains": null,
+     "blocked_domains": null,
+     "user_location": null,
+     "allowed_callers": [
+      "direct"
+     ]
+    },
+    {
+     "name": "web_fetch",
+     "type": "web_fetch_20260209",
+     "max_uses": 1,
+     "allowed_domains": null,
+     "blocked_domains": null,
+     "citations": null,
+     "max_content_tokens": null,
+     "allowed_callers": [
+      "direct"
+     ]
+    }
+   ]
+  }
+ },
+ "claude-test": {
+  "path": "/v1/messages",
+  "headers": {
+   "anthropic-beta": "web-fetch-2025-09-10",
+   "anthropic-version": "2026-10-21",
+   "content-type": "application/json"
+  },
+  "body": {
+   "max_tokens": 16000,
+   "messages": [
+    {
+     "role": "user",
+     "content": [
+      {
+       "text": "how wide is the Brenta 600 basket?",
+       "type": "text",
+       "cache_control": {
+        "type": "ephemeral",
+        "ttl": "1h"
+       }
+      }
+     ]
+    }
+   ],
+   "model": "claude-test",
+   "stream": true,
+   "system": [
+    {
+     "type": "text",
+     "text": "(the instructions)",
+     "cache_control": {
+      "type": "ephemeral",
+      "ttl": "1h"
+     }
+    }
+   ],
+   "tool_choice": {
+    "type": "auto"
+   },
+   "tools": [
+    {
+     "name": "write_model_code",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "set_parameter",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "sweep_parameters",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "run_checks",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "render_views",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "measure",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "read_docs",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_cards",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_components",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_print_profiles",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "print_plan",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "slice",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "propose_print",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "snapshot_model",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "record_source",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     },
+     "cache_control": {
+      "type": "ephemeral",
+      "ttl": "1h"
+     }
+    },
+    {
+     "name": "web_search",
+     "type": "web_search_20250305",
+     "max_uses": 1,
+     "allowed_domains": null,
+     "blocked_domains": null,
+     "user_location": null,
+     "allowed_callers": [
+      "direct"
+     ]
+    },
+    {
+     "name": "web_fetch",
+     "type": "web_fetch_20250910",
+     "max_uses": 1,
+     "allowed_domains": null,
+     "blocked_domains": null,
+     "citations": null,
+     "max_content_tokens": null,
+     "allowed_callers": [
+      "direct"
+     ]
+    }
+   ]
+  }
+ },
+ "claude-fable-5-2": {
+  "path": "/v1/messages",
+  "headers": {
+   "anthropic-version": "2026-10-21",
+   "content-type": "application/json"
+  },
+  "body": {
+   "max_tokens": 16000,
+   "messages": [
+    {
+     "role": "user",
+     "content": [
+      {
+       "text": "how wide is the Brenta 600 basket?",
+       "type": "text",
+       "cache_control": {
+        "type": "ephemeral",
+        "ttl": "1h"
+       }
+      }
+     ]
+    }
+   ],
+   "model": "claude-fable-5-2",
+   "stream": true,
+   "system": [
+    {
+     "type": "text",
+     "text": "(the instructions)",
+     "cache_control": {
+      "type": "ephemeral",
+      "ttl": "1h"
+     }
+    }
+   ],
+   "tool_choice": {
+    "type": "auto"
+   },
+   "tools": [
+    {
+     "name": "write_model_code",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "set_parameter",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "sweep_parameters",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "run_checks",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "render_views",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "measure",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "read_docs",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_cards",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_components",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "list_print_profiles",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "print_plan",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "slice",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "propose_print",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "snapshot_model",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     }
+    },
+    {
+     "name": "record_source",
+     "description": "(a description)",
+     "input_schema": {
+      "type": "object"
+     },
+     "cache_control": {
+      "type": "ephemeral",
+      "ttl": "1h"
+     }
+    },
+    {
+     "name": "web_search",
+     "type": "web_search_20260209",
+     "max_uses": 1,
+     "allowed_domains": null,
+     "blocked_domains": null,
+     "user_location": null,
+     "allowed_callers": [
+      "direct"
+     ]
+    },
+    {
+     "name": "web_fetch",
+     "type": "web_fetch_20260209",
+     "max_uses": 1,
+     "allowed_domains": null,
+     "blocked_domains": null,
+     "citations": null,
+     "max_content_tokens": null,
+     "allowed_callers": [
+      "direct"
+     ]
+    }
+   ]
+  }
+ }
+}

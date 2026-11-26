@@ -1,0 +1,52 @@
+# Which slicer versions Hotend will run. Data, not code: change a pin here.
+#
+# The first rule that matches a version decides: `from` is inclusive, `below` is exclusive,
+# a missing bound is open. A pre-release (2.9.7-rc1, 3.0.0-alpha14) is neither "from" nor
+# "below" its release, so it matches only a rule that spans it. A version no rule matches is
+# refused. `unknown` decides when the version could not be read.
+# Verdicts: "allow" runs; "warn" runs and adds a warning to every result; "refuse" does not run.
+
+schema = 1
+revision = "2026-11-17.2"
+
+[[slicer]]
+kind = "bambu-studio"
+# Hotend pins one exact public release. The release below is the one Hotend's command line,
+# profile flattening and output reader were measured against: 02.09.01.70, by hand on Windows
+# and by Hotend on Linux (the ignored tests of real_bambu_studio.rs). It still warns; once
+# the steps in README.md have all passed, change its verdict to "allow" and the catch-all
+# rule to "refuse".
+#
+# The Windows program prints nothing, so its version cannot be asked for before a slice
+# ("unknown" below). The sliced file states the version in its first line, and the rules
+# are applied to that statement before the file is used.
+unknown = "warn"
+
+[[slicer.rule]]
+from = "2.9.1.70"
+below = "2.9.1.71"
+verdict = "warn"
+reason = "Bambu Studio 02.09.01.70 is the version Hotend's command line was measured against, but Hotend has not yet passed its regression suite with it; check the sliced file in Bambu Studio's preview before printing"
+
+[[slicer.rule]]
+verdict = "warn"
+reason = "this is not the Bambu Studio version Hotend was measured against (02.09.01.70); its command line, profiles and output may differ, and no release is pinned yet"
+
+[[slicer]]
+kind = "prusa-slicer"
+unknown = "refuse"
+
+[[slicer.rule]]
+below = "2.9.7"
+verdict = "refuse"
+reason = "PrusaSlicer older than 2.9.7 lacks security fixes; install 2.9.7 or a later 2.9 release"
+
+[[slicer.rule]]
+from = "2.9.7"
+below = "3.0.0"
+verdict = "allow"
+
+[[slicer.rule]]
+from = "3.0.0"
+verdict = "refuse"
+reason = "PrusaSlicer 3.0 is an alpha rewrite and is not supported yet; install a 2.9 release from 2.9.7 on"

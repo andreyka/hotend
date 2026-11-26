@@ -1,0 +1,30 @@
+[workspace]
+resolver = "3"
+members = ["crates/*", "apps/desktop/src-tauri"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+license = "Apache-2.0"
+publish = false
+
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[workspace.lints.clippy]
+unwrap_used = "warn"
+expect_used = "warn"
+dbg_macro = "deny"
+todo = "warn"
+
+[profile.dev]
+debug = "line-tables-only"
+
+# Dependencies are built without debug info: it halves the size of target/.
+[profile.dev.package."*"]
+debug = false
+
+[profile.release]
+lto = "thin"
+strip = "debuginfo"

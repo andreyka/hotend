@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-bridge/
+test-results/
+playwright-report/
+*.tsbuildinfo
+# Written by the Playwright tests on every run.
+/e2e/screenshots

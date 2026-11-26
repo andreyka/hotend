@@ -55,8 +55,8 @@ flowchart TB
 | Desktop shell | `apps/desktop/src-tauri` | Exposes the core's facade to the window, plus a few commands of its own (pick a file or folder, open a link, subscribe to events); owns the native print confirmation | Adds no way around the core's checks |
 | Core | `crates/hotend-core` | Project store, sandboxed jobs, tool gateway, agent supervisor, egress filter, key storage, print jobs, audit log | Never runs model-written code in its own process |
 | Sandbox | `crates/hotend-sandbox` | Launcher and library that confine the engine, the agent and the slicer | Refuses to run a job when confinement cannot be applied |
-| Agent | `python/hotend_agent` | The conversation loop with the model (Pydantic AI) | No network socket, no key, no file outside its scratch folder and the read-only runtime, no tool of its own |
-| CAD engine | `python/hotend_engine` | Runs a model script, checks it, exports, tessellates, renders, measures | No network, nothing outside its job folder |
+| Agent | `python/hotend_agent` | The conversation loop with the model (Pydantic AI) | No network socket, no key, no tool of its own. Writes only its scratch folder; reads that, the Python runtime and the sandbox's list of system paths |
+| CAD engine | `python/hotend_engine` | Runs a model script, checks it, exports, tessellates, renders, measures | No network. Writes only its job folder; reads that, the Python runtime and the sandbox's list of system paths |
 | Proven Fit | `python/hotend_fit` | Fit contract, calibration table, feature cards, components, gauges, range sampler | |
 | Slicer layer | `crates/hotend-slicer` | Detects installed slicers, applies a version policy, runs them sandboxed, reads their results as hostile input | Bundles and links no slicer code |
 | Printer layer | `crates/hotend-printer` | G-code check, confirmation summary, start token, deliveries, simulated printer, read-only status listener | The application build cannot send a printer a command. A commanding LAN transport exists behind an off-by-default feature, restricted to loopback and used only by tests |
@@ -81,26 +81,47 @@ code and the slicer all run under the same launcher:
 - no network (seccomp denies the socket calls; an empty network namespace where available);
   the agent alone may create an anonymous socket pair to itself, which the Python event loop
   needs,
-- writes only below the job folder, reads only the job folder, the Python runtime and a short
-  system list (Landlock),
+- writes only below the job folder, where the program's home and temporary folder are too
+  (and to `/dev/null`); no file in the job folder can be started directly as a program
+  (`execve` is refused there); an interpreter or the system's dynamic loader, which are on
+  the readable paths, can still run a script or load native code written there, inside the
+  same sandbox,
+- reads the job folder, and reads and executes the paths the job is given (the Python runtime
+  for the engine and the agent, the slicer's installation for the slicer) and a fixed system
+  list: `/usr`, `/lib`, `/lib32`, `/lib64`, `/bin`, `/sbin`, named files and folders under
+  `/etc`, `/sys/devices/system/cpu`, five global files of `/proc`, the program's own
+  `/proc/<pid>`, `/dev/zero`, `/dev/urandom` and `/dev/random` (Landlock; the lists are in
+  `crates/hotend-sandbox/src/linux/fs.rs`). Other files cannot be
+  opened or listed; for a path whose name is known, its existence, size, dates and permissions
+  (`stat`, `access`) and where a link points (`readlink`) stay visible,
 - no privilege gain, no ptrace, no new namespaces, no mounts,
 - time, memory and process caps, and a whole-tree kill when a limit is hit or the launcher
   goes away.
+
+These lists describe the Linux backend. The macOS backend, untested and off unless opted in,
+gives less: no cap on the number of processes or on the memory of the whole tree, no check of
+the job folder's size, a descendant that calls `setsid` escapes the wall-clock kill, nothing
+ends the job if the launcher itself is killed, and its profile puts no limit on which files
+can be started as programs, files in the job folder included
+(`crates/hotend-sandbox/src/macos.rs`, `src/seatbelt.rs`; `docs/notes/sandbox.md`, section 6).
 
 If confinement cannot be applied, the job does not run. Linux has the working backend
 (Landlock and seccomp, Linux 6.2 or newer). A macOS backend is written and untested, so it is
 off unless explicitly enabled. A Windows backend is planned; today Windows runs Hotend inside
 WSL2. Debug builds have two development switches (run unconfined with a warning, or use
 another launcher program). A few helper programs that do not run model-influenced code start
-outside the sandbox: the Python interpreter once, to find its prefix, and the system's
-openers for a link or a folder. `docs/notes/sandbox.md` lists each guarantee and the
-mechanism behind it.
+outside the sandbox: the Python interpreter once, to find its prefix (with an empty
+environment), and the system's openers for a link or a file (without the variables that may
+hold a key). `docs/notes/sandbox.md` lists each guarantee and the mechanism behind it.
 
 **3. Whatever comes back is hostile input.** Engine results, slicer output, sliced files and
 printer reports are read with size caps, no symlinks and no path outside the job folder, and
-the fields the core acts on are parsed strictly. Web pages are cleaned, framed and cut
-before the model sees them. Text from a page or a file is never an instruction to the core:
-it cannot add a tool, raise a cap or confirm a print.
+the fields the core acts on are parsed strictly. A web page read through Keenable or
+Tavily is cleaned, framed and cut by the core before the model sees it. With the
+provider's own search the provider reads the pages inside the model request, before the
+core sees them; there the core caps the searches and page reads of a request and what a
+conversation keeps. Text from a page or a file is never an instruction to the core: it
+cannot add a tool, raise a cap or confirm a print.
 
 ## The agent cannot act, it can only ask
 
@@ -196,7 +217,9 @@ flowchart LR
   other printers are not checked or delivered yet.
 - **Confirmation** is bound to that file's hash and to the text you were shown. In the
   application it is a native dialog whose default is Cancel; in the command line it is
-  `yes` typed at a terminal. The check runs again at confirmation. Neither the tool gateway
+  `yes` typed at a terminal. The full check runs just before the confirmation is shown;
+  once it is given, the hash, the review text and the file on disk are verified. An editable
+  Bambu Studio project leaves this check: Bambu Studio slices it again. Neither the tool gateway
   nor the window can give the confirmation. (The development bridge used by the interface
   tests, a debug-only program with a scripted core and the simulated printer, has a test
   switch that answers dialogs.)
@@ -273,8 +296,9 @@ tools.
 ## Testing
 
 `scripts/test-all.sh` is the full test run. Its summary says what ran and what was left out,
-and why: tests that need a real slicer, real reference files or a paid model call run only
-where those exist and are counted and named otherwise. The end-to-end tests drive the same
+and why: tests that need a real PrusaSlicer or local reference files run only where those
+exist, and tests that need a real Bambu Studio or a paid model call are never run by it; it
+counts and names what it left out. The end-to-end tests drive the same
 core the window uses, through the sandbox, with a scripted conversation in place of a model,
 a stand-in slicer and the simulated printer, so the whole path runs offline. The interface
 is tested in headless Chromium against a development bridge; no automated test opens the

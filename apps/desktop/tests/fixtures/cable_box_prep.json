@@ -1,0 +1,572 @@
+{
+ "checks": [
+  {
+   "data": {
+    "faces": [
+     {
+      "area": 24.0,
+      "face": 7
+     },
+     {
+      "area": 24.0,
+      "face": 25
+     }
+    ],
+    "limit_deg": 45.0,
+    "limit_source": "default",
+    "overhang_area": 48.0
+   },
+   "id": "overhangs",
+   "message": "About 48 mm2 of surface on 2 face(s) hangs over at more than 45 degrees and will need support when printed as modelled.",
+   "part": "box",
+   "severity": "warning",
+   "status": "warn"
+  },
+  {
+   "data": {
+    "contact_area": 7928.2743,
+    "contact_ratio": 0.999,
+    "footprint_area": 7936.0
+   },
+   "id": "bed_contact",
+   "message": "7928 mm2 of flat surface rests on the bed (100% of the footprint) when printed as modelled.",
+   "part": "box",
+   "severity": "warning",
+   "status": "pass"
+  },
+  {
+   "data": {
+    "fit_faces": [],
+    "fit_overhang": 0.0,
+    "weak_snaps": []
+   },
+   "id": "fit_orientation",
+   "message": "Printed as modelled, no mating face needs support and no snap is printed across its layers.",
+   "part": "box",
+   "severity": "warning",
+   "status": "pass"
+  },
+  {
+   "data": {
+    "margin": 2.0,
+    "nozzle_id": 1,
+    "placed": 1,
+    "plates": [
+     1
+    ],
+    "reach": {
+     "x": [
+      0.0,
+      256.0
+     ],
+     "y": [
+      0.0,
+      256.0
+     ],
+     "z": [
+      0.0,
+      260.0
+     ]
+    },
+    "unplaced": 0
+   },
+   "id": "plate_fit",
+   "message": "It lies inside the main nozzle's reach.",
+   "part": "box",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "data": {
+    "faces": [],
+    "limit_deg": 45.0,
+    "limit_source": "default",
+    "overhang_area": 0.0
+   },
+   "id": "overhangs",
+   "message": "No overhang steeper than 45 degrees; prints without support turned upside down.",
+   "part": "lid",
+   "severity": "warning",
+   "status": "pass"
+  },
+  {
+   "data": {
+    "contact_area": 7918.1577,
+    "contact_ratio": 0.9978,
+    "footprint_area": 7936.0
+   },
+   "id": "bed_contact",
+   "message": "7918 mm2 of flat surface rests on the bed (100% of the footprint) when printed turned upside down.",
+   "part": "lid",
+   "severity": "warning",
+   "status": "pass"
+  },
+  {
+   "data": {
+    "fit_faces": [],
+    "fit_overhang": 0.0,
+    "weak_snaps": [
+     "snap lid 'snap_lid_1'"
+    ]
+   },
+   "id": "fit_orientation",
+   "message": "Printed turned upside down, its snap rails stand upright, across the layers, which is their weaker direction; push the parts together gently.",
+   "part": "lid",
+   "severity": "warning",
+   "status": "warn"
+  },
+  {
+   "data": {
+    "margin": 2.0,
+    "nozzle_id": 1,
+    "placed": 1,
+    "plates": [
+     1
+    ],
+    "reach": {
+     "x": [
+      0.0,
+      256.0
+     ],
+     "y": [
+      0.0,
+      256.0
+     ],
+     "z": [
+      0.0,
+      260.0
+     ]
+    },
+    "unplaced": 0
+   },
+   "id": "plate_fit",
+   "message": "It lies inside the main nozzle's reach.",
+   "part": "lid",
+   "severity": "error",
+   "status": "pass"
+  }
+ ],
+ "created_at_ms": 1794949446087,
+ "dir": "/data/projects/01a1eb51-7b48-7046-9384-bd1bfc2b4e51/versions/2/prepare",
+ "material_id": "pla-basic",
+ "options": {
+  "copies": {},
+  "orientations": {}
+ },
+ "orientations": [
+  {
+   "as_modelled": {
+    "contact": 7928.274333882306,
+    "fit_faces": [],
+    "fit_overhang": 0.0,
+    "footprint": [
+     124.0,
+     64.0
+    ],
+    "height": 40.0,
+    "overhang": 48.0,
+    "weak_snaps": []
+   },
+   "candidates": [
+    {
+     "contact": 7928.274333882306,
+     "fit_overhang": 0.0,
+     "fits_reach": true,
+     "height": 40.0,
+     "overhang": 48.0,
+     "score": 88.0,
+     "source": "as_modelled",
+     "turned": "as modelled",
+     "up": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 754.207175129545,
+     "fit_overhang": 0.0,
+     "fits_reach": true,
+     "height": 40.0,
+     "overhang": 7222.067158752782,
+     "score": 7262.067,
+     "source": "face",
+     "turned": "upside down",
+     "up": [
+      0.0,
+      0.0,
+      -1.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 2175.9999999999995,
+     "fit_overhang": 2040.0961649996927,
+     "fits_reach": true,
+     "height": 124.0,
+     "overhang": 2446.3550031270634,
+     "score": 8756.466,
+     "source": "face",
+     "turned": "onto its -X side",
+     "up": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 2175.9999999999995,
+     "fit_overhang": 2208.9908088864768,
+     "fits_reach": true,
+     "height": 124.0,
+     "overhang": 2444.9962329474615,
+     "score": 9261.791,
+     "source": "face",
+     "turned": "onto its +X side",
+     "up": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 4719.999999999999,
+     "fit_overhang": 4438.404957336315,
+     "fits_reach": true,
+     "height": 64.0,
+     "overhang": 4905.152915044065,
+     "score": 18284.368,
+     "source": "face",
+     "turned": "onto its -Y side",
+     "up": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 4719.999999999999,
+     "fit_overhang": 4613.104808272586,
+     "fits_reach": true,
+     "height": 64.0,
+     "overhang": 4896.1709931865125,
+     "score": 18799.485,
+     "source": "face",
+     "turned": "onto its +Y side",
+     "up": [
+      0.0,
+      -1.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    }
+   ],
+   "copies": 1,
+   "explanation": "'box' is printed as modelled: 7928 mm2 lies flat on the bed and about 48 mm2 needs support.",
+   "measures": {
+    "contact": 7928.274333882306,
+    "fit_faces": [],
+    "fit_overhang": 0.0,
+    "footprint": [
+     124.0,
+     64.0
+    ],
+    "height": 40.0,
+    "overhang": 48.0,
+    "weak_snaps": []
+   },
+   "nozzle_id": 1,
+   "overridden": null,
+   "part": "box",
+   "preferred_by": null,
+   "score": 88.0,
+   "source": "as_modelled",
+   "terms": {
+    "fit_support": 0.0,
+    "height": 40.0,
+    "support": 48.0,
+    "tipping": 0.0,
+    "weak_snaps": 0.0
+   },
+   "turned": "as modelled",
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "as_modelled": {
+    "contact": 288.0,
+    "fit_faces": [],
+    "fit_overhang": 0.0,
+    "footprint": [
+     124.0,
+     64.0
+    ],
+    "height": 10.400001525878906,
+    "overhang": 7630.157682186038,
+    "weak_snaps": [
+     "snap lid 'snap_lid_1'"
+    ]
+   },
+   "candidates": [
+    {
+     "contact": 7918.157682186037,
+     "fit_overhang": 0.0,
+     "fits_reach": true,
+     "height": 10.400001525878906,
+     "overhang": 0.0,
+     "score": 160.4,
+     "source": "face",
+     "turned": "upside down",
+     "up": [
+      0.0,
+      0.0,
+      -1.0
+     ],
+     "weak_snaps": 1
+    },
+    {
+     "contact": 21.637467504308386,
+     "fit_overhang": 0.0,
+     "fits_reach": true,
+     "height": 50.96825943137669,
+     "overhang": 0.0,
+     "score": 1096.681,
+     "source": "face",
+     "turned": "so that its (0.00, -0.71, 0.71) direction points up",
+     "up": [
+      0.0,
+      -0.7071067811865475,
+      0.7071067811865475
+     ],
+     "weak_snaps": 1
+    },
+    {
+     "contact": 21.637467504308386,
+     "fit_overhang": 0.0,
+     "fits_reach": true,
+     "height": 50.96825943137669,
+     "overhang": 0.0,
+     "score": 1096.681,
+     "source": "face",
+     "turned": "so that its (0.00, 0.71, 0.71) direction points up",
+     "up": [
+      0.0,
+      0.7071067811865475,
+      0.7071067811865475
+     ],
+     "weak_snaps": 1
+    },
+    {
+     "contact": 139.19999999999996,
+     "fit_overhang": 246.86964422041922,
+     "fits_reach": true,
+     "height": 124.0,
+     "overhang": 524.9070487018462,
+     "score": 2240.514,
+     "source": "face",
+     "turned": "onto its -X side",
+     "up": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 139.19999999999996,
+     "fit_overhang": 247.57249717525343,
+     "fits_reach": true,
+     "height": 124.0,
+     "overhang": 524.4777016566804,
+     "score": 2242.194,
+     "source": "face",
+     "turned": "onto its +X side",
+     "up": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 283.19999999999993,
+     "fit_overhang": 456.26964361411797,
+     "fits_reach": true,
+     "height": 64.0,
+     "overhang": 973.174834938234,
+     "score": 2586.29,
+     "source": "face",
+     "turned": "onto its +Y side",
+     "up": [
+      0.0,
+      -1.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 283.19999999999993,
+     "fit_overhang": 456.26964272650395,
+     "fits_reach": true,
+     "height": 64.0,
+     "overhang": 973.1748340506199,
+     "score": 2586.29,
+     "source": "face",
+     "turned": "onto its -Y side",
+     "up": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "weak_snaps": 0
+    },
+    {
+     "contact": 288.0,
+     "fit_overhang": 0.0,
+     "fits_reach": true,
+     "height": 10.400001525878906,
+     "overhang": 7630.157682186038,
+     "score": 7790.558,
+     "source": "as_modelled",
+     "turned": "as modelled",
+     "up": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "weak_snaps": 1
+    }
+   ],
+   "copies": 1,
+   "explanation": "'lid' is turned upside down: 7918 mm2 lies flat on the bed and nothing needs support (as modelled about 7630 mm2 would); the snap rails stand upright, across the layers, which is their weaker direction.",
+   "measures": {
+    "contact": 7918.157682186037,
+    "fit_faces": [],
+    "fit_overhang": 0.0,
+    "footprint": [
+     124.0,
+     64.0
+    ],
+    "height": 10.400001525878906,
+    "overhang": 0.0,
+    "weak_snaps": [
+     "snap lid 'snap_lid_1'"
+    ]
+   },
+   "nozzle_id": 1,
+   "overridden": null,
+   "part": "lid",
+   "preferred_by": null,
+   "score": 160.4,
+   "source": "face",
+   "terms": {
+    "fit_support": 0.0,
+    "height": 10.400001525878906,
+    "support": 0.0,
+    "tipping": 0.0,
+    "weak_snaps": 150.0
+   },
+   "turned": "upside down",
+   "up": [
+    0.0,
+    0.0,
+    -1.0
+   ]
+  }
+ ],
+ "plates": [
+  {
+   "index": 1,
+   "items": [
+    {
+     "bbox": {
+      "max": [
+       126.0,
+       66.0,
+       40.0
+      ],
+      "min": [
+       2.0,
+       2.0,
+       0.0
+      ]
+     },
+     "copy": 1,
+     "name": "box",
+     "nozzle_id": 1,
+     "part": "box",
+     "quarter_turn": false,
+     "transform": [
+      1.0,
+      0.0,
+      0.0,
+      64.0,
+      0.0,
+      1.0,
+      0.0,
+      34.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+     ]
+    },
+    {
+     "bbox": {
+      "max": [
+       126.0,
+       135.0,
+       10.4
+      ],
+      "min": [
+       2.0,
+       71.0,
+       0.0
+      ]
+     },
+     "copy": 1,
+     "name": "lid",
+     "nozzle_id": 1,
+     "part": "lid",
+     "quarter_turn": false,
+     "transform": [
+      1.0,
+      0.0,
+      0.0,
+      64.0,
+      0.0,
+      -1.0,
+      0.0,
+      103.0,
+      0.0,
+      0.0,
+      -1.0,
+      42.4
+     ]
+    }
+   ],
+   "size": [
+    256.0,
+    256.0
+   ],
+   "threemf": "plates/1/plate.3mf",
+   "views": {
+    "iso": "plates/1/views/iso.png",
+    "top": "plates/1/views/top.png"
+   }
+  }
+ ],
+ "printer_id": "bambu-x2d",
+ "project_id": "01a1eb51-7b48-7046-9384-bd1bfc2b4e51",
+ "status": "ok",
+ "unplaced": [],
+ "version": 2,
+ "warnings": []
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-slicer-choose"
+description = "Enables the slicer_choose command without any pre-configured scope."
+commands.allow = ["slicer_choose"]
+
+[[permission]]
+identifier = "deny-slicer-choose"
+description = "Denies the slicer_choose command without any pre-configured scope."
+commands.deny = ["slicer_choose"]

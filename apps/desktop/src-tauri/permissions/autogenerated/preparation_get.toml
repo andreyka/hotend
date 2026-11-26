@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-preparation-get"
+description = "Enables the preparation_get command without any pre-configured scope."
+commands.allow = ["preparation_get"]
+
+[[permission]]
+identifier = "deny-preparation-get"
+description = "Denies the preparation_get command without any pre-configured scope."
+commands.deny = ["preparation_get"]

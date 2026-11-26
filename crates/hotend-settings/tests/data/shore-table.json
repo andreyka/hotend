@@ -1,0 +1,85 @@
+{
+  "about": "Material ids and the Shore A hardness each one names. Read by MaterialId::shore_a of crates/hotend-settings and meant for python/hotend_fit/materials.py as well: both sides must agree on every row.",
+  "rows": [
+    {
+      "id": "tpu-90a",
+      "shore_a": 90
+    },
+    {
+      "id": "tpu-95a",
+      "shore_a": 95
+    },
+    {
+      "id": "tpu-95a-hf",
+      "shore_a": 95
+    },
+    {
+      "id": "tpu-85a",
+      "shore_a": 85
+    },
+    {
+      "id": "tpu85a",
+      "shore_a": 85
+    },
+    {
+      "id": "tpu-80a",
+      "shore_a": 80
+    },
+    {
+      "id": "tpu-085a",
+      "shore_a": 85
+    },
+    {
+      "id": "tpu-185a",
+      "shore_a": 85
+    },
+    {
+      "id": "tpu-9085a",
+      "shore_a": 85
+    },
+    {
+      "id": "tpu-090a",
+      "shore_a": 90
+    },
+    {
+      "id": "tpu-generic",
+      "shore_a": null
+    },
+    {
+      "id": "tpu-95",
+      "shore_a": null
+    },
+    {
+      "id": "tpu-95ab",
+      "shore_a": null
+    },
+    {
+      "id": "tpu-9a",
+      "shore_a": null
+    },
+    {
+      "id": "tpu-for-ams",
+      "shore_a": null
+    },
+    {
+      "id": "tpu-64d",
+      "shore_a": null
+    },
+    {
+      "id": "tpu-88a-90a",
+      "shore_a": 88
+    },
+    {
+      "id": "98a",
+      "shore_a": 98
+    },
+    {
+      "id": "tpu-95a2",
+      "shore_a": null
+    },
+    {
+      "id": "tpu-a95",
+      "shore_a": null
+    }
+  ]
+}

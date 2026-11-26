@@ -1,0 +1,260 @@
+{
+  "schema": 1,
+  "id": "sample_phone",
+  "name": "Sample phone (invented)",
+  "kind": "phone",
+  "units": "mm",
+  "frame": "An invented device, not a real product. Origin at the centre of the phone's outline, on the back. +X to the right seen from the front (the edge with the side button and the touch strip), +Y to the top edge, +Z from the back (z = 0) to the front glass (z = 10). The camera plateau and lens stand out of the back, towards -Z. 'From the top' t is y = 65 - t.",
+  "sources": {
+    "sample": {
+      "title": "Invented numbers of the sample phone. No such device exists: nobody makes or sells it and nothing was measured",
+      "url": "https://example.com/hotend/sample-phone",
+      "kind": "invented_sample",
+      "retrieved": "2026-11-25",
+      "note": "Stands in for a maker's drawing in examples and tests. The numbers define the sample device, so they count as its standard. They describe no real product: never build a case for a real phone from them."
+    },
+    "sample_estimate": {
+      "title": "Invented numbers of the sample phone that play the part of sizes scaled off a drawing",
+      "url": "https://example.com/hotend/sample-phone-estimates",
+      "kind": "estimate",
+      "retrieved": "2026-11-25",
+      "note": "They show how a number the maker does not state is tagged (guessed) and asked about."
+    }
+  },
+  "defaults": {"source": "sample", "provenance": "standard", "confidence": "verified"},
+  "envelope": {
+    "width": {"value": 80.0, "tolerance": 0.25, "note": "Excludes the buttons, which add 0.6 per side."},
+    "height": {"value": 130.0, "tolerance": 0.40},
+    "depth": {"value": 10.0, "tolerance": 0.10},
+    "corner_profile": {
+      "value": [[0.03, 11.1], [1.6, 6.0], [3.5, 3.5], [6.0, 1.6], [11.1, 0.03]],
+      "tolerance": 0.10,
+      "note": "All four corners: points as (distance from the side edge, distance from the end edge). Not a circular arc."
+    },
+    "corner_lead_in": {
+      "value": 12.0, "tolerance": 0.20, "source": "sample_estimate", "provenance": "guessed", "confidence": "likely",
+      "note": "Where the straight edges resume, measured from the corner. The body outline does not use it."
+    },
+    "edge_profile": {
+      "value": [[0.0, 2.0], [0.2, 3.0], [0.9, 4.1], [2.0, 4.8], [3.0, 5.0]],
+      "tolerance": 0.10,
+      "note": "All sides: points as (inward from the side, height from the mid-plane, both ways). The body has these rounded shoulders on the back and on the front."
+    },
+    "cover_glass": {"value": [77.0, 127.0], "tolerance": 0.25, "note": "Front glass outline; it starts 1.5 in from the housing edge all round. Nothing may touch it."},
+    "display_active": {"value": [74.0, 124.0], "tolerance": 0.25, "note": "Display active area; 3 from the housing edge all round, which is also where the flat front face starts."},
+    "mass": {"value": 200.0, "unit": "g", "tolerance": 2.0, "confidence": "likely"}
+  },
+  "features": [
+    {
+      "id": "mode_button", "kind": "button", "label": "Mode button", "face": "-x",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "box",
+               "center": [-40.0, {"value": 45.0, "tolerance": 0.20, "note": "20 from the top."},
+                          {"value": 5.0, "tolerance": 0.30, "provenance": "guessed", "confidence": "unverified", "note": "Assumed centred in the thickness like the side button."}],
+               "size": [0.6, 8.0, 3.0]},
+      "question": "Is the middle of the mode button 5 mm from the back? The sample states where it is along the edge and how large it is; the 5 mm is an assumption. Compare with the phone, or print that opening alone."
+    },
+    {
+      "id": "volume_up", "kind": "button", "label": "Volume up", "face": "-x",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "box",
+               "center": [-40.0, {"value": 26.0, "tolerance": 0.20, "note": "39 from the top."},
+                          {"value": 5.0, "tolerance": 0.30, "provenance": "guessed", "confidence": "unverified", "note": "Assumed centred in the thickness like the side button."}],
+               "size": [0.6, 12.0, 3.0]},
+      "question": "Are the middles of both volume buttons 5 mm from the back? The sample states where they are along the edge and how large they are; the 5 mm is an assumption. Compare with the phone, or print those openings alone.",
+      "note": "The gap to the volume down button is 4."
+    },
+    {
+      "id": "volume_down", "kind": "button", "label": "Volume down", "face": "-x",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "box",
+               "center": [-40.0, {"value": 10.0, "tolerance": 0.20, "note": "55 from the top."},
+                          {"value": 5.0, "tolerance": 0.30, "provenance": "guessed", "confidence": "unverified", "note": "Assumed centred in the thickness like the side button."}],
+               "size": [0.6, 12.0, 3.0]},
+      "question": "Are the middles of both volume buttons 5 mm from the back? The sample states where they are along the edge and how large they are; the 5 mm is an assumption. Compare with the phone, or print those openings alone."
+    },
+    {
+      "id": "side_button", "kind": "button", "label": "Side button", "face": "+x",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "box",
+               "center": [40.0, {"value": 10.0, "tolerance": 0.20, "note": "55 from the top."}, 5.0],
+               "size": [0.6, 14.0, 3.0]},
+      "note": "Stands 0.6 proud, centred in the thickness."
+    },
+    {
+      "id": "touch_strip", "kind": "button", "label": "Touch strip", "face": "+x",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "box",
+               "center": [40.0, {"value": -25.0, "tolerance": 0.30, "note": "90 from the top."}, 5.0],
+               "size": [0.0, 16.0, 4.0]},
+      "keep_out": [{"shape": "box",
+                    "center": [40.0, {"value": -25.0, "tolerance": 0.30}, 5.0],
+                    "size": [null, 22.0, 10.8], "radius": 3.0,
+                    "flare": {"value": 40.0, "unit": "deg", "tolerance": 0.5, "confidence": "likely",
+                              "note": "The sample does not say from which line the angle counts; it is taken from the surface's normal."}}],
+      "question": "Does a finger reach the whole touch strip through the case? The opening is 22 x 10.8 mm at the surface and widens by 40 degrees, here taken from the surface's normal because the sample leaves the reference line open. Try it on a test print of that side.",
+      "note": "Flush with the edge. A case opening is 22 x 10.8 at the surface with R3 corners and a 40 degree flare all round; 10.8 is wider than the 10 body, so the opening breaks through both faces."
+    },
+    {
+      "id": "receiver", "kind": "speaker", "label": "Receiver slot", "face": "+z",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "box",
+               "center": [0.0, {"value": 63.0, "confidence": "likely", "note": "Slot centre 2 from the top edge, read as the middle of the keep-out."}, 10.0],
+               "size": [16.0, 0.6, 0.0]},
+      "keep_out": [{"shape": "box", "center": [0.0, {"value": 63.0, "note": "The keep-out runs from 1.5 to 2.5 from the top edge."}, 10.0],
+                    "size": [18.0, 1.0, null]}],
+      "question": "Is the receiver slot free below the top lip? The sample states a band to keep free, 1.5 to 2.5 mm from the top edge; that the slot is in the middle of it, at 2 mm, is an assumption.",
+      "note": "A top lip must not reach more than 1.5 in from the top edge across the middle 18."
+    },
+    {
+      "id": "front_camera", "kind": "camera", "label": "Front camera", "face": "+z",
+      "defaults": {"tolerance": 0.10},
+      "keep_out": [{"shape": "box", "center": [0.0, 57.0, 10.0],
+                    "size": [12.0, 6.0, null], "radius": 3.0}],
+      "note": "Inside the display; a lip never reaches it."
+    },
+    {
+      "id": "usb_c", "kind": "port", "label": "USB-C receptacle", "face": "-y",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "box",
+               "center": [0.0, -65.0, {"value": 4.6, "confidence": "likely", "note": "Centreline 4.6 from the back; which face it counts from is not stated."}],
+               "size": [9.0, 0.0, {"value": 3.2, "confidence": "likely"}]},
+      "keep_out": [{"shape": "box",
+                    "center": [0.0, -65.0, {"value": 4.6, "confidence": "likely"}],
+                    "size": [13.0, 16.0, 10.6], "radius": 5.0}],
+      "question": "Does a plug go into the USB-C receptacle with the case on? Its centreline is taken as 4.6 mm from the back; the sample gives the 4.6 mm without naming the face. Look at the phone before you print the bottom wall.",
+      "note": "Connector keep-out: 13 x 10.6 with R5 corners, outward 16. It is taller than the 10 body, so a bottom wall cannot bridge over the port: it must be an open notch."
+    },
+    {
+      "id": "bottom_mic_1", "kind": "microphone", "label": "Bottom microphone 1", "face": "-y",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [-18.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+               "diameter": 1.4, "length": 0.0},
+      "keep_out": [{"shape": "cylinder", "center": [-18.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+                    "diameter": {"value": 4.4, "note": "The 1.4 hole plus 1.5 all round."}, "length": null}],
+      "question": "Are the microphones and ports beside the USB-C receptacle open with the case on? Their centres are taken as 4 mm from the back; the sample gives the 4 mm without naming the face. Look at the phone before you print the bottom wall."
+    },
+    {
+      "id": "bottom_mic_2", "kind": "microphone", "label": "Bottom microphone 2", "face": "-y",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [15.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+               "diameter": 1.4, "length": 0.0},
+      "keep_out": [{"shape": "cylinder", "center": [15.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+                    "diameter": 4.4, "length": null}],
+      "question": "Are the microphones and ports beside the USB-C receptacle open with the case on? Their centres are taken as 4 mm from the back; the sample gives the 4 mm without naming the face. Look at the phone before you print the bottom wall."
+    },
+    {
+      "id": "bottom_port_1", "kind": "port", "label": "Bottom port 1", "face": "-y",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [-15.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+               "diameter": 1.4, "length": 0.0},
+      "keep_out": [{"shape": "cylinder", "center": [-15.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+                    "diameter": 4.4, "length": null}],
+      "question": "Are the microphones and ports beside the USB-C receptacle open with the case on? Their centres are taken as 4 mm from the back; the sample gives the 4 mm without naming the face. Look at the phone before you print the bottom wall."
+    },
+    {
+      "id": "bottom_port_2", "kind": "port", "label": "Bottom port 2", "face": "-y",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [18.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+               "diameter": 1.4, "length": 0.0},
+      "keep_out": [{"shape": "cylinder", "center": [18.0, -65.0, {"value": 4.0, "confidence": "likely"}],
+                    "diameter": 4.4, "length": null}],
+      "question": "Are the microphones and ports beside the USB-C receptacle open with the case on? Their centres are taken as 4 mm from the back; the sample gives the 4 mm without naming the face. Look at the phone before you print the bottom wall."
+    },
+    {
+      "id": "camera_plateau", "kind": "camera", "label": "Camera plateau", "face": "-z",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "bar",
+               "center": [0.0, {"value": 45.0, "source": "sample_estimate", "provenance": "guessed", "confidence": "likely", "tolerance": 0.15, "note": "Spans 10 to 30 from the top."}, 0.0],
+               "size": [{"value": 60.0, "source": "sample_estimate", "provenance": "guessed", "confidence": "likely", "tolerance": 0.15},
+                        {"value": 20.0, "source": "sample_estimate", "provenance": "guessed", "confidence": "likely", "tolerance": 0.15},
+                        {"value": 2.5, "tolerance": 0.10, "note": "Back to camera plateau."}],
+               "end_profile": {"value": [[0.0, 0.0], [0.7, 4.0], [3.0, 7.5], [7.0, 9.5], [12.0, 10.0]],
+                               "source": "sample_estimate", "provenance": "guessed", "confidence": "likely", "tolerance": 0.15,
+                               "note": "The ends are flattened curves, not semicircles: points as (distance from the bar's end, distance from its centre line); straight between the ends."}},
+      "data": {
+        "blend_limit_y": {"value": 28.0, "source": "sample_estimate", "provenance": "guessed", "confidence": "likely", "tolerance": 0.15,
+                          "note": "The concave blend from the plateau to the back ends 37 from the top across the middle and curls up to 32 near each side."},
+        "blend_side_y": {"value": 33.0, "source": "sample_estimate", "provenance": "guessed", "confidence": "likely", "tolerance": 0.15,
+                         "note": "Where the blend ends at the lines 3 in from each side: 32 from the top."},
+        "blend_straight_x": {"value": 14.0, "source": "sample_estimate", "provenance": "guessed", "confidence": "likely", "tolerance": 0.15,
+                             "note": "Half the width over which the blend's lower edge is straight."}
+      },
+      "question": "Does the camera plateau fit the case's opening? Its 60 x 20 mm top face, the shape of its ends and the blend around it are estimates; its height (2.5 mm) and what is on it are stated. Print the opening alone first, or measure the plateau with a caliper.",
+      "note": "The phone is 12.5 thick there."
+    },
+    {
+      "id": "rear_camera", "kind": "camera", "label": "Rear camera", "face": "-z",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [18.0, 45.0, 0.0],
+               "diameter": 14.0, "length": {"value": 4.5, "note": "Back to rear camera glass (2 above the plateau)."}},
+      "keep_out": [{"shape": "cone",
+                    "center": [18.0, 45.0, {"value": -1.5, "confidence": "likely", "note": "The cone's apex on the lens axis."}],
+                    "angle": {"value": 80.0, "unit": "deg", "tolerance": 0.5, "confidence": "likely"}, "length": null}],
+      "question": "Are the corners of a picture dark with the case on? The lens keeps an 80 degree cone free, and where the tip of that cone is, is not certain. Take a test picture."
+    },
+    {
+      "id": "flash", "kind": "camera", "label": "Flash", "face": "-z",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [{"value": -18.0, "tolerance": 0.20}, 45.0, -2.4],
+               "diameter": 5.0, "length": 0.0},
+      "keep_out": [
+        {"shape": "cone", "center": [{"value": -18.0, "tolerance": 0.20}, 45.0, -2.4],
+         "diameter": 5.0,
+         "angle": {"value": 70.0, "unit": "deg", "tolerance": 0.5},
+         "length": 1.5},
+        {"shape": "cone", "center": [{"value": -18.0, "tolerance": 0.20}, 45.0, {"value": -3.9, "confidence": "likely", "note": "1.5 above the flash."}],
+         "diameter": {"value": 7.1, "confidence": "likely", "note": "Where the 70 degree cone ends: 5 + 2 x 1.5 x tan(35 deg)."},
+         "angle": {"value": 150.0, "unit": "deg", "tolerance": 0.5, "confidence": "likely"},
+         "length": {"value": 2.0, "confidence": "likely"}}
+      ],
+      "question": "Does the case catch light from the flash? The sample's outer cone to keep free (150 degrees, from 1.5 to 3.5 mm above the flash) is not certain, so a lip around the plateau stays low there."
+    },
+    {
+      "id": "rear_mic", "kind": "microphone", "label": "Rear microphone", "face": "-z",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [{"value": -8.0, "tolerance": 0.20}, 45.0, -2.5],
+               "diameter": 1.6, "length": 0.0},
+      "keep_out": [{"shape": "cylinder", "center": [{"value": -8.0, "tolerance": 0.20}, 45.0, -2.5], "diameter": 1.6, "length": null}],
+      "note": "On the plateau."
+    },
+    {
+      "id": "back_area_plateau", "kind": "area", "label": "Area of uniform case thickness on the camera plateau", "face": "-z",
+      "defaults": {"tolerance": 0.20},
+      "body": {"shape": "box", "center": [2.0, 39.0, -2.5], "size": [20.0, 6.0, 0.0]},
+      "note": "Where a case covers this area its thickness must be uniform, and no thicker than the back limit."
+    },
+    {
+      "id": "back_area_corner", "kind": "area", "label": "Area of uniform case thickness below the camera", "face": "-z",
+      "defaults": {"tolerance": 0.20},
+      "body": {"shape": "box", "center": [33.0, 26.0, 0.0], "size": [6.0, 14.0, 0.0]},
+      "note": "On the back just below the camera plateau's raised surround, 19 to 33 above the centre. Where a case covers this area its thickness must be uniform: no edge of an opening, no rib and no step should cross it."
+    },
+    {
+      "id": "magnet_ring", "kind": "magnet", "label": "Magnet ring", "face": "-z",
+      "defaults": {"tolerance": 0.10},
+      "body": {"shape": "cylinder", "center": [0.0, {"value": -10.0, "note": "75 from the top."}, 0.0],
+               "diameter": 60.0, "length": 0.0},
+      "data": {
+        "ring_outer_diameter": 52.0,
+        "ring_inner_diameter": 40.0,
+        "magnet_thickness": {"value": 0.8, "tolerance": 0.05},
+        "field_span": {"value": [30.0, 45.0], "note": "From 30 to 45 below the ring centre."}
+      },
+      "note": "Inside the 60 circle no metal, conductive or magnetic material. Plain TPU, PETG and PLA are unaffected."
+    },
+    {
+      "id": "compass", "kind": "sensor", "label": "Compass", "face": "-z",
+      "defaults": {"tolerance": 0.20},
+      "body": {"shape": "cylinder", "center": [15.0, -55.0, 0.0], "diameter": 1.0, "length": 0.0},
+      "note": "Keep magnets and magnetic material away; the 1.0 diameter only marks the spot."
+    }
+  ],
+  "rules": {
+    "max_back_thickness": {"value": 2.4, "tolerance": 0.0, "note": "Case thickness on the back: 2.4 max, uniform."},
+    "min_glass_standoff": {"value": 0.7, "tolerance": 0.0, "note": "Exposed glass shall not come within 0.7 of a flat surface with the case on."},
+    "usb_c_opening_min": {"value": [12.5, 9.0], "tolerance": 0.0, "note": "A USB-C opening shall be at least 12.5 x 9; 13 x 10.6 is recommended."},
+    "dock_max_bottom": {"value": 2.2, "tolerance": 0.0, "note": "At most 2.2 from the phone's bottom to the outside of the case."},
+    "touchscreen_opening_deg": {"value": 100.0, "unit": "deg", "tolerance": 0.0, "note": "The case opens at 100 degrees along the edges of the active area."}
+  }
+}

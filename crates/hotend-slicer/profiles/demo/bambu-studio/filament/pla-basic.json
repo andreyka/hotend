@@ -1,0 +1,11 @@
+{
+  "name": "Hotend demo filament pla-basic (fake slicer only)",
+  "filament_type": ["PLA"],
+  "filament_density": ["1.24"],
+  "filament_diameter": ["1.75"],
+  "nozzle_temperature": ["220"],
+  "cool_plate_temp": ["35"],
+  "textured_plate_temp": ["55"],
+  "hot_plate_temp": ["55"],
+  "eng_plate_temp": ["55"]
+}

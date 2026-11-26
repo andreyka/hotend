@@ -1,0 +1,1761 @@
+# Printer facts the printer layer depends on, as data (IMPLEMENTATION_BRIEF section 7).
+#
+# One file, versioned: bump `revision` with every change and `schema` when the layout changes.
+# Every block of facts carries its own `verified` flag, and `source` says where a value
+# comes from. `verified = true` means the fact was observed in real output, and the block
+# says which kind:
+#   on a printer   captured or measured on a real printer. None so far: a print has gone
+#                  through Bambu Connect to an X2D, and no fact was captured or measured
+#                  there.
+#   in a slice     read from a file written by the real slicer. So far three files, all
+#                  sliced on 2026-11-17 by Bambu Studio 02.09.01.70 for the X2D (0.4 mm
+#                  nozzles, one PLA filament on the main nozzle):
+#                    the first slice      Cool Plate, stock PLA profile, 26 layers
+#                    two textured slices  Textured PEI Plate, Generic PLA with Hotend's
+#                                         settings, 37 and 344 layers
+#                  Facts of this kind are the G-code table, the section markers, the travel
+#                  box, the names in `slice_file`, the two plate rows and the numbers of
+#                  `[family.gcode.limits]`; each limit says what was seen and what margin
+#                  was added. They say what the slicer writes, not what the printer does.
+#                  Where a row does not name the textured slices, it was written from the
+#                  first slice and the textured slices pass it unchanged.
+# Sources:
+#   OpenBambuAPI  = https://raw.githubusercontent.com/Doridian/OpenBambuAPI/main/{mqtt,ftp,tls}.md
+#                   (facts only: no text or file of it is in this repository. A row that names
+#                   ha-bambulab beside it was found in both)
+#   ha-bambulab   = https://github.com/greghesp/ha-bambulab (MIT),
+#                   pybambu/{models,const,commands,bambu_client}.py
+#   X2D FAQ       = https://wiki.bambulab.com/en/x2d/manual/x2d-faq (Bambu Lab)
+#   network ports = https://wiki.bambulab.com/en/general/printer-network-ports (Bambu Lab)
+#   error codes   = https://wiki.bambulab.com/en/hms/error-code (Bambu Lab)
+#   brief         = docs/IMPLEMENTATION_BRIEF.md section 7
+#   real slice    = the files described above (never stored in this repository)
+#   public report = a statement by users of the printer, named where it is used; the weakest
+#                   source here, never confirmed by us
+#
+# The nozzle ids and reach repeat crates/hotend-slicer/profiles/printers.toml; a test in this
+# crate fails when the two files disagree.
+
+schema = 5
+revision = "2026-11-25.2"
+
+# ---------------------------------------------------------------------------------------
+# Printers
+# ---------------------------------------------------------------------------------------
+
+[[printer]]
+id = "bambu-x2d"
+name = "Bambu Lab X2D"
+# The X2D speaks the H2 / P2S protocol generation, not the X1 one.
+family = "bambu-h2"
+
+[printer.identity]
+# What the printer calls itself in discovery and in `get_version`.
+model_codes = ["N6"]
+serial_prefixes = ["20P"]
+verified = false
+source = "public reports: serial prefix 20P (Bambu Lab forum, serial number decoder, topic 205244; bambulab_metrics_exporter pull request 45, from a captured X2D); model code N6 (bambu-printer-mcp issue 36)"
+
+# What a file sliced for this printer says about itself in its config comments
+# (`; printer_model = ...`). A file that names another printer is refused. The comment is
+# part of the file being checked, so this catches a wrong profile, not a forgery.
+[printer.slice_file]
+printer_models = ["Bambu Lab X2D"]
+# `; printer_settings_id = ...`, which the real slice also writes into
+# `Metadata/project_settings.config`. Checked wherever the file states it.
+printer_settings_ids = ["Bambu Lab X2D 0.4 nozzle"]
+# The nozzle sizes the G-code table was written from. The job must declare one of them
+# for every filament, and the file must state the same size (`; nozzle_diameter = ...`,
+# one value per slicer extruder). Three rows of the table hold 0.4 as an exact value.
+nozzle_diameters_mm = [0.4]
+# The entries a sliced archive may hold: the names of the 21 entries of the real slice,
+# with `{plate}` for the number of the one plate the job prints and `{n}` for any number.
+# Any other name is refused, and so is a second plate: only the G-code of the declared
+# plate is read, so no other G-code may travel in the file.
+entries = [
+  "[Content_Types].xml",
+  "_rels/.rels",
+  "3D/3dmodel.model",
+  "3D/_rels/3dmodel.model.rels",
+  "3D/Objects/object_{n}.model",
+  "Metadata/plate_{plate}.gcode",
+  "Metadata/plate_{plate}.gcode.md5",
+  "Metadata/plate_{plate}.json",
+  "Metadata/plate_{plate}.png",
+  "Metadata/plate_{plate}_small.png",
+  "Metadata/plate_no_light_{plate}.png",
+  "Metadata/top_{plate}.png",
+  "Metadata/pick_{plate}.png",
+  "Metadata/project_settings.config",
+  "Metadata/model_settings.config",
+  "Metadata/_rels/model_settings.config.rels",
+  "Metadata/cut_information.xml",
+  "Metadata/slice_info.config",
+  "Metadata/filament_sequence.json",
+]
+# The entries the check itself reads and therefore needs: the G-code, its MD5 (32 hex
+# digits, compared with the G-code) and the slicer's own account of the plate.
+required_entries = [
+  "Metadata/plate_{plate}.gcode",
+  "Metadata/plate_{plate}.gcode.md5",
+  "Metadata/slice_info.config",
+]
+verified = true
+source = "real slice (in a slice)"
+
+# Build plates. The person chooses the plate, the job declares it, and the file must name
+# the same one. `id` is Hotend's own id of the plate: the application stores the person's
+# choice as this id and records it with the slice; it is the id of the same plate in
+# crates/hotend-slicer/profiles/system-profiles.toml (a test there fails when a name
+# differs) and the plate type token of the print settings. The file names the plate by
+# `name` in `; curr_bed_type = ...` (and in project_settings.config when the archive has
+# it) and by `json_name` as `bed_type` in `Metadata/plate_<n>.json` when it has that.
+# `bed_max_c` is the highest bed temperature a file for this plate may command, whatever
+# the filament allows. `z_trim_mm` is the Z trim the stock start routine sets for the
+# plate (`G29.1 Z...`); a file may set that value or 0 and no other, and a plate without
+# one takes 0 only.
+[[printer.plate]]
+id = "cool"
+name = "Cool Plate"
+json_name = "cool_plate"
+# Seen: 35 C (PLA). The ceiling is 10 C above it: the stock PLA profiles of other makes
+# differ by a few degrees, and 45 C is well below the 55 C the same file names for the
+# hot plates. The margin was chosen here, not measured.
+bed_max_c = 45.0
+# Seen: 0.022, once, in the start routine of the first slice.
+z_trim_mm = 0.022
+verified = true
+source = "real slice (in a slice): names, 35 C and the trim; the ceiling is a chosen margin"
+
+[[printer.plate]]
+id = "textured-pei"
+name = "Textured PEI Plate"
+json_name = "textured_plate"
+# Seen: 65 C in the start routine and for the first layer, 60 C from the second layer
+# (Generic PLA with Hotend's settings; the stock profile states 55 C). The ceiling is
+# the machine's bed limit, so the filament's limit is the one that binds (70 C for PLA):
+# this plate is the one for the hot plastics, and no slice of them was seen.
+bed_max_c = 120.0
+# Seen: 0.002, once, in the start routine of each textured slice, where the first slice
+# has 0.022.
+z_trim_mm = 0.002
+verified = true
+source = "two textured slices (in a slice): names, 65 and 60 C and the trim; the ceiling is the machine's limit, not measured"
+
+# Ids: `device_extruder` is the extruder id the printer reports and accepts;
+# `slicer_extruder` is the slicer's 1-based number for the same nozzle. The numbering is
+# inverted between the two. Code maps by these numbers only, never by "main", "left" or "right".
+[[printer.nozzle]]
+role = "main"
+drive = "direct"
+ids = { device_extruder = 1, slicer_extruder = 1, verified = false }
+# The real slice states the same printable area in its config comments, and a printable
+# height of 261 mm for this nozzle. The lower figure of the brief is kept.
+reach = { x = [0.0, 256.0], y = [0.0, 256.0], z = [0.0, 260.0], verified = false }
+# Where the nozzle may be sent without printing. Measured in the real slice (in a slice):
+# every coordinate written in the start and end routines lies inside the reach (X 100 to
+# 128, Y 0 to 200, Z 0.6 to 82.6) except one, the start of the load line (`G130`) at
+# Y -0.2. The purge chute, the wiper and the cutter are reached by firmware routines
+# (`G150.x`, `T`, `M620`) that carry no coordinates, so the file says nothing about where
+# they are. Moves written relative to a position only the printer knows are limited by
+# `[family.gcode.unplaced]`.
+travel = { x = [0.0, 256.0], y = [-0.2, 256.0], z = [0.0, 260.0], verified = true }
+# The external spool holder that feeds this nozzle, as a tray id. That 254 and 255 are the
+# external spools comes from ha-bambulab; which one feeds which nozzle is inferred.
+external_tray = { id = 254, verified = false }
+source = "real slices (in a slice): numbering (`physical_extruder_map` 1,0), direct drive, area; ha-bambulab models.py (external spools 254/255); brief"
+
+[[printer.nozzle]]
+role = "auxiliary"
+drive = "bowden"
+ids = { device_extruder = 0, slicer_extruder = 2, verified = false }
+# 235.5 x 256 x 256 mm, X from 20.5 mm: the real slices state this area and height.
+reach = { x = [20.5, 256.0], y = [0.0, 256.0], z = [0.0, 256.0], verified = false }
+max_speed = { mm_s = 200.0, verified = false }
+external_tray = { id = 255, verified = false }
+source = "real slices (in a slice): numbering, bowden, area, height; X2D FAQ (200 mm/s); ha-bambulab models.py (external spools 254/255)"
+
+# No travel box for the auxiliary nozzle: the real slice printed with the main nozzle only,
+# so nothing was measured, and every move of the auxiliary nozzle is held to its reach.
+
+# Parts of the bed that pieces and their brims stay off. Print
+# preparation lays every plate out round these boxes, in bed coordinates (mm), and the
+# engine checks the finished layout again (`keepout`).
+#   start_load_line  Measured in the real slice (in a slice): the start routine draws a load
+#                    line from X 100, Y -0.2 at Z 0.6, 40 mm long, feeding 12 mm of
+#                    filament. Its direction and width are not in the file, so the box
+#                    reaches 40 mm to both sides of the start plus 5 mm, and 8 mm deep. The
+#                    size of the box is a judgment, not a measurement. The X2D profile itself
+#                    states no excluded area (`bed_exclude_area` is empty).
+[[printer.keepout]]
+id = "start_load_line"
+x = [55.0, 145.0]
+y = [0.0, 8.0]
+reason = "the start routine draws its load line here before every print"
+verified = false
+source = "real slice (in a slice): start X 100, Y -0.2, 40 mm long; box size a judgment"
+
+# Hard limits of the machine, whatever the filament.
+[printer.limits]
+nozzle_max_c = 300.0
+bed_max_c = 120.0
+chamber_max_c = 65.0
+verified = false
+source = "X2D FAQ (nozzle 300 C, bed 120 C, chamber 65 C)"
+
+# ---------------------------------------------------------------------------------------
+# Protocol families
+# ---------------------------------------------------------------------------------------
+
+[[family]]
+id = "bambu-h2"
+name = "Bambu Lab H2 / P2S / X2 generation"
+
+[family.transport]
+mqtt_port = 8883
+ftps_port = 990
+# Hotend offers only TLS 1.2. Users of several models report that their printers complete no
+# other version; for the X2D this is disputed and was not measured.
+tls = "1.2"
+username = "bblp"
+access_code_length = 8
+report_topic = "device/{serial}/report"
+request_topic = "device/{serial}/request"
+# The certificate's common name is the printer's serial number.
+certificate_names_serial = true
+verified = false
+source = "OpenBambuAPI mqtt.md, ftp.md (ports, user name, topics; the same in ha-bambulab bambu_client.py), tls.md (the serial in the certificate); network ports (8883, 990); public reports (TLS 1.2: Home Assistant community, thread 489510)"
+
+[family.storage]
+# Hotend delivers over FTPS to external storage only: the addresses below are the ones
+# documented for a card. The X2D also has built-in storage (X2D FAQ); whether FTPS reaches
+# it was not tried, so it is not used.
+ftps_reaches = "external"
+url_prefix = "ftp:///"
+verified = false
+source = "OpenBambuAPI mqtt.md (print.project_file: `ftp:///` for a card); the limit to external storage is a choice of Hotend's"
+
+[family.discovery]
+port = 2021
+service = "urn:bambulab-com:device:3dprinter:1"
+verified = false
+source = "network ports (SSDP 1990/2021); ha-bambulab manifest.json (service type)"
+
+[family.project_file]
+# bed_leveling, flow_cali, vibration_cali and layer_inspect are booleans in both sources.
+# Whether this generation takes numbers instead was not tried.
+flag_type = "boolean"
+# OpenBambuAPI spells this key "bed_levelling"; ha-bambulab sends "bed_leveling".
+bed_leveling_key = "bed_leveling"
+# `ams_mapping2` (one {ams_id, slot_id} per project filament) is not sent: that this
+# generation wants it is a public report (bambu-printer-mcp README, for H2 and P2S) and its
+# fields are not documented by a source used here. To check on the first printer.
+send_ams_mapping2 = false
+verified = false
+source = "OpenBambuAPI mqtt.md (print.project_file) and ha-bambulab commands.py, which differ in the spelling above"
+
+[family.ams]
+trays_per_unit = 4
+# Regular units have ids 0-3. AMS HT units (one tray each) have ids 128-135.
+ht_unit_id_base = 128
+ht_unit_count = 8
+# In the flat `ams_mapping` array a regular tray is unit * 4 + tray. For an AMS HT,
+# ha-bambulab models.py records what it has seen in `print.ams_mapping`: "AMS HT units
+# follow on from there at 16-23", and, for prints started on the touchscreen,
+# unit * 4 + tray. The bare unit id (128-135) is neither.
+# `flat_ht` picks what is sent: "slot_16" (what the source observed) or "unit_id".
+# Not tried on a printer: a wrong value makes the printer pause instead of starting
+# (OpenBambuAPI mqtt.md), and the LAN transport refuses to start from an AMS HT until it is.
+flat_ht = "slot_16"
+# External spool holders, as tray ids.
+external_ids = [254, 255]
+# Unit `info` is a hex bitfield; bits 8-11 hold the device extruder id the unit feeds.
+# 14 (0xE) means the unit is not bound to one nozzle.
+nozzle_shift = 8
+nozzle_mask = 15
+nozzle_unbound = 14
+verified = false
+source = "ha-bambulab models.py (AMS_HT_UNIT_BASE, connected_nozzle, tray_exist_bits, external spools 254/255)"
+
+[family.speed_levels]
+silent = 1
+standard = 2
+sport = 3
+ludicrous = 4
+verified = false
+source = "OpenBambuAPI mqtt.md (print.print_speed); the same levels in ha-bambulab const.py"
+
+# Error codes with a meaning Hotend acts on or can explain. `kind` is `print_error` (the
+# number in `print.print_error`) or `hms` (attr and code of one `print.hms` entry). The
+# messages are Hotend's own wording.
+[[family.known_code]]
+kind = "print_error"
+code = 0x0300400C
+meaning = "cancelled"
+message = "The print was cancelled."
+verified = false
+source = "ha-bambulab models.py (print_error 50348044 on a user cancel)"
+
+[[family.known_code]]
+kind = "print_error"
+code = 0x07008012
+meaning = "filament_mapping"
+message = "The printer could not match the job's filaments to the loaded spools. Check what is loaded and send the job again."
+verified = false
+source = "error codes (0700-8012)"
+
+[[family.known_code]]
+kind = "print_error"
+code = 0x05024007
+meaning = "not_authorised"
+message = "The printer refused the command. Third-party control needs Developer Mode switched on at the printer, or use Bambu Connect instead."
+verified = false
+source = "public reports (print_error 84033543, a command refused outside Developer Mode)"
+
+[[family.known_code]]
+kind = "hms"
+attr = 0x03000100
+code = 0x00010007
+meaning = "heatbed_sensor"
+message = "The heated bed's temperature reading is abnormal. Switch the printer off and contact Bambu support; do not keep printing."
+verified = false
+source = "ha-bambulab models.py (HMS_0300_0100_0001_0007 example)"
+
+# ---------------------------------------------------------------------------------------
+# G-code this family may be sent
+# ---------------------------------------------------------------------------------------
+#
+# A sliced file passes the check only if every command line matches a row of this table:
+# the command word, the section of the file it stands in, the exact set of parameter
+# letters and a limit for every value. Anything else is refused. The rows record facts measured
+# in the real slices named at the top of this file: single command words, their parameter
+# letters and values. A row with `verified = true` was seen there with these letters and with
+# values inside these limits. No passage and no comment of the vendor's routines is in this
+# file. Rows with `verified = false` are standard commands whose whole
+# effect the check follows itself (moves, modes, temperatures); they were not seen in this
+# form in the real slice.
+#
+# A row never records a guessed meaning. `basis` says where `what` comes from:
+#   standard   the command means the same in common firmware and the check models it
+#   stated     the slicer's own routine says what the line is for (the wording here is ours)
+#   inferred   worked out from the values or the place in the file; the row says how
+#   unknown    nobody here knows; `what` is "unknown" and the values are held to exactly
+#              what was seen
+#
+# Fields of a row:
+#   codes      the command words, upper case, with their sub-code ("G150.1"). "T" is the
+#              selection of a project filament (`T<n>`, n counted from 0); a full word such
+#              as "T65279" is that one tool number.
+#   sections   where the row applies: "start" (the machine start routine), "body" (the
+#              print) and "end" (the machine end routine). Left out: everywhere.
+#   class      what the check does with the line (left out: "opaque"):
+#                move, arc_cw, arc_ccw   followed and held to the nozzle's boxes
+#                probe         a guarded move whose end is not known
+#                home          the named axes (or all) are at a position the check does not know
+#                absolute, relative, e_absolute, e_relative   positioning modes
+#                set_position  G92; offsets are followed
+#                tool          selects a declared filament; service_tool is a tool number
+#                              that is not a filament
+#                progress      M73; the remaining time is read
+#                area          a probing area: X Y is its corner, I J its size
+#                line          a purge line: X Y Z is its start, L its length
+#                branch_start, branch_end   the lines between run only if a printer flag says so
+#                switch_start, switch_end   the lines between switch to the filament named by S
+#                              and run only if the printer decides so
+#                text          one of the row's `verbs` and one value of the kind it names:
+#                              "number" (0 to 999), "name" (letters, digits, _) or
+#                              "filament_type" (the material of a declared filament, or UNKNOWN)
+#                mask          one base64 word of `mask_chars` characters
+#                opaque        nothing is followed; every value must match `args`
+#   forms      the sets of parameter letters the row accepts, each written as one word
+#              ("" is the command alone). A line matches only if its letters are exactly
+#              one of them, in any order.
+#   letters    instead of `forms`, for moves: any subset of these letters
+#   args       per letter: [low, high], { one_of = [..] }, { up_to = n } (above 0, at most n),
+#              "flag" (the letter alone) or one of
+#                nozzle_temp, bed_temp, chamber_temp   a temperature that is set: held to the
+#                              filament's and the machine's limits and shown to the person
+#                nozzle_temp_ref   a value that may be a nozzle temperature: held to the same
+#                              limits and shown apart, because the check cannot tell
+#                nozzle        a device extruder id of this printer
+#                filament_a    a project filament number followed by the letter A
+#                service_tool  one of the `service_tool` numbers
+#                plate_z_trim  0, or the `z_trim_mm` of the build plate the job declares
+#   moves      after this line the nozzle is somewhere the file does not say. A row whose
+#              meaning is unknown must have it, or give in `stays_put` the evidence that the
+#              nozzle stays where it was.
+#   requires   "relative": accepted only in relative positioning
+#   config     the line changes limits or stored configuration. It is counted, held to
+#              `max_count` per file, and listed in what a person confirms:
+#              travel_limits, stored_settings, motion_limits, motor_current, z_offset
+#   what, basis, verified   as described above
+
+[family.gcode]
+verified = true
+source = "real slice (in a slice): Bambu Studio 02.09.01.70, X2D 0.4 mm nozzle, one PLA filament on the main nozzle, Cool Plate, sliced 2026-11-17"
+
+# The marker comments Bambu Studio writes around the machine routines. They are comments in
+# the file being checked, so they prove nothing: they only choose which rows apply, and no
+# section has a row that the check would not accept from someone who wrote the whole file.
+# A section opens only at its place (`open` before the first command, each marker once and
+# in order), the start and end routines may not lay plastic along a path, and both are
+# limited in length. A file without `open` is body from the first line to the last.
+[family.gcode.sections]
+open = "EXECUTABLE_BLOCK_START"
+start_end = "MACHINE_START_GCODE_END"
+end_start = "MACHINE_END_GCODE_START"
+close = "EXECUTABLE_BLOCK_END"
+# Seen: 278 commands in the start routine and 77 in the end routine.
+start_max_commands = 600
+end_max_commands = 200
+verified = true
+
+# Moves written relative to a position only the printer knows (after homing, after a
+# firmware routine). Nothing can check where such a move ends, and the stock start routine
+# has switched the printer's own travel limit check off, so they are held to the direction
+# and the distances of the stock routine. A lower Z is a smaller gap between the nozzle
+# and the bed.
+# Seen: five, all in the start routine: a guarded lift of 22 mm with a guarded lowering of
+# 12 mm directly after it, Y -16, Z +5 and Z +6. None carries an E word.
+# Every range is [furthest in the negative direction, furthest in the positive direction].
+#   sections   the sections that may contain such a move
+#   plain      what one G0 or G1 may cover. It is not guarded, so it never lowers Z.
+#   guarded    what one guarded move (class `probe`) may cover
+#   net        where the sum of the moves on an axis must stay, counted from where the
+#              printer itself last left that axis (homing, a firmware routine, a tool
+#              change, conditional lines). For Z the sum never goes below 0: a guarded
+#              move may lower the nozzle only as far as a move lifted it just before.
+#   total_mm   the distance all such moves of a file may cover per axis, both directions
+#              added up (seen: Y 16, Z 22 + 12 + 5 + 6)
+#   max_count  how many such moves a file may have
+# Loading refuses a table in which a plain move or the sum of the moves may lower Z.
+[family.gcode.unplaced]
+sections = ["start"]
+plain = { x = [0.0, 0.0], y = [-16.0, 0.0], z = [0.0, 6.0] }
+guarded = { x = [0.0, 0.0], y = [0.0, 0.0], z = [-12.0, 22.0] }
+net = { x = [0.0, 0.0], y = [-16.0, 0.0], z = [0.0, 22.0] }
+total_mm = { x = 0.0, y = 16.0, z = 45.0 }
+max_count = 5
+verified = true
+
+# What the moves of a file may do, beyond staying inside the nozzle's boxes. Every number
+# was measured in the real slice (in a slice); the comment says what was seen and which
+# margin was chosen. A file outside them is refused.
+[family.gcode.limits]
+# The lowest height any move may name. Seen: 0.2 mm, the first layer, which is also the
+# lowest height at which the print travels (it does not lift for short travels). No
+# margin: nothing in the real slice goes lower, and every height below the first layer
+# is a nozzle closer to the plate than the slicer ever puts it.
+min_z_mm = 0.2
+# Plastic may be laid at most this far above the highest height at which plastic was laid
+# before (above the plate, for the first). Seen: 0.2 mm steps, 26 of them. The limit is
+# 80 % of the 0.4 mm bore, the tallest layer such a nozzle is given; a taller step is
+# plastic laid into the air.
+max_layer_step_mm = 0.32
+# The highest F a move may carry, mm/min. Seen: 60000 (the print's travels), which is the
+# 1000 mm/s the slicer states as the machine's own limit for X and Y. No margin: beyond
+# it the value means nothing.
+max_feed_mm_min = 60000.0
+# Most filament pushed per millimetre of path, mm/mm. Seen: at most 0.0634 (a line of
+# 0.15 mm2). The limit is the widest line (0.75 mm, about twice the bore) at the tallest
+# layer (0.32 mm) a 0.4 mm nozzle lays: 0.24 mm2 of 1.75 mm filament. That is 1.6 times
+# what was seen; a tighter limit would need the width the slicer meant for each line.
+max_e_per_mm = 0.1
+# Most filament pulled back and not yet pushed forward again, mm. Seen: 3.4 (3.0 in the
+# start routine, plus 0.4 at the first travel of the print). Filament may be pushed
+# without moving in X or Y only to undo that, never further. The limit leaves room for
+# the 0.8 mm the file states as the main nozzle's full retraction instead of the 0.4 seen.
+max_retracted_mm = 4.0
+# A push in place may exceed what was pulled back by this much, mm, for the rounding of
+# the written values. Seen: the slice pulls back in several moves whose five-decimal
+# values sum to 0.39999 mm and pushes 0.4 mm, 0.00001 mm more. The limit is a hundred
+# times that and still no plastic to speak of (0.002 mm3).
+in_place_slack_mm = 0.001
+# The lowest nozzle temperature that must be in force when filament is pushed. Seen: 220 C
+# at every such move. 170 C is the usual cold-extrusion guard of FDM firmware; whether
+# this printer has one is not known.
+min_extrude_c = 170.0
+# For the weight the file states: the filament's diameter (seen: 1.75) and the range of
+# densities a stated weight may imply for the measured length, g/cm3 (seen: 1.26, PLA).
+# The range spans the plastics of the `[[filament]]` table, about 1.0 (ABS) to 1.3 (filled).
+filament_diameter_mm = 1.75
+density_g_cm3 = [0.9, 1.5]
+# How far the length the file states for a filament may be from the length the moves
+# push: this fraction plus this many millimetres. Seen: 1490 mm stated (two decimals of
+# a metre), 1487.37 mm measured, 0.18 % apart. The 10 mm cover the rounding of the stated
+# value (5 mm) and the stock routine's own retraction (3 mm).
+length_tolerance = 0.02
+length_slack_mm = 10.0
+# The time the file states must be at least the time the moves take at their commanded
+# speeds (seen: 262 s against the stated 710 s), and at most that time times
+# `time_max_factor` plus `time_overhead_s`. Seen: the print itself is stated at 1.5 times
+# the moves' time (acceleration) and the routines at 309 s (heating, levelling).
+time_max_factor = 4.0
+time_overhead_s = 1800.0
+# Most lines of G-code. Seen: 42,200. A file of the largest size the archive limits allow
+# has at most a few million lines of real moves; beyond this the check stops reading.
+max_lines = 5000000
+verified = true
+
+# --- Moves and modes (the check follows these itself) ------------------------------------
+
+[[family.gcode.command]]
+codes = ["G0"]
+class = "move"
+letters = "XYZF"
+what = "travel move"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G1"]
+class = "move"
+letters = "XYZEF"
+what = "linear move"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G2"]
+class = "arc_cw"
+letters = "XYZIJRPEF"
+what = "clockwise arc in the XY plane; P must be 1 and makes it a whole turn"
+basis = "standard"
+verified = false
+
+[[family.gcode.command]]
+codes = ["G3"]
+class = "arc_ccw"
+letters = "XYZIJRPEF"
+what = "counter-clockwise arc in the XY plane; P must be 1 and makes it a whole turn (seen as the lift before a travel: Z I J P F)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G4"]
+class = "dwell"
+forms = ["P", "S"]
+args = { P = [0, 180000], S = [0, 180] }
+what = "dwell, at most three minutes"
+basis = "standard"
+verified = false
+
+[[family.gcode.command]]
+codes = ["G17"]
+what = "select the XY plane for arcs (the only plane the check accepts)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G21"]
+what = "lengths are millimetres (inches, G20, are refused)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G28"]
+class = "home"
+forms = ["", "X", "Y", "Z", "XY", "XYZ"]
+what = "home the named axes, or all"
+basis = "standard"
+verified = false
+
+[[family.gcode.command]]
+codes = ["G28"]
+sections = ["start"]
+class = "home"
+forms = ["XTR"]
+args = { T = [300, 300], R = "flag" }
+what = "home X; T and R unknown. T is not read as a temperature that is set, and is held to the one value seen"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G28"]
+sections = ["start"]
+class = "home"
+forms = ["ZPT"]
+args = { P = [0, 0], T = [400, 400] }
+what = "home Z; P and T unknown. T is not read as a temperature that is set, and is held to the one value seen"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G28"]
+sections = ["start"]
+class = "home"
+forms = ["R"]
+args = { R = "flag" }
+what = "home all axes; R unknown (stands where bed levelling is skipped)"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G90"]
+class = "absolute"
+what = "absolute positioning"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G91"]
+class = "relative"
+what = "relative positioning"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G92"]
+class = "set_position"
+letters = "E"
+what = "set the extrusion counter. The real slice resets E only; a reset of X, Y or Z is refused, because everything after it would be placed by arithmetic alone while the printer's own travel limit check is off"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M82"]
+class = "e_absolute"
+what = "absolute extrusion"
+basis = "standard"
+verified = false
+
+[[family.gcode.command]]
+codes = ["M83"]
+class = "e_relative"
+what = "relative extrusion"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G380"]
+sections = ["start"]
+class = "probe"
+forms = ["SZF"]
+args = { S = [2, 2], Z = [-12, 22], F = { up_to = 1200 } }
+requires = "relative"
+what = "moves Z by the given distance and may stop on the way (the routine uses it to move off the end stop); where it ends is not known"
+basis = "stated"
+verified = true
+
+# --- Tools --------------------------------------------------------------------------------
+
+[[family.gcode.command]]
+codes = ["T"]
+class = "tool"
+forms = ["H"]
+args = { H = [-1, -1] }
+moves = true
+what = "select project filament n (counted from 0); H unknown"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["T"]
+class = "tool"
+moves = true
+what = "select project filament n (counted from 0), the plain form of other firmware"
+basis = "standard"
+verified = false
+
+# Seen in the end routine under a note about pulling the filament back to the AMS, each
+# between `M620 S<number> B` and `M621 S<number> B`. They are not filament slots. No other
+# special number is known; the ones older notes list (255, 1000, 1100) were not seen.
+[[family.gcode.command]]
+codes = ["T65279", "T65535"]
+sections = ["end"]
+class = "service_tool"
+moves = true
+what = "unknown (stands where the routine pulls the filament back)"
+basis = "unknown"
+verified = true
+
+# --- Temperatures -------------------------------------------------------------------------
+
+[[family.gcode.command]]
+codes = ["M104"]
+forms = ["S", "SA", "ST"]
+args = { S = "nozzle_temp", A = "flag", T = "nozzle" }
+what = "set a nozzle temperature. T names the nozzle by device extruder id (inferred: the one filament is on device extruder 1 and the only nozzle heated by number is T1); A unknown"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M109"]
+forms = ["S", "SA"]
+args = { S = "nozzle_temp", A = "flag" }
+what = "set a nozzle temperature and wait; A unknown"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M140", "M190"]
+forms = ["S"]
+args = { S = "bed_temp" }
+what = "set the bed temperature (M190 waits)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M141", "M191"]
+forms = ["S"]
+args = { S = "chamber_temp" }
+what = "set the chamber temperature (M191 waits); seen with 0 only"
+basis = "standard"
+verified = true
+
+# --- Fans, progress, waiting --------------------------------------------------------------
+
+[[family.gcode.command]]
+codes = ["M106"]
+forms = ["S", "PS"]
+args = { S = [0, 255], P = { one_of = [1, 2, 3, 10] } }
+what = "fan speed; P picks the fan (1, 2, 3 and 10 seen)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M73"]
+class = "progress"
+forms = ["PR", "L"]
+args = { P = [0, 100], R = [0, 100000], L = [0, 1000000] }
+what = "progress in percent and minutes left, or the layer number, for the screen"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M73.2"]
+sections = ["start", "end"]
+forms = ["R"]
+args = { R = [1, 1] }
+what = "puts the scale of the remaining time back to 1"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M400"]
+what = "wait until the moves are done"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M400"]
+sections = ["start", "end"]
+forms = ["S", "P"]
+args = { S = [0, 180], P = [0, 500] }
+# Thirteen timed waits in every real slice (eight in the start routine, five in the end
+# routine, about 380 s in all); the heaters stay on while they last.
+max_count = 13
+what = "wait S seconds or P milliseconds (up to 180 s and 500 ms seen)"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M204"]
+forms = ["S"]
+args = { S = { up_to = 20000 } }
+what = "acceleration for the moves that follow (250 to 10000 seen; held to the limit the start routine sets)"
+basis = "standard"
+verified = true
+
+# --- Commands that change limits or stored configuration -----------------------------------
+#
+# Bambu Studio's stock routines contain these, so refusing them would refuse every job.
+# Each is accepted only in the section and form it was seen in, at most as often as it was
+# seen, and all of them are listed in the text a person confirms.
+
+[[family.gcode.command]]
+codes = ["M211"]
+sections = ["start"]
+forms = ["XYZ"]
+args = { X = [0, 0], Y = [0, 0], Z = [0, 0] }
+config = "travel_limits"
+max_count = 2
+what = "switches the printer's own travel limit check off for X, Y and Z"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M211"]
+sections = ["end"]
+forms = ["Z"]
+args = { Z = [1, 1] }
+config = "travel_limits"
+max_count = 1
+what = "switches the printer's own travel limit check on again for Z"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M500"]
+sections = ["start"]
+forms = ["D"]
+args = { D = [1, 1] }
+config = "stored_settings"
+max_count = 1
+what = "unknown on this printer. In common firmware M500 stores the current settings; D is not known"
+basis = "unknown"
+moves = true
+verified = true
+
+[[family.gcode.command]]
+codes = ["M201"]
+sections = ["start"]
+forms = ["XYZE"]
+args = { X = { up_to = 20000 }, Y = { up_to = 20000 }, Z = { up_to = 500 }, E = { up_to = 30000 } }
+config = "motion_limits"
+max_count = 1
+what = "highest acceleration per axis for this print (the values of the machine profile are the upper limit)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M203"]
+sections = ["start"]
+forms = ["XYZE"]
+args = { X = { up_to = 1000 }, Y = { up_to = 1000 }, Z = { up_to = 20 }, E = { up_to = 30 } }
+config = "motion_limits"
+max_count = 1
+what = "highest speed per axis for this print (the values of the machine profile are the upper limit)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M204"]
+sections = ["start"]
+forms = ["PRT"]
+args = { P = { up_to = 20000 }, R = { up_to = 30000 }, T = { up_to = 20000 } }
+config = "motion_limits"
+max_count = 1
+what = "acceleration for printing, retracting and travel (the values of the machine profile are the upper limit)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M205"]
+sections = ["start"]
+forms = ["XYZE"]
+args = { X = { up_to = 9 }, Y = { up_to = 9 }, Z = { up_to = 3 }, E = { up_to = 2.5 } }
+config = "motion_limits"
+max_count = 1
+what = "jerk limits for this print (the values of the machine profile are the upper limit)"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M201.2"]
+sections = ["end"]
+forms = ["K"]
+args = { K = [1, 1] }
+config = "motion_limits"
+max_count = 1
+what = "puts the acceleration scale back to 1"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M17"]
+sections = ["start"]
+forms = ["D"]
+args = { D = "flag" }
+config = "motor_current"
+max_count = 2
+what = "puts the motor current back to its default"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M17"]
+sections = ["end"]
+forms = ["S"]
+args = { S = "flag" }
+config = "motor_current"
+max_count = 1
+what = "unknown (stands directly before the Z motor current is lowered)"
+basis = "unknown"
+moves = true
+verified = true
+
+[[family.gcode.command]]
+codes = ["M17"]
+sections = ["end"]
+forms = ["Z"]
+args = { Z = [0.4, 0.4] }
+config = "motor_current"
+max_count = 1
+what = "lowers the Z motor current before the bed moves down"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M17"]
+sections = ["end"]
+forms = ["R"]
+args = { R = "flag" }
+config = "motor_current"
+max_count = 1
+what = "restores the Z motor current"
+basis = "stated"
+verified = true
+
+# The trim is cleared first and then set for the plate. Seen: 0 and 0.022 in the first
+# slice (Cool Plate), 0 and 0.002 in both textured slices. Only 0 and the value of the
+# plate the job declares pass (`z_trim_mm` of the plate's row): a trim is added to every
+# height in the file, so a negative one would undo the floor of `[family.gcode.limits]`,
+# and a larger one lifts the first layer off the plate.
+[[family.gcode.command]]
+codes = ["G29.1"]
+sections = ["start"]
+forms = ["Z"]
+args = { Z = "plate_z_trim" }
+config = "z_offset"
+max_count = 2
+what = "sets a small Z trim for the print (cleared first, then set for the plate)"
+basis = "stated"
+verified = true
+
+# --- The machine start and end routines (Bambu's own commands) -----------------------------
+
+[[family.gcode.command]]
+codes = ["M17"]
+sections = ["start", "end"]
+what = "motors on"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M18"]
+sections = ["start"]
+forms = ["E"]
+args = { E = "flag" }
+what = "extruder motor off"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M18"]
+sections = ["end"]
+what = "motors off"
+basis = "standard"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M220"]
+sections = ["start", "end"]
+forms = ["S"]
+args = { S = [100, 100] }
+what = "puts the speed factor back to 100 percent"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M221"]
+sections = ["start"]
+forms = ["S"]
+args = { S = [100, 100] }
+what = "puts the flow factor back to 100 percent"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1006"]
+sections = ["start", "end"]
+forms = ["S"]
+args = { S = [1, 1] }
+what = "sound: start of a tune"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1006"]
+sections = ["start", "end"]
+forms = ["ABLCDMEFN"]
+args = { A = [0, 61], B = [9, 18], L = [0, 50], C = [0, 61], D = [9, 18], M = [0, 50], E = [0, 61], F = [9, 18], N = [0, 50] }
+what = "sound: one step of the start or finish tune"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1006"]
+sections = ["start", "end"]
+forms = ["W"]
+args = { W = "flag" }
+what = "sound: end of a tune"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M960"]
+sections = ["start"]
+forms = ["SP"]
+args = { S = { one_of = [1, 2, 5] }, P = [0, 1] }
+what = "lights: the logo lamp on, the lasers off"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M993"]
+sections = ["start"]
+forms = ["ABC"]
+args = { A = [0, 0], B = [0, 0], C = [0, 0] }
+what = "switches the nozzle camera check off"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M145"]
+sections = ["start", "end"]
+forms = ["P"]
+args = { P = [0, 1] }
+what = "air duct mode (0 is cooling)"
+basis = "stated"
+verified = true
+
+# R, S and O may be chamber temperatures at which the cooling changes. The check cannot
+# tell, so every value is held to exactly what was seen (a PLA slice).
+[[family.gcode.command]]
+codes = ["M142"]
+sections = ["start"]
+forms = ["PRSUV"]
+args = { P = [6, 6], R = [30, 30], S = [40, 40], U = [0.6, 0.6], V = [0.8, 0.8] }
+what = "chamber auto cooling by the exhaust fan"
+basis = "stated"
+verified = true
+
+# Seen once per file, in the layer change before the second layer. U is the only value
+# that differs between the three slices: 0.7 in the first slice and 0.3 in both textured
+# slices. In each file it is one hundredth of the `additional_cooling_fan_speed` the file
+# states (70 and 30, the highest share of the auxiliary fan), so it follows the
+# filament's settings and not the plate. Only the values seen pass: 0.5 was seen on 18
+# November 2026 in two real slices of the Linux command line 02.09.01.70 (a calm box and a
+# ring-shaped test print, both by the rules alone at level 0), each stating
+# `additional_cooling_fan_speed = 50`; the same runs with 30 gave 0.3 again.
+[[family.gcode.command]]
+codes = ["M142"]
+sections = ["body"]
+forms = ["PRSUVO"]
+args = { P = [1, 1], R = [30, 30], S = [40, 40], U = { one_of = [0.3, 0.5, 0.7] }, V = [1, 1], O = [45, 45] }
+max_count = 1
+what = "chamber auto cooling, changed at a later layer; U is the highest share of the auxiliary fan (inferred: it equals the filament's stated setting in three slices)"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G29.2"]
+sections = ["start"]
+forms = ["S"]
+args = { S = [0, 1] }
+what = "bed levelling compensation off (0) or on (1)"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G29"]
+sections = ["start"]
+class = "area"
+forms = ["AXYIJR"]
+args = { A = { one_of = [1, 2] }, R = "flag" }
+moves = true
+what = "bed levelling over the area the print covers; A and R unknown"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G150.1"]
+sections = ["start"]
+forms = ["", "F"]
+args = { F = { up_to = 8000 } }
+moves = true
+what = "wipes the nozzle tip"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G150.1"]
+sections = ["end"]
+forms = ["F"]
+args = { F = { up_to = 8000 } }
+moves = true
+what = "wipes the nozzle tip"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G150.2"]
+sections = ["start"]
+moves = true
+what = "unknown (stands between two wipes)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G150.3"]
+sections = ["start", "end"]
+moves = true
+what = "moves the nozzle to the waste chute"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G150"]
+sections = ["start"]
+forms = ["T"]
+args = { T = "nozzle_temp_ref" }
+moves = true
+what = "nozzle wipe; T equals the print temperature in the real slice and may set it"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G383"]
+sections = ["start"]
+forms = ["OMT"]
+args = { O = [0, 0], M = [1, 1], T = "nozzle_temp_ref" }
+moves = true
+what = "Z offset calibration; O and M unknown; T may be a nozzle temperature"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G383"]
+sections = ["start"]
+forms = ["OTL"]
+args = { O = [1, 1], T = "nozzle_temp_ref", L = [0, 0] }
+moves = true
+what = "nozzle XY offset calibration; O and L unknown; T may be a nozzle temperature"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G383.3"]
+sections = ["start"]
+forms = ["TL"]
+args = { T = "nozzle_temp_ref", L = [0, 0] }
+moves = true
+what = "nozzle XY offset calibration, second variant; L unknown; T may be a nozzle temperature"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["G383.4", "G29.99"]
+sections = ["start"]
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+# The load line. X Y Z is where it starts and L how long it is; the start must lie in the
+# travel box and the line must fit along X in both directions, because the file does not
+# say which way it runs. F equals half the filament's volume rate in the real slice (PLA,
+# 21 mm3/s), so a slower filament gives a lower value and a faster one is refused.
+[[family.gcode.command]]
+codes = ["G130"]
+sections = ["start"]
+class = "line"
+forms = ["OXYZFLED"]
+args = { O = [0, 0], F = { up_to = 4.36536 }, E = [12, 12], D = [4, 4] }
+moves = true
+max_count = 1
+what = "draws the load line at the front edge of the plate before the print; O and D unknown"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M972"]
+sections = ["start"]
+forms = ["SP"]
+args = { S = { one_of = [19, 24, 31, 34] }, P = [0, 0] }
+moves = true
+what = "camera checks before the print (bed, camera lens, plate position); 24 unknown"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M972"]
+sections = ["start"]
+forms = ["SPC"]
+args = { S = [26, 26], P = [0, 0], C = [0, 0] }
+moves = true
+what = "camera check for objects left on the bed"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M975"]
+sections = ["start"]
+forms = ["S"]
+args = { S = [1, 1] }
+what = "vibration suppression on"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M970.3"]
+sections = ["start"]
+forms = ["QAKO"]
+args = { Q = [0, 1], A = { one_of = [5, 7] }, K = [0, 0], O = [1, 1] }
+moves = true
+what = "one step of the vibration measurement"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M970.3"]
+sections = ["start"]
+forms = ["QAKLTOFU"]
+args = { Q = [1, 1], A = [5, 5], K = [0, 0], L = [0, 0], T = [15, 15], O = [3, 3], F = [1, 1], U = [2, 2] }
+moves = true
+what = "one step of the vibration measurement"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M970.2"]
+sections = ["start"]
+forms = ["QWKZ"]
+args = { Q = [0, 0], W = [73, 73], K = [1, 1], Z = [0.01, 0.01] }
+moves = true
+what = "one step of the vibration measurement"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M974"]
+sections = ["start"]
+forms = ["SP"]
+args = { S = [2, 2], P = [0, 0] }
+moves = true
+what = "one step of the vibration measurement"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M982.2"]
+sections = ["start"]
+forms = ["S"]
+args = { S = [1, 1] }
+what = "motor noise reduction on"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M983.3"]
+sections = ["start"]
+forms = ["FA"]
+args = { F = { up_to = 8.75 }, A = [0.4, 0.4] }
+moves = true
+what = "calibrates the extrusion compensation; F follows the filament's volume rate (21 mm3/s in the real slice), A is the nozzle size"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M983.4"]
+sections = ["start"]
+forms = ["S"]
+args = { S = [0, 0] }
+what = "deformation compensation off"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1015.3"]
+sections = ["start", "end"]
+forms = ["S"]
+args = { S = [0, 0] }
+what = "clog detection off"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1015.4"]
+sections = ["start"]
+forms = ["SKH"]
+args = { S = [1, 1], K = [1, 1], H = [0.4, 0.4] }
+what = "detection of printing without filament on; H is the nozzle size"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1015.4"]
+sections = ["end"]
+forms = ["SK"]
+args = { S = [0, 0], K = [0, 0] }
+what = "detection of printing without filament off"
+basis = "stated"
+verified = true
+
+# Filament and nozzle switching. `M620 S<n>A ... M621 S<n>A` encloses the lines that run
+# when an AMS feeds filament n. The printer decides whether they run, so they are held to
+# the same rules as the lines between `M622` and `M623` (below), and a tool selection
+# inside must name the same filament n.
+[[family.gcode.command]]
+codes = ["M620"]
+sections = ["start"]
+forms = ["M"]
+args = { M = "flag" }
+what = "enables the remapping of filaments"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M620"]
+sections = ["start"]
+class = "switch_start"
+forms = ["SHB"]
+args = { S = "filament_a", H = [-1, -1], B = "flag" }
+moves = true
+what = "starts the lines that switch to project filament n and run only if an AMS is present; H and B unknown"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M621"]
+sections = ["start"]
+class = "switch_end"
+forms = ["SB"]
+args = { S = "filament_a", B = "flag" }
+moves = true
+what = "ends the lines started by M620 for project filament n; B unknown"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M620"]
+sections = ["end"]
+class = "switch_start"
+forms = ["SB"]
+args = { S = "service_tool", B = "flag" }
+moves = true
+what = "unknown (opens the lines around a service tool number where the routine pulls the filament back)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M621"]
+sections = ["end"]
+class = "switch_end"
+forms = ["SB"]
+args = { S = "service_tool", B = "flag" }
+moves = true
+what = "unknown (closes the lines opened by M620 around a service tool number)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M620"]
+sections = ["start"]
+forms = ["D"]
+args = { D = [-1, -1] }
+moves = true
+what = "unknown (stands in the nozzle offset calibration)"
+basis = "unknown"
+verified = true
+
+# T and P equal the filament's highest and its print temperature in the real slice, F the
+# flush speed for its volume rate, H the nozzle size. The check cannot tell whether T and P
+# set a temperature, so both are held to the nozzle temperature limits.
+[[family.gcode.command]]
+codes = ["M620.10"]
+sections = ["start"]
+forms = ["AFHTPS"]
+args = { A = [0, 1], F = { up_to = 523.843 }, H = [0.4, 0.4], T = "nozzle_temp_ref", P = "nozzle_temp_ref", S = [1, 1] }
+what = "filament change settings for nozzle A; S unknown"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M620.11"]
+sections = ["start"]
+forms = ["PLIBE"]
+args = { P = [0, 0], L = [0, 0], I = [0, 0], B = [-1, -1], E = [0, 0] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M620.11"]
+sections = ["start"]
+forms = ["KIBR"]
+args = { K = [0, 0], I = [0, 0], B = [-1, -1], R = [0, 0] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+# S equals the print temperature in the real slice, once per nozzle (T 0 and 1), inside
+# the nozzle offset calibration. Held to the nozzle temperature limits.
+[[family.gcode.command]]
+codes = ["M620.17"]
+sections = ["start"]
+forms = ["TSL"]
+args = { T = [0, 1], S = "nozzle_temp_ref", L = [0, 0] }
+moves = true
+what = "unknown; S may be a nozzle temperature"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M620.22"]
+sections = ["start"]
+forms = ["IP"]
+args = { I = [0, 0], P = [1, 1] }
+what = "automatic purge after a filament runout on, for the remote extruder"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M620.6"]
+sections = ["start"]
+forms = ["IHW"]
+args = { I = [0, 0], H = [-1, -1], W = [1, 1] }
+what = "AMS detection of printing without filament on"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M628"]
+sections = ["start"]
+forms = ["S"]
+args = { S = [0, 0] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M629"]
+sections = ["start"]
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1012.1"]
+sections = ["start"]
+forms = ["T"]
+args = { T = [1100, 1100] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1012.5"]
+sections = ["start"]
+forms = ["NR"]
+args = { N = [1, 1], R = [1, 1] }
+moves = true
+what = "unknown (runs when the nozzle offset calibration is skipped)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M630"]
+sections = ["start"]
+forms = ["SP"]
+args = { S = [0, 0], P = [1, 1] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M562"]
+sections = ["start"]
+forms = ["PEB"]
+args = { P = { one_of = [1, 2] }, E = [0, 1], B = [1, 1] }
+moves = true
+what = "unknown (stands around the camera checks)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1028"]
+sections = ["start"]
+forms = ["S"]
+args = { S = [0, 1] }
+moves = true
+what = "unknown (stands around the camera checks)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M983.1"]
+sections = ["start"]
+forms = ["M"]
+args = { M = [1, 1] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M9714"]
+sections = ["start"]
+forms = ["A"]
+args = { A = [0, 0] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1040"]
+sections = ["start"]
+forms = ["EB"]
+args = { E = [0, 0], B = [1, 1] }
+moves = true
+what = "unknown"
+basis = "unknown"
+verified = true
+
+# --- Lines that run only if the printer says so --------------------------------------------
+#
+# `M1002 judge_flag <name>` reads a flag of the print job, `M622 J<n>` starts the lines that
+# run when the flag has that value and `M623` ends them. The check cannot know the flag, so
+# it holds every such line to the same rules as any other, refuses inside them a change of
+# positioning mode, a tool selection, a `G92` on X, Y or Z and another such block, and
+# treats the position as unknown afterwards if anything inside could have moved the nozzle.
+
+[[family.gcode.command]]
+codes = ["M622"]
+class = "branch_start"
+forms = ["J"]
+args = { J = [0, 2] }
+what = "starts the lines that run only when the flag read before has the value J"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M623"]
+class = "branch_end"
+what = "ends the lines started by M622"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M622.1"]
+sections = ["start", "end"]
+forms = ["S"]
+args = { S = [0, 0] }
+moves = true
+what = "unknown (stands before a flag is read)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M622.1"]
+sections = ["body"]
+forms = ["S"]
+args = { S = [1, 1] }
+stays_put = "in the real slice the slicer lays plastic straight after the time-lapse lines this stands in, from the position it had before them"
+what = "unknown (stands before the time-lapse flag is read in every layer)"
+basis = "unknown"
+verified = true
+
+# What the firmware does with the text is not known beyond the routine's own notes, so only
+# the four words seen are accepted, each with one value: a number for the screen state and
+# the speed level, a flag name for `judge_flag`, and for `set_filament_type` the material
+# of a declared filament or UNKNOWN. `set_flag` (which would change a print option) was
+# seen only inside comments and is refused.
+[[family.gcode.command]]
+codes = ["M1002"]
+class = "text"
+verbs = { gcode_claim_action = "number", set_gcode_claim_speed_level = "number", set_filament_type = "filament_type", judge_flag = "name" }
+what = "tells the screen what the printer is doing, names the filament type, or reads a flag of the print job"
+basis = "stated"
+verified = true
+
+# --- The print itself -----------------------------------------------------------------------
+
+[[family.gcode.command]]
+codes = ["M624"]
+sections = ["body"]
+class = "mask"
+mask_chars = 12
+what = "marks which labelled objects the lines that follow belong to (the note beside it names the object)"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M625"]
+sections = ["body"]
+what = "ends the lines of one labelled object"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M639"]
+sections = ["body"]
+class = "mask"
+mask_chars = 12
+what = "the labelled objects still to print (the note beside it lists them)"
+basis = "inferred"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M981"]
+sections = ["body"]
+forms = ["SP"]
+args = { S = [0, 1], P = [20000, 20000] }
+what = "detection of a failed print (loose strands) on (1) and off (0); P unknown"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M991"]
+sections = ["body", "end"]
+forms = ["SP"]
+args = { S = [0, 0], P = [-1, 1000000] }
+what = "tells the printer that layer P begins (for time-lapse); -1 ends it"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M971"]
+sections = ["body"]
+forms = ["SCOT"]
+args = { S = [11, 11], C = [10, 10], O = [0, 0], T = [0, 0] }
+stays_put = "in the real slice the slicer lays plastic straight after the time-lapse lines this stands in, from the position it had before them"
+what = "unknown (stands in the time-lapse lines of every layer)"
+basis = "unknown"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1004"]
+sections = ["body"]
+forms = ["SP"]
+args = { S = [5, 5], P = [1, 1] }
+what = "triggers an external camera shutter"
+basis = "stated"
+verified = true
+
+[[family.gcode.command]]
+codes = ["M1003"]
+sections = ["body", "end"]
+forms = ["S"]
+args = { S = [0, 1] }
+what = "power-loss recovery on (1) and off (0)"
+basis = "stated"
+verified = true
+
+# --- Refused by name -------------------------------------------------------------------------
+#
+# Commands that are refused with a reason wherever no row above accepts them. Anything in
+# neither list is refused as unknown.
+[[family.gcode.deny]]
+category = "eeprom"
+codes = ["M500", "M501", "M502", "M503", "M504"]
+why = "reads or writes the printer's stored settings"
+
+[[family.gcode.deny]]
+category = "firmware"
+codes = ["M111", "M112", "M997", "M998", "M999"]
+why = "firmware update, restart, emergency stop or debug mode"
+
+[[family.gcode.deny]]
+category = "configuration"
+codes = ["M92", "M201", "M203", "M205", "M206", "M211", "M218", "M301", "M302", "M303", "M304", "M305", "M350", "M351", "M569", "M575", "M665", "M666", "M851", "M906", "M907", "M908", "M909", "M910", "M913", "M914", "M915"]
+why = "changes machine configuration (steps, offsets, PID, motor drivers, travel and motion limits, cold extrusion)"
+
+[[family.gcode.deny]]
+category = "network"
+codes = ["M540", "M550", "M551", "M552", "M553", "M554", "M586", "M587", "M588", "M589"]
+why = "changes network settings"
+
+[[family.gcode.deny]]
+category = "storage"
+codes = ["M20", "M21", "M22", "M23", "M24", "M25", "M26", "M27", "M28", "M29", "M30", "M32", "M33", "M34", "M928"]
+why = "reads, writes, deletes or runs files on the printer's storage"
+
+[[family.gcode.deny]]
+category = "pins"
+codes = ["M42", "M43", "M226", "M260", "M261", "M280"]
+why = "drives pins, buses or servos directly"
+
+# ---------------------------------------------------------------------------------------
+# Filaments
+# ---------------------------------------------------------------------------------------
+#
+# The highest temperatures a job may command for a filament family. A family matches when
+# the material, upper-cased and without spaces, dashes or underscores, equals the family
+# or one of its `aliases`. Nothing matches by prefix: "PCTG" is not "PC". A material that
+# matches nothing is refused. The aliases are product names, not observed anywhere. The
+# temperatures are general FDM practice, not measured on a printer and not vendor limits:
+# the spool's own range (reported by the AMS as nozzle_temp_min/max) is the better source
+# once a printer is connected.
+
+[[filament]]
+family = "PLA"
+aliases = ["PLA Basic", "PLA Matte"]
+nozzle_max_c = 240.0
+bed_max_c = 70.0
+chamber_max_c = 45.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "PLA-CF"
+nozzle_max_c = 250.0
+bed_max_c = 70.0
+chamber_max_c = 45.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "PETG"
+aliases = ["PETG Basic", "PETG HF"]
+nozzle_max_c = 270.0
+bed_max_c = 90.0
+chamber_max_c = 50.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "TPU"
+nozzle_max_c = 250.0
+bed_max_c = 60.0
+chamber_max_c = 45.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "ABS"
+nozzle_max_c = 290.0
+bed_max_c = 110.0
+chamber_max_c = 65.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "ASA"
+nozzle_max_c = 290.0
+bed_max_c = 110.0
+chamber_max_c = 65.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "PA"
+nozzle_max_c = 300.0
+bed_max_c = 110.0
+chamber_max_c = 65.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "PC"
+nozzle_max_c = 300.0
+bed_max_c = 120.0
+chamber_max_c = 65.0
+verified = false
+source = "general FDM practice"
+
+[[filament]]
+family = "PVA"
+nozzle_max_c = 240.0
+bed_max_c = 70.0
+chamber_max_c = 45.0
+verified = false
+source = "general FDM practice"

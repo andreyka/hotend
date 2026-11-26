@@ -1,0 +1,133 @@
+# How Hotend's printers, process presets and materials map to the system profiles that an
+# installed Bambu Studio ships, and which plate types Hotend can ask for. Data, not code.
+#
+# The installed system profile is always the base. Hotend flattens it (inherits chain and
+# include templates, see src/flatten.rs) and sets settings on top only through the keymap
+# (`profiles/keymap-bambu-studio.toml`, `src/keymap.rs`): the plate type of the job, the
+# print settings of the plate's plan, and the `overrides` of a process preset below. A key
+# that is not a row of the keymap cannot be set, none can hold G-code, and each value must
+# have the form and lie in the range of its row.
+#
+# Profile names are facts about an installation, not profile content. `verified = true`
+# means the name was seen on a real installation and sliced with; the measurement is named
+# in `measured_on`. Every other name is a guess from the vendor's naming pattern and is
+# reported as an error that lists the names really installed if it is wrong.
+#
+# A job selects a process preset and a material by the `id` (or an alias) given here, and
+# by nothing else: an id this file does not list is refused. To slice with another
+# installed profile, add it here.
+
+schema = 1
+revision = "2026-11-18.1"
+measured_on = "Bambu Studio 02.09.01.70 on Windows, 17 November 2026, and on Linux (WSL), 18 November 2026"
+
+# The command line's own default is the Cool Plate with a 35 C bed, whatever plate is on
+# the printer, so Hotend always states the plate. Which plate is on the printer is a fact
+# only the user knows: a real slice is refused until the job or the settings name it
+# (`bed_type_not_chosen`). Only the stand-in slicer, whose file cannot be printed, slices
+# for the plate below when nobody chose one.
+stand_in_bed_type = "textured-pei"
+
+# How the plate could be told on the command line: `<option>=<slicer_value>`. With
+# `use = false` the option is not passed: the plate goes into the process settings as
+# `curr_bed_type` only, which is what the measured command lines did (the hand-made project
+# of 17 November 2026, and the Linux runs of 18 November 2026 with this option left out,
+# which sliced and heated for the plate asked for).
+[bed_type_option]
+option = "--curr-bed-type"
+verified = false
+use = false
+
+# `slicer_value` is the value of the slicer setting `curr_bed_type`; `temperature_key` and
+# `first_layer_temperature_key` are the filament settings that hold the bed temperature for
+# that plate, for the other layers and for the first layer.
+[[bed_type]]
+id = "cool"
+name = "Cool Plate"
+slicer_value = "Cool Plate"
+temperature_key = "cool_plate_temp"
+first_layer_temperature_key = "cool_plate_temp_initial_layer"
+# Measured: the sliced G-code states this value and heats the bed to the 35 C of this key.
+verified = true
+
+[[bed_type]]
+id = "textured-pei"
+name = "Textured PEI Plate"
+slicer_value = "Textured PEI Plate"
+temperature_key = "textured_plate_temp"
+first_layer_temperature_key = "textured_plate_temp_initial_layer"
+# Measured: two test slices (a hand-made project, 17 November 2026, and a holder) state this
+# value, heat the bed to the two keys (65 C for the first layer and 60 C for the others as
+# set there) and trim Z for a textured plate.
+verified = true
+
+[[bed_type]]
+id = "high-temp"
+name = "High Temp Plate"
+slicer_value = "High Temp Plate"
+temperature_key = "hot_plate_temp"
+first_layer_temperature_key = "hot_plate_temp_initial_layer"
+verified = false
+
+[[bed_type]]
+id = "engineering"
+name = "Engineering Plate"
+slicer_value = "Engineering Plate"
+temperature_key = "eng_plate_temp"
+first_layer_temperature_key = "eng_plate_temp_initial_layer"
+verified = false
+
+[[printer]]
+id = "bambu-x2d"
+# Folder of the vendor below `resources/profiles` in the installation.
+vendor = "BBL"
+nozzle = "0.4"
+machine = "Bambu Lab X2D 0.4 nozzle"
+machine_verified = true
+# A material's system profile is its `base` followed by this text.
+filament_suffix = " @BBL X2D 0.4 nozzle"
+
+# The nozzle inventory of both nozzles. The stock machine profile lacks these keys, and an
+# editable project exported without them records one nozzle and then fails to slice on its
+# own (return code -100). Measured on 17 November 2026: with these values in the machine
+# settings the exported project sliced alone with return code 0. They are machine facts,
+# written only for a project export, and only these six machine keys are ever written
+# (`keymap::NOZZLE_INVENTORY_KEYS`).
+[printer.nozzle_inventory]
+verified = true
+measured_on = "Bambu Studio 02.09.01.70 on Windows, 17 November 2026"
+values = { extruder_nozzle_count = ["1", "1"], extruder_nozzle_diameter = ["0.4", "0.4"], extruder_nozzle_slot = ["0", "1"], extruder_nozzle_stats = ["Standard#1", "Standard#1"], extruder_nozzle_volume_type = ["Standard", "Standard"], nozzle_volume_type = ["Standard", "Standard"] }
+
+[[printer.process]]
+id = "standard-0.20mm"
+# The id the demo and the stand-in slicer use for the same layer height.
+aliases = ["demo-0.20mm"]
+base = "0.20mm Standard @BBL X2D"
+verified = true
+
+[[printer.process]]
+id = "fine-0.12mm"
+aliases = ["demo-0.12mm"]
+base = "0.12mm Fine @BBL X2D"
+verified = false
+
+[[printer.material]]
+id = "pla-basic"
+base = "Bambu PLA Basic"
+verified = true
+
+# The vendor's stock preset for PLA of any brand; the two test slices used this profile.
+[[printer.material]]
+id = "pla-generic"
+base = "Generic PLA"
+verified = true
+
+[[printer.material]]
+id = "petg-basic"
+base = "Bambu PETG Basic"
+verified = false
+
+[[printer.material]]
+id = "tpu-95a"
+base = "Bambu TPU 95A"
+verified = false

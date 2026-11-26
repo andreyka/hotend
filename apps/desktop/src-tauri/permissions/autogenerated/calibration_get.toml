@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-calibration-get"
+description = "Enables the calibration_get command without any pre-configured scope."
+commands.allow = ["calibration_get"]
+
+[[permission]]
+identifier = "deny-calibration-get"
+description = "Denies the calibration_get command without any pre-configured scope."
+commands.deny = ["calibration_get"]

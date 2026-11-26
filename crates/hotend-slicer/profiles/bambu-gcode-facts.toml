@@ -1,0 +1,69 @@
+# What the proof (`src/proof.rs`) reads in a G-code that Bambu Studio wrote for the X2D: the
+# marker comments, the feature names of the first layer and the fan command words. Data, not
+# code. These are printer-family facts; they belong in
+# `crates/hotend-printer/profiles/bambu.toml`, which this crate does not depend on, so they
+# live here beside the slicer for now and move there when the core passes them in.
+#
+# Measured on a test slice of a holder (Bambu Studio 02.09.01.70, sliced 2026-11-17) and on a
+# hand-made gauge project (sliced 2026-11-17). Only key names and marker words are recorded
+# here, no profile or G-code text.
+
+schema = 1
+revision = "2026-11-18.2"
+measured_on = "Bambu Studio 02.09.01.70 for the X2D, 17 and 18 November 2026"
+
+# The comment that starts every layer, and the prefix of the comment that names the feature
+# of the moves that follow.
+layer_marker = "CHANGE_LAYER"
+feature_prefix = "FEATURE:"
+# The settings block: one `; key = value` comment per setting between these two comments.
+config_start = "CONFIG_BLOCK_START"
+config_end = "CONFIG_BLOCK_END"
+
+# Fan words of `M106`: the fan index is the `P` word, and `0` stands for `M106` without one.
+# The part cooling fan is `M106` without `P` (and `P1` in the start routine); the auxiliary
+# fans are `P2` and `P10`; the chamber fan is `P3`, which the start routine sets and no key
+# controls (reported, never judged).
+part_fans = [0, 1]
+aux_fans = [2, 10]
+chamber_fan = 3
+
+# A feature whose name contains this word (any case), on any layer, is a prime tower.
+tower_word = "tower"
+# The feature of the brim lines.
+brim_feature = "Brim"
+
+# The closed list of features an extruding move of the first layer may carry. `bound` says
+# which first layer speed holds for it: `wall` (the first layer speed) or `fill` (the first
+# layer infill speed). A first layer move under any other feature, or under none, makes the
+# proof incomplete: the names of overhang walls, supports, infill and gap fill are added when a
+# real first layer shows them.
+[[feature]]
+name = "Brim"
+bound = "wall"
+verified = true
+
+[[feature]]
+name = "Outer wall"
+bound = "wall"
+verified = true
+
+[[feature]]
+name = "Inner wall"
+bound = "wall"
+verified = true
+
+[[feature]]
+name = "Bottom surface"
+bound = "fill"
+verified = true
+
+# Gap fill between the walls and the bottom: measured on 18 November 2026 with the Linux
+# command line 02.09.01.70 on the bundled example's plate (the cable box): its first layer
+# fills gaps at the first layer speed of the walls, 30 mm/s with the calm plan (walls 30,
+# infill 50) and 20 mm/s with the holder recipe (walls 20, infill 30)
+# (tests/real_bambu_studio.rs, the_real_bambu_studio_fills_first_layer_gaps_at_the_wall_speed).
+[[feature]]
+name = "Gap infill"
+bound = "wall"
+verified = true

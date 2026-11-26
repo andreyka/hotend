@@ -1,0 +1,167 @@
+# Thresholds and widths of the print rules (docs/PRINT_SETTINGS.md).
+#
+# Every number carries a mark: "measured" (on a printer or read from a test slice),
+# "sourced" (a public vendor page), "judgment" (to be replaced by a measurement) or
+# "stock" (the value of the installed standard preset). Hard ranges are not here: they are
+# constants in src/bounds.rs, and no number of this file can widen one.
+
+schema = 1
+revision = "2026-11-18.1"
+
+# STK-1. The four sticking values Hotend does not write while the standard preset is used.
+# The proof demands them in the echo; another preset gets them written explicitly.
+[baseline]
+preset = "standard-0.20mm"
+elephant_foot_mm = 0.15
+first_layer_height_mm = 0.20
+first_layer_line_width_mm = 0.50
+first_layer_accel_mm_s2 = 500
+mark = "measured"
+source = "the values of the standard 0.20 mm preset in a test project, 17 November 2026"
+
+# AD-1 thin strip: strip width below the limit asks for an outer brim.
+[brim.thin_strip]
+below_mm = 3.0
+width_mm = 5
+mark = "judgment"
+source = "5 mm gave a ten-line brim on the measured ring; the 3.0 mm limit is judgment"
+
+# AD-2 small foot.
+[brim.small_foot]
+below_mm2 = 300.0
+width_mm = 3
+tiny_below_mm2 = 100.0
+tiny_width_mm = 5
+mark = "judgment"
+source = "the failed pieces had 167 and 196 mm2; small objects want a brim (vendor page on the textured plate)"
+
+# AD-3 tall and slender: height / sqrt(contact).
+[brim.slender]
+above = 2.0
+width_mm = 5
+very_above = 4.0
+very_width_mm = 8
+warn_above = 6.0
+mark = "judgment"
+source = "2 is the limit print preparation scores for tipping; a taller part with a smaller footprint needs a wider brim (vendor page on brims); widths are judgment"
+
+# AD-4 long part, by warp class.
+[brim.long_part]
+low_above_mm = 180.0
+low_width_mm = 3
+medium_above_mm = 120.0
+medium_width_mm = 5
+mark = "judgment"
+source = "judgment"
+
+# AD-5 warping material (warp class high).
+[brim.warping]
+width_mm = 5
+mark = "judgment"
+source = "these materials get wider brims (vendor page on brims); the width is judgment"
+
+# AD-6 flexible material: replaces the widths above.
+[brim.flexible]
+width_mm = 0
+thin_or_tall_width_mm = 3
+mark = "judgment"
+source = "a flexible part usually needs a narrower brim and sticks strongly to the plate (vendor pages); widths are judgment"
+
+# An inner brim needs an inner loop at least 2 x width + extra wide.
+[brim.inner]
+extra_mm = 10.0
+mark = "judgment"
+source = "judgment"
+
+# FIT-2: a brim that a rule requires touches the part, when the elephant foot compensation
+# is at least the stated value.
+[brim.gap]
+required_mm = 0.0
+min_elephant_foot_mm = 0.1
+mark = "measured"
+source = "the hand-made recipe used gap 0; for PETG, ABS and ASA it is judgment until one print shows the brim still snaps off"
+
+# The widest brim a change may ask for.
+[brim.limit]
+max_mm = 10
+max_warp_high_mm = 15
+mark = "judgment"
+source = "judgment"
+
+# Level 2 and what it brings. A silk spool raises the level by one, to `silk_max` at most; a
+# level may be asked for up to `ask_max`.
+[level]
+silk_max = 2
+ask_max = 2
+brim_min_mm = 5
+brim_extra_mm = 3
+brim_max_mm = 10
+fan_off_layers = 5
+first_layer_height_mm = 0.25
+first_layer_height_plate = "textured-pei"
+mark = "judgment"
+source = "0.25 mm on the textured plate is the vendor's advice; the failed ring was silk PETG; the rest is judgment"
+
+# MAT-1 thin walls.
+[walls]
+strip_below_mm = 3.0
+min_wall_at_most_mm = 2.4
+loops = 3
+mark = "judgment"
+source = "so that a 2 mm wall prints as walls only; the proof project used 3"
+
+# MAT-2 flexible material.
+[flexible]
+max_pieces = 4
+refused_shore_a = 85
+refused_nozzle_mm = 0.4
+mark = "judgment"
+source = "one or a few models per plate (vendor TPU guide); 85A with a 0.4 mm nozzle is not supported (vendor 85A and 90A guide); the number 4 is judgment"
+
+# SUP-1 to SUP-4. A region does not count when it is a bridge of at most `bridge_max_mm`, the
+# ceiling of a round hole of at most `hole_max_mm`, or a free overhang reaching at most
+# `reach_max_mm`.
+[supports]
+bridge_max_mm = 20.0
+hole_max_mm = 8.0
+reach_max_mm = 2.0
+offer_from_mm2 = 4.0
+on_from_mm2 = 20.0
+forced_above_mm2 = 100.0
+flexible_on_from_mm2 = 50.0
+flexible_forced_above_mm2 = 200.0
+over_part_from_mm2 = 4.0
+fit_overhang_from_mm2 = 4.0
+threshold_deg = 30
+mark = "judgment"
+source = "the threshold is the stock value; the limits are judgment"
+
+# SPD-2 gentle motion for tall, slender pieces.
+[gentle]
+above = 4.0
+accel_cap_mm_s2 = 4000
+outer_wall_accel_cap_mm_s2 = 2000
+outer_wall_speed_cap_mm_s = 100
+mark = "judgment"
+source = "judgment"
+
+# VNT-1: the venting line applies to prints longer than this.
+[venting]
+longer_than_minutes = 60
+mark = "judgment"
+source = "judgment"
+
+# Cross-field rules for the first layer, as multiples of the nozzle diameter.
+[cross]
+first_layer_height_max_factor = 0.75
+line_width_min_factor = 1.05
+line_width_max_factor = 1.5
+mark = "judgment"
+source = "judgment"
+
+# A product whose bed temperatures differ by more than this from the gauge's gets the
+# warning that the fit was calibrated with other settings.
+[signature]
+bed_tolerance_c = 5
+mark = "judgment"
+source = "judgment"

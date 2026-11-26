@@ -1,0 +1,358 @@
+# Material print cards (docs/PRINT_SETTINGS.md): one card per family of
+# python/hotend_fit/materials.py. A test fails when a family exists on one side only.
+#
+# Marks: "measured", "sourced" (a public vendor page), "judgment", "stock" (the value of the
+# installed profile). Three-entry lists are the values for adhesion levels 0, 1 and 2.
+# `bed` is [first layer, other layers] at level 0 and `bed_raised` the pair from level 1; a
+# pair no source gives is kept at the level 0 pair and marked "judgment".
+# `window` is the range a bed temperature may be moved in on that plate.
+# `max_overhang_deg` is the steepest overhang the family prints without support, the number
+# python/hotend_fit/materials.py has; a support threshold may be moved up to 90 minus it.
+# Hard ranges are constants in src/bounds.rs; a card outside them fails to load.
+
+schema = 1
+revision = "2026-11-18.3"
+
+[[card]]
+family = "PLA"
+proven = true
+flexible = false
+warp_class = "low"
+feed = "any"
+fan_off_layers = 3
+fan_off_layers_mark = "sourced"
+aux_fan_first_layers_pct = 0
+aux_fan_first_layers_mark = "measured"
+brim_gap_mm = 0.1
+brim_gap_mark = "stock"
+vent_mark_c = 45
+nozzle_range_c = [190, 240]
+nozzle_range_mark = "measured"
+max_overhang_deg = 45
+max_overhang_mark = "judgment"
+list = []
+source = "vendor material table, page on warping, page on plates; the level 1 values produced the intended G-code on 17 November 2026"
+
+[card.first_layer]
+walls_mm_s = [30, 20, 15]
+infill_mm_s = [50, 30, 25]
+marks = ["judgment", "measured", "judgment"]
+
+[card.aux_fan_max]
+pct = [50, 30, 30]
+marks = ["sourced", "measured", "measured"]
+
+[card.plate.textured-pei]
+status = "ok"
+glue = "no"
+bed = [60, 55]
+bed_mark = "judgment"
+bed_raised = [65, 60]
+bed_raised_mark = "measured"
+window = [55, 65]
+window_mark = "sourced"
+source = "stock is 55 and 55; the proof run heated to 65 and 60; window about 55 to 65 (page on warping)"
+
+[card.plate.cool]
+status = "ok"
+glue = "required"
+bed = [35, 35]
+bed_mark = "stock"
+bed_raised = [40, 40]
+bed_raised_mark = "judgment"
+window = [35, 45]
+window_mark = "sourced"
+source = "stock 35 and 35; window from the material table; glue required (page on plates)"
+
+[card.plate.high-temp]
+status = "ok"
+glue = "no"
+bed = [55, 55]
+bed_mark = "stock"
+bed_raised = [60, 60]
+bed_raised_mark = "judgment"
+window = [45, 65]
+window_mark = "sourced"
+source = "stock 55 and 55; window from the material table; no glue (page on plates)"
+
+[card.plate.engineering]
+status = "warning"
+glue = "required"
+bed = [55, 55]
+bed_mark = "stock"
+bed_raised = [55, 55]
+bed_raised_mark = "judgment"
+window = [55, 55]
+window_mark = "judgment"
+source = "not recommended (material table); stock 55 and 55; no other number is known, so the window is the stock value alone; this plate needs glue for every filament (page on plates, read again on 18 November 2026)"
+
+[[card]]
+family = "PETG"
+proven = true
+flexible = false
+warp_class = "medium"
+feed = "any"
+fan_off_layers = 3
+fan_off_layers_mark = "sourced"
+aux_fan_first_layers_pct = 0
+aux_fan_first_layers_mark = "measured"
+brim_gap_mm = 0.1
+brim_gap_mark = "judgment"
+vent_mark_c = 70
+nozzle_range_c = [220, 270]
+nozzle_range_mark = "judgment"
+max_overhang_deg = 45
+max_overhang_mark = "judgment"
+list = ["after.cool"]
+source = "vendor material table and page on plates; speeds and the auxiliary fan cap are judgment"
+
+[card.first_layer]
+walls_mm_s = [25, 20, 15]
+infill_mm_s = [40, 30, 25]
+marks = ["judgment", "judgment", "judgment"]
+
+[card.aux_fan_max]
+pct = [20, 20, 20]
+marks = ["judgment", "judgment", "judgment"]
+
+[card.plate.textured-pei]
+status = "ok"
+glue = "unstated"
+bed = [70, 70]
+bed_mark = "stock"
+bed_raised = [75, 70]
+bed_raised_mark = "judgment"
+window = [65, 80]
+window_mark = "sourced"
+source = "stock 70 and 70; table 60 to 80"
+
+[card.plate.cool]
+status = "refused"
+source = "not recommended (material table); the slicer refuses it as well"
+
+[card.plate.high-temp]
+status = "ok"
+glue = "required"
+bed = [70, 70]
+bed_mark = "judgment"
+bed_raised = [70, 70]
+bed_raised_mark = "judgment"
+window = [60, 80]
+window_mark = "sourced"
+source = "window from the material table; glue protects the sheet (page on plates)"
+
+[card.plate.engineering]
+status = "ok"
+glue = "required"
+bed = [70, 70]
+bed_mark = "judgment"
+bed_raised = [70, 70]
+bed_raised_mark = "judgment"
+window = [60, 80]
+window_mark = "sourced"
+source = "window from the material table; glue (page on plates)"
+
+[[card]]
+family = "TPU"
+proven = true
+flexible = true
+warp_class = "low"
+feed = "external_main"
+fan_off_layers = 3
+fan_off_layers_mark = "sourced"
+aux_fan_first_layers_pct = 0
+aux_fan_first_layers_mark = "measured"
+brim_gap_mm = 0.1
+brim_gap_mark = "judgment"
+vent_mark_c = 45
+nozzle_range_c = [200, 250]
+nozzle_range_mark = "judgment"
+max_overhang_deg = 45
+max_overhang_mark = "judgment"
+outer_wall_cap_mm_s = 30
+outer_wall_cap_mark = "judgment"
+list = ["tpu.dry", "after.flexible"]
+source = "vendor TPU guide and the 85A and 90A guide for the X series; the loading lines and the vent mark are to be read again against those pages"
+
+[card.first_layer]
+walls_mm_s = [15, 15, 15]
+infill_mm_s = [20, 20, 20]
+marks = ["judgment", "judgment", "judgment"]
+
+[card.plate.textured-pei]
+status = "ok"
+glue = "no"
+bed = [35, 35]
+bed_mark = "judgment"
+bed_raised = [40, 40]
+bed_raised_mark = "judgment"
+window = [35, 45]
+window_mark = "sourced"
+source = "window from the material table; no glue on this plate (85A and 90A guide)"
+
+[card.plate.cool]
+status = "refused"
+source = "refused by the material table; the TPU guide lists it as compatible and the stricter page wins"
+
+[card.plate.high-temp]
+status = "ok"
+glue = "required"
+bed = [35, 35]
+bed_mark = "judgment"
+bed_raised = [35, 35]
+bed_raised_mark = "judgment"
+window = [35, 45]
+window_mark = "sourced"
+source = "window from the material table; glue required (page on plates)"
+
+[card.plate.engineering]
+status = "ok"
+glue = "required"
+bed = [35, 35]
+bed_mark = "judgment"
+bed_raised = [35, 35]
+bed_raised_mark = "judgment"
+window = [30, 35]
+window_mark = "sourced"
+source = "window from the material table; glue (85A and 90A guide)"
+
+# Softer grades are pushed more slowly. 95A has no cap.
+# A grade row holds for its hardness and every softer one down to the next row. A harder
+# material than every row gets none of it; a material whose id names no hardness gets the
+# softest row. `list` are the lines of the list the grade adds.
+[[card.grade]]
+shore_a = 90
+max_flow_cap_mm3_s = 2.5
+list = ["tpu.load"]
+mark = "judgment"
+source = "lower for soft TPU, no number given (vendor TPU guide); loading and unloading by hand are stated for 85A and 90A (vendor 85A and 90A guide)"
+
+[[card]]
+family = "ABS"
+proven = false
+flexible = false
+warp_class = "high"
+feed = "any"
+fan_off_layers = 3
+fan_off_layers_mark = "sourced"
+aux_fan_first_layers_pct = 0
+aux_fan_first_layers_mark = "measured"
+brim_gap_mm = 0.1
+brim_gap_mark = "judgment"
+nozzle_range_c = [240, 290]
+nozzle_range_mark = "judgment"
+max_overhang_deg = 45
+max_overhang_mark = "judgment"
+list = ["unproven"]
+source = "unproven: no test print; bed temperatures from the vendor material table"
+
+[card.first_layer]
+walls_mm_s = [30, 20, 15]
+infill_mm_s = [50, 30, 25]
+marks = ["judgment", "judgment", "judgment"]
+
+[card.aux_fan_max]
+pct = [0, 0, 0]
+marks = ["judgment", "judgment", "judgment"]
+
+[card.plate.textured-pei]
+status = "ok"
+glue = "unstated"
+bed = [100, 100]
+bed_mark = "judgment"
+bed_raised = [100, 100]
+bed_raised_mark = "judgment"
+window = [90, 100]
+window_mark = "sourced"
+source = "window from the material table"
+
+[card.plate.cool]
+status = "refused"
+source = "refused by the material table"
+
+[card.plate.high-temp]
+status = "ok"
+glue = "required"
+bed = [100, 100]
+bed_mark = "judgment"
+bed_raised = [100, 100]
+bed_raised_mark = "judgment"
+window = [90, 100]
+window_mark = "judgment"
+source = "glue; the window is taken from the textured plate"
+
+[card.plate.engineering]
+status = "ok"
+glue = "required"
+bed = [100, 100]
+bed_mark = "judgment"
+bed_raised = [100, 100]
+bed_raised_mark = "judgment"
+window = [90, 100]
+window_mark = "judgment"
+source = "glue; the window is taken from the textured plate"
+
+[[card]]
+family = "ASA"
+proven = false
+flexible = false
+warp_class = "high"
+feed = "any"
+fan_off_layers = 3
+fan_off_layers_mark = "sourced"
+aux_fan_first_layers_pct = 0
+aux_fan_first_layers_mark = "measured"
+brim_gap_mm = 0.1
+brim_gap_mark = "judgment"
+nozzle_range_c = [240, 290]
+nozzle_range_mark = "judgment"
+max_overhang_deg = 45
+max_overhang_mark = "judgment"
+list = ["unproven"]
+source = "unproven: no test print; bed temperatures from the vendor material table"
+
+[card.first_layer]
+walls_mm_s = [30, 20, 15]
+infill_mm_s = [50, 30, 25]
+marks = ["judgment", "judgment", "judgment"]
+
+[card.aux_fan_max]
+pct = [0, 0, 0]
+marks = ["judgment", "judgment", "judgment"]
+
+[card.plate.textured-pei]
+status = "ok"
+glue = "unstated"
+bed = [100, 100]
+bed_mark = "judgment"
+bed_raised = [100, 100]
+bed_raised_mark = "judgment"
+window = [90, 100]
+window_mark = "sourced"
+source = "window from the material table"
+
+[card.plate.cool]
+status = "refused"
+source = "refused by the material table"
+
+[card.plate.high-temp]
+status = "ok"
+glue = "required"
+bed = [100, 100]
+bed_mark = "judgment"
+bed_raised = [100, 100]
+bed_raised_mark = "judgment"
+window = [90, 100]
+window_mark = "judgment"
+source = "glue; the window is taken from the textured plate"
+
+[card.plate.engineering]
+status = "ok"
+glue = "required"
+bed = [100, 100]
+bed_mark = "judgment"
+bed_raised = [100, 100]
+bed_raised_mark = "judgment"
+window = [90, 100]
+window_mark = "judgment"
+source = "glue; the window is taken from the textured plate"

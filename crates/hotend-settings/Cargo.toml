@@ -1,0 +1,29 @@
+[package]
+name = "hotend-settings"
+description = "Hotend's print settings: the closed field model with constant hard ranges, the rule data and the rule engine that turn measured plate facts into a print plan"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[lib]
+name = "hotend_settings"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sha2 = "0.11.1"
+thiserror = "2.0.21"
+toml = { version = "1.2.1", default-features = false, features = ["parse", "serde"] }
+# Tells an assigned, visible character from one that is not; a note is held to the former.
+unicode-general-category = "1.1.0"
+
+[dev-dependencies]
+# Runs the published proposal schema through a real validator (tests/schema.rs). The same
+# crate and features as hotend-core uses.
+jsonschema = { version = "0.61.2", default-features = false }

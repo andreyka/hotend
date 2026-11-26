@@ -1,0 +1,72 @@
+event: message_start
+data: {"type":"message_start","message":{"id":"msg_01research","type":"message","role":"assistant","model":"m","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":2710,"cache_creation_input_tokens":0,"cache_read_input_tokens":5120,"output_tokens":3}}}
+
+event: ping
+data: {"type":"ping"}
+
+event: content_block_start
+data: {"type":"content_block_start","index":0,"content_block":{"type":"thinking","thinking":"","signature":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":"EuYBCkYICBgCKkDfixtureSignatureNotARealOne0123456789abcdefghijklmnopqrstuvwxyzABCDEF=="}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":0}
+
+event: content_block_start
+data: {"type":"content_block_start","index":1,"content_block":{"type":"text","text":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"I'll look up the "}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"basket's diameter."}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":1}
+
+event: content_block_start
+data: {"type":"content_block_start","index":2,"content_block":{"type":"server_tool_use","id":"srvtoolu_01search","name":"web_search","input":{}}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":2,"delta":{"type":"input_json_delta","partial_json":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":2,"delta":{"type":"input_json_delta","partial_json":"{\"query\": \"Brenta 600 ba"}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":2,"delta":{"type":"input_json_delta","partial_json":"sket inner diameter mm\"}"}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":2}
+
+event: ping
+data: {"type":"ping"}
+
+event: content_block_start
+data: {"type":"content_block_start","index":3,"content_block":{"type":"web_search_tool_result","tool_use_id":"srvtoolu_01search","content":[{"type":"web_search_result","title":"Brenta 600 portafilter basket - dimensions","url":"https://maker.example/brenta-600/specs?ref=search","encrypted_content":"fixtureEncryptedContentNotARealOne0123456789abcdefghijklmnopq","page_age":"April 30, 2025"},{"type":"web_search_result","title":"Brenta 600 review","url":"https://reviews.example/brenta-600","encrypted_content":"fixtureEncryptedContentNotARealTwo0123456789abcdefghijklmnopqrs","page_age":null}]}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":3}
+
+event: content_block_start
+data: {"type":"content_block_start","index":4,"content_block":{"type":"text","text":""}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":4,"delta":{"type":"citations_delta","citation":{"type":"web_search_result_location","url":"https://maker.example/brenta-600/specs?ref=search","title":"Brenta 600 portafilter basket - dimensions","encrypted_index":"fixtureEncryptedIndex001","cited_text":"The Brenta 600 basket has an inner diameter of 58.5 mm and a rim of 70 mm."}}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":4,"delta":{"type":"text_delta","text":"The basket's inner "}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":4,"delta":{"type":"text_delta","text":"diameter is 58.5 mm."}}
+
+event: content_block_stop
+data: {"type":"content_block_stop","index":4}
+
+event: message_delta
+data: {"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null},"usage":{"input_tokens":9400,"cache_creation_input_tokens":0,"cache_read_input_tokens":5120,"output_tokens":180,"server_tool_use":{"web_search_requests":1,"web_fetch_requests":0}}}
+
+event: message_stop
+data: {"type":"message_stop"}
+

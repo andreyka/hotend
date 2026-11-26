@@ -1,0 +1,4 @@
+/gen/schemas
+# What tauri.bundle.conf.json packs, put there before a bundle is built.
+/binaries/
+/bundle/

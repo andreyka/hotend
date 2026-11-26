@@ -1,0 +1,21 @@
+target/
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.DS_Store
+*.log
+/data/
+.env
+.env.*
+
+# Local reference models (third-party designs under their own licences): never committed.
+/refs/
+
+# A component file a person puts beside the shipped sample is never committed.
+/python/hotend_fit/components/*.json
+!/python/hotend_fit/components/sample_phone.json

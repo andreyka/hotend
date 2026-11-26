@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-run-cancel"
+description = "Enables the run_cancel command without any pre-configured scope."
+commands.allow = ["run_cancel"]
+
+[[permission]]
+identifier = "deny-run-cancel"
+description = "Denies the run_cancel command without any pre-configured scope."
+commands.deny = ["run_cancel"]

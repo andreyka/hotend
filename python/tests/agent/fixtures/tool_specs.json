@@ -1,0 +1,372 @@
+[
+  {
+    "description": "Replace the model script with `code` (one Python file defining PARAMS and build(p, ctx) with build123d), build it in the sandbox and run the checks. If it builds, it becomes the new current version. Returns the status, any error with its line number, the check results and a summary of the parts.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "description": "The complete model script.",
+          "maxLength": 200000,
+          "minLength": 1,
+          "type": "string"
+        },
+        "note": {
+          "description": "One line on what changed and why.",
+          "maxLength": 500,
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "type": "object"
+    },
+    "name": "write_model_code"
+  },
+  {
+    "description": "Rebuild the current version with one parameter changed. Creates a new version if it builds. The value must be inside the parameter's declared range.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "pattern": "^[a-z][a-z0-9_]{0,31}$",
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "type": "object"
+    },
+    "name": "set_parameter"
+  },
+  {
+    "description": "Try a few values of one to three parameters of the current version in one call, without creating a version: each setting is built from scratch with the other parameters as they are and judged by the error checks and the contract. Returns, per setting, whether it builds and passes, the failed checks, every contract requirement and the size of each part. Give each parameter `values` (up to 9) or `from`, `to` and `steps`; `combine` tries every combination instead of one parameter at a time. At most 16 settings; values must be inside the declared ranges. Read-only: change the version afterwards with set_parameter or write_model_code.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "combine": {
+          "type": "boolean"
+        },
+        "params": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "from": {
+                "type": "number"
+              },
+              "name": {
+                "pattern": "^[a-z][a-z0-9_]{0,31}$",
+                "type": "string"
+              },
+              "steps": {
+                "maximum": 9,
+                "minimum": 2,
+                "type": "integer"
+              },
+              "to": {
+                "type": "number"
+              },
+              "values": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 9,
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "params"
+      ],
+      "type": "object"
+    },
+    "name": "sweep_parameters"
+  },
+  {
+    "description": "Run the geometric checks on the current version again, all of them or only the listed ones.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "items": {
+            "enum": [
+              "valid_solid",
+              "manifold",
+              "single_solid_per_part",
+              "fits_build_volume",
+              "min_wall",
+              "overhangs",
+              "bed_contact",
+              "small_features",
+              "parts_do_not_intersect",
+              "fit_pairs",
+              "parameter_ranges",
+              "contract"
+            ]
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "name": "run_checks"
+  },
+  {
+    "description": "Render PNG views of the current version, optionally cut open by a section plane to show the inside. Returns the images.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "section": {
+          "additionalProperties": false,
+          "properties": {
+            "offset": {
+              "maximum": 10000,
+              "minimum": -10000,
+              "type": "number"
+            },
+            "plane": {
+              "enum": [
+                "XY",
+                "XZ",
+                "YZ"
+              ]
+            }
+          },
+          "required": [
+            "plane"
+          ],
+          "type": "object"
+        },
+        "views": {
+          "items": {
+            "enum": [
+              "iso",
+              "front",
+              "back",
+              "left",
+              "right",
+              "top",
+              "bottom"
+            ]
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "views"
+      ],
+      "type": "object"
+    },
+    "name": "render_views"
+  },
+  {
+    "description": "Exact measurements on the current version. Each query has a `kind`: bbox {part?}, volume {part?}, distance {a, b} where a and b are {part}, {part, face}, {part, edge} or {point: [x, y, z]}, or section {plane, offset, part?}. Lengths are millimetres.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "queries": {
+          "items": {
+            "maxProperties": 8,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "bbox",
+                  "volume",
+                  "distance",
+                  "section"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "queries"
+      ],
+      "type": "object"
+    },
+    "name": "measure"
+  },
+  {
+    "description": "Search the documentation of the installed build123d, bd_warehouse and Hotend feature-card libraries. Returns signatures and docstrings for the exact versions the model runs on.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "maximum": 10,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "query": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+        },
+        "topic": {
+          "maxLength": 200,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "name": "read_docs"
+  },
+  {
+    "description": "List the Proven Fit feature cards available to the model script (hotend_fit.cards) with their signatures and ports.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    },
+    "name": "list_cards"
+  },
+  {
+    "description": "List the bought devices Hotend has as components: for each its id for ctx.component(id), its name and size, the sources its numbers come from (a maker's drawing, a datasheet) and how many of its numbers are not verified, by feature. Use a component instead of asking the maker for a device's size or looking it up. Read-only.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    },
+    "name": "list_components"
+  },
+  {
+    "description": "List what a slice can be made with on the printer in Hotend's settings: the process profiles `slice` accepts, the materials and build plates Hotend knows, and which material, build plate and nozzle size the settings name now. Read-only: only the maker changes the settings, in Hotend.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    },
+    "name": "list_print_profiles"
+  },
+  {
+    "description": "Hotend's print settings for one plate of the current version (plate 1 unless given): every setting with its value and where it comes from, the questions, warnings, assumptions and the before-you-print list, or why the plan is blocked. With `explain`, the rule and the reason for each setting. Read-only: it shows the plan of the version as it is laid out now, stores nothing and changes no layout, setting, baseline or print; before the version is laid out (by `slice`) it says so.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "explain": {
+          "type": "boolean"
+        },
+        "plate": {
+          "maximum": 64,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "name": "print_plan"
+  },
+  {
+    "description": "Lay the current version out for printing (each part turned the way it prints best, on as many plates as it needs) and slice one plate with a process profile. Returns print time, filament per nozzle, how each part was oriented, whether anything did not fit, and the slicer's warnings.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "plate": {
+          "maximum": 64,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "profile": {
+          "maxLength": 120,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9 ._@()+-]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "slice"
+  },
+  {
+    "description": "Create a pending print job from the latest slice of the current version, for the user to review. This cannot start a print: only the user can, in Hotend's own confirmation.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "note": {
+          "maxLength": 500,
+          "type": "string"
+        }
+      },
+      "required": [
+        "note"
+      ],
+      "type": "object"
+    },
+    "name": "propose_print"
+  },
+  {
+    "description": "When the maker wants to keep this state, name the current version as a snapshot: use their name for it, or a short one from their words (\"lid fits\"). The maker can then find it, export its files and go back to it later while the design moves on. It changes no version, no geometry and nothing else; only the maker can export a snapshot's files or go back to it, in Hotend.",
+    "input_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "One plain line, unique in the project.",
+          "maxLength": 80,
+          "minLength": 1,
+          "type": "string"
+        },
+        "note": {
+          "description": "One line on what this state is.",
+          "maxLength": 500,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
+    "name": "snapshot_model"
+  }
+]

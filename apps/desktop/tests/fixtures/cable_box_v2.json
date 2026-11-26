@@ -1,0 +1,1356 @@
+{
+ "dir": "/data/projects/01a1eb51-7b48-7046-9384-bd1bfc2b4e51/versions/2",
+ "result": {
+  "artifacts": {
+   "brep": "model.brep",
+   "mesh": "mesh.json",
+   "parts_index": "model.parts.json",
+   "step": "model.step",
+   "views": {
+    "iso": "views/iso.png"
+   }
+  },
+  "checks": [
+   {
+    "data": {
+     "is_valid": true,
+     "volume": 44552.9205
+    },
+    "id": "valid_solid",
+    "message": "A valid solid of 44.55 cm3.",
+    "part": "box",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "is_valid": true,
+     "volume": 21450.983
+    },
+    "id": "valid_solid",
+    "message": "A valid solid of 21.45 cm3.",
+    "part": "lid",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "mesh_closed": true,
+     "non_manifold_edges": 0,
+     "open_edges": 0
+    },
+    "id": "manifold",
+    "message": "Watertight: the solid and its triangle mesh are closed.",
+    "part": "box",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "mesh_closed": true,
+     "non_manifold_edges": 0,
+     "open_edges": 0
+    },
+    "id": "manifold",
+    "message": "Watertight: the solid and its triangle mesh are closed.",
+    "part": "lid",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "solids": 1
+    },
+    "id": "single_solid_per_part",
+    "message": "One solid piece.",
+    "part": "box",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "solids": 1
+    },
+    "id": "single_solid_per_part",
+    "message": "One solid piece.",
+    "part": "lid",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "margin": 2.0,
+     "nozzles": [
+      {
+       "fits": true,
+       "name": "main nozzle",
+       "needs_quarter_turn": false,
+       "nozzle_id": 1,
+       "reach": [
+        256.0,
+        256.0,
+        260.0
+       ],
+       "role": "main",
+       "size": [
+        130.0,
+        64.0,
+        40.0
+       ],
+       "source": "as_modelled",
+       "spare": [
+        122.0,
+        188.0,
+        220.0
+       ],
+       "turned": "as modelled",
+       "up": [
+        0.0,
+        0.0,
+        1.0
+       ]
+      },
+      {
+       "fits": true,
+       "name": "auxiliary nozzle",
+       "needs_quarter_turn": false,
+       "nozzle_id": 0,
+       "reach": [
+        235.5,
+        256.0,
+        256.0
+       ],
+       "role": "auxiliary",
+       "size": [
+        130.0,
+        64.0,
+        40.0
+       ],
+       "source": "as_modelled",
+       "spare": [
+        101.5,
+        188.0,
+        216.0
+       ],
+       "turned": "as modelled",
+       "up": [
+        0.0,
+        0.0,
+        1.0
+       ]
+      }
+     ],
+     "orientation": {
+      "explanation": "'box' is printed as modelled: 7974 mm2 lies flat on the bed and about 48 mm2 needs support.",
+      "source": "as_modelled",
+      "turned": "as modelled",
+      "up": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     },
+     "size": [
+      130.0,
+      64.0,
+      40.0
+     ]
+    },
+    "id": "fits_build_volume",
+    "message": "Fits the main nozzle's reach with 122.0 mm to spare in X beyond the 2 mm kept free at each edge of the bed.",
+    "part": "box",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "margin": 2.0,
+     "nozzles": [
+      {
+       "fits": true,
+       "name": "main nozzle",
+       "needs_quarter_turn": false,
+       "nozzle_id": 1,
+       "reach": [
+        256.0,
+        256.0,
+        260.0
+       ],
+       "role": "main",
+       "size": [
+        130.0,
+        64.0,
+        10.4
+       ],
+       "source": "face",
+       "spare": [
+        122.0,
+        188.0,
+        249.6
+       ],
+       "turned": "upside down",
+       "up": [
+        0.0,
+        0.0,
+        -1.0
+       ]
+      },
+      {
+       "fits": true,
+       "name": "auxiliary nozzle",
+       "needs_quarter_turn": false,
+       "nozzle_id": 0,
+       "reach": [
+        235.5,
+        256.0,
+        256.0
+       ],
+       "role": "auxiliary",
+       "size": [
+        130.0,
+        64.0,
+        10.4
+       ],
+       "source": "face",
+       "spare": [
+        101.5,
+        188.0,
+        245.6
+       ],
+       "turned": "upside down",
+       "up": [
+        0.0,
+        0.0,
+        -1.0
+       ]
+      }
+     ],
+     "orientation": {
+      "explanation": "'lid' is turned upside down: 7964 mm2 lies flat on the bed and nothing needs support (as modelled about 7676 mm2 would); the snap rails stand upright, across the layers, which is their weaker direction.",
+      "source": "face",
+      "turned": "upside down",
+      "up": [
+       0.0,
+       0.0,
+       -1.0
+      ]
+     },
+     "size": [
+      130.0,
+      64.0,
+      10.4
+     ]
+    },
+    "id": "fits_build_volume",
+    "message": "Fits the main nozzle's reach when printed turned upside down with 122.0 mm to spare in X beyond the 2 mm kept free at each edge of the bed.",
+    "part": "lid",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "measured": 2622,
+     "min_wall": 0.8,
+     "samples": 2743,
+     "thin_area": 0.0,
+     "thinnest": 1.6,
+     "thinnest_at": [
+      -5.1567,
+      -30.4,
+      32.681
+     ]
+    },
+    "id": "min_wall",
+    "message": "Thinnest wall found is 1.60 mm; the minimum is 0.80 mm (2622 points sampled).",
+    "part": "box",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "measured": 2652,
+     "min_wall": 0.8,
+     "samples": 2782,
+     "thin_area": 0.0,
+     "thinnest": 1.6,
+     "thinnest_at": [
+      -59.62,
+      -5.0,
+      34.6667
+     ]
+    },
+    "id": "min_wall",
+    "message": "Thinnest wall found is 1.60 mm; the minimum is 0.80 mm (2652 points sampled).",
+    "part": "lid",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "faces": [
+      {
+       "area": 24.0,
+       "face": 7
+      },
+      {
+       "area": 24.0,
+       "face": 22
+      }
+     ],
+     "limit_deg": 45.0,
+     "limit_source": "default",
+     "orientation": {
+      "explanation": "'box' is printed as modelled: 7974 mm2 lies flat on the bed and about 48 mm2 needs support.",
+      "source": "as_modelled",
+      "turned": "as modelled",
+      "up": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     },
+     "overhang_area": 48.0
+    },
+    "id": "overhangs",
+    "message": "About 48 mm2 of surface on 2 face(s) hangs over at more than 45 degrees and will need support when printed as modelled.",
+    "part": "box",
+    "severity": "warning",
+    "status": "warn"
+   },
+   {
+    "data": {
+     "faces": [],
+     "limit_deg": 45.0,
+     "limit_source": "default",
+     "orientation": {
+      "explanation": "'lid' is turned upside down: 7964 mm2 lies flat on the bed and nothing needs support (as modelled about 7676 mm2 would); the snap rails stand upright, across the layers, which is their weaker direction.",
+      "source": "face",
+      "turned": "upside down",
+      "up": [
+       0.0,
+       0.0,
+       -1.0
+      ]
+     },
+     "overhang_area": 0.0
+    },
+    "id": "overhangs",
+    "message": "No overhang steeper than 45 degrees; prints without support turned upside down.",
+    "part": "lid",
+    "severity": "warning",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "contact_area": 7973.8737,
+     "contact_ratio": 0.9584,
+     "footprint_area": 8320.0,
+     "orientation": {
+      "explanation": "'box' is printed as modelled: 7974 mm2 lies flat on the bed and about 48 mm2 needs support.",
+      "source": "as_modelled",
+      "turned": "as modelled",
+      "up": [
+       0.0,
+       0.0,
+       1.0
+      ]
+     }
+    },
+    "id": "bed_contact",
+    "message": "7974 mm2 of flat surface rests on the bed (96% of the footprint) when printed as modelled.",
+    "part": "box",
+    "severity": "warning",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "contact_area": 7963.7571,
+     "contact_ratio": 0.9572,
+     "footprint_area": 8320.0,
+     "orientation": {
+      "explanation": "'lid' is turned upside down: 7964 mm2 lies flat on the bed and nothing needs support (as modelled about 7676 mm2 would); the snap rails stand upright, across the layers, which is their weaker direction.",
+      "source": "face",
+      "turned": "upside down",
+      "up": [
+       0.0,
+       0.0,
+       -1.0
+      ]
+     }
+    },
+    "id": "bed_contact",
+    "message": "7964 mm2 of flat surface rests on the bed (96% of the footprint) when printed turned upside down.",
+    "part": "lid",
+    "severity": "warning",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "narrow_face_count": 0,
+     "narrow_faces": [],
+     "nozzle_diameter": 0.4,
+     "round_feature_count": 0,
+     "round_features": []
+    },
+    "id": "small_features",
+    "message": "No feature is finer than the 0.4 mm nozzle can print.",
+    "part": "box",
+    "severity": "warning",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "narrow_face_count": 0,
+     "narrow_faces": [],
+     "nozzle_diameter": 0.4,
+     "round_feature_count": 0,
+     "round_features": []
+    },
+    "id": "small_features",
+    "message": "No feature is finer than the 0.4 mm nozzle can print.",
+    "part": "lid",
+    "severity": "warning",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "intended": [],
+     "overlaps": [],
+     "undetermined": []
+    },
+    "id": "parts_do_not_intersect",
+    "message": "No two parts overlap.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": 0.0,
+     "distance": 0.32,
+     "expected": 0.32,
+     "extreme": "nominal",
+     "fit_class": "slide",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.32,
+     "nominal": 60.0,
+     "offsets_provenance": "guessed",
+     "pair": "wall_plus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       30.0,
+       30.0,
+       40.0
+      ],
+      [
+       30.0,
+       29.68,
+       40.0
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.wall_plus' is drawn with the slide clearance the guessed default calibration asks for (this printer is not measured yet): 0.320 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": -0.0,
+     "distance": 0.507,
+     "expected": -0.19,
+     "extreme": "nominal",
+     "fit_class": "snap",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": -0.19,
+     "nominal": 60.0,
+     "offsets_provenance": "guessed",
+     "pair": "snap_plus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       -15.47,
+       30.0,
+       32.51
+      ],
+      [
+       -15.0,
+       30.19,
+       32.51
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.snap_plus' is drawn with the snap clearance the guessed default calibration asks for (this printer is not measured yet): -0.190 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": -0.0,
+     "distance": 0.21,
+     "expected": 0.21,
+     "extreme": "nominal",
+     "fit_class": "snug",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.21,
+     "nominal": 60.0,
+     "offsets_provenance": "guessed",
+     "pair": "seat_plus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       -15.0,
+       30.4,
+       32.51
+      ],
+      [
+       -15.0,
+       30.19,
+       32.51
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.seat_plus' is drawn with the snug clearance the guessed default calibration asks for (this printer is not measured yet): 0.210 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": 0.0,
+     "distance": 0.47,
+     "expected": 0.47,
+     "extreme": "nominal",
+     "fit_class": "loose",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.47,
+     "nominal": 30.0,
+     "offsets_provenance": "guessed",
+     "pair": "end_plus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       15.47,
+       30.19,
+       33.11
+      ],
+      [
+       15.0,
+       30.19,
+       33.11
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.end_plus' is drawn with the loose clearance the guessed default calibration asks for (this printer is not measured yet): 0.470 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": -0.0,
+     "distance": 0.38,
+     "expected": 0.38,
+     "extreme": "nominal",
+     "fit_class": "slide",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.38,
+     "nominal": 120.0,
+     "offsets_provenance": "guessed",
+     "pair": "locate_plus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       60.0,
+       -15.0,
+       40.0
+      ],
+      [
+       59.62,
+       -15.0,
+       40.0
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.locate_plus' is drawn with the slide clearance the guessed default calibration asks for (this printer is not measured yet): 0.380 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": 0.0,
+     "distance": 0.32,
+     "expected": 0.32,
+     "extreme": "nominal",
+     "fit_class": "slide",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.32,
+     "nominal": 60.0,
+     "offsets_provenance": "guessed",
+     "pair": "wall_minus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       30.0,
+       -30.0,
+       40.0
+      ],
+      [
+       30.0,
+       -29.68,
+       40.0
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.wall_minus' is drawn with the slide clearance the guessed default calibration asks for (this printer is not measured yet): 0.320 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": -0.0,
+     "distance": 0.507,
+     "expected": -0.19,
+     "extreme": "nominal",
+     "fit_class": "snap",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": -0.19,
+     "nominal": 60.0,
+     "offsets_provenance": "guessed",
+     "pair": "snap_minus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       -15.47,
+       -30.0,
+       32.51
+      ],
+      [
+       -15.0,
+       -30.19,
+       32.51
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.snap_minus' is drawn with the snap clearance the guessed default calibration asks for (this printer is not measured yet): -0.190 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": -0.0,
+     "distance": 0.21,
+     "expected": 0.21,
+     "extreme": "nominal",
+     "fit_class": "snug",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.21,
+     "nominal": 60.0,
+     "offsets_provenance": "guessed",
+     "pair": "seat_minus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       15.0,
+       -30.4,
+       32.51
+      ],
+      [
+       15.0,
+       -30.19,
+       32.51
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.seat_minus' is drawn with the snug clearance the guessed default calibration asks for (this printer is not measured yet): 0.210 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": 0.0,
+     "distance": 0.47,
+     "expected": 0.47,
+     "extreme": "nominal",
+     "fit_class": "loose",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.47,
+     "nominal": 30.0,
+     "offsets_provenance": "guessed",
+     "pair": "end_minus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       15.47,
+       -30.19,
+       33.11
+      ],
+      [
+       15.0,
+       -30.19,
+       33.11
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.end_minus' is drawn with the loose clearance the guessed default calibration asks for (this printer is not measured yet): 0.470 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "snap_lid",
+     "difference": 0.0,
+     "distance": 0.38,
+     "expected": 0.38,
+     "extreme": "nominal",
+     "fit_class": "slide",
+     "instance": "snap_lid_1",
+     "kind": "pair",
+     "measured": 0.38,
+     "nominal": 120.0,
+     "offsets_provenance": "guessed",
+     "pair": "locate_minus",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "points": [
+      [
+       -60.0,
+       -15.0,
+       40.0
+      ],
+      [
+       -59.62,
+       -15.0,
+       40.0
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1.locate_minus' is drawn with the slide clearance the guessed default calibration asks for (this printer is not measured yet): 0.380 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "screw_boss",
+     "difference": -0.0,
+     "distance": 0.2155,
+     "expected": -0.2155,
+     "extreme": "nominal",
+     "fit_class": "thread_tap",
+     "instance": "screw_boss_1",
+     "kind": "pair",
+     "measured": -0.2155,
+     "nominal": 3.0,
+     "offsets_provenance": "guessed",
+     "pair": "thread",
+     "parts": [
+      "box",
+      null
+     ],
+     "points": [
+      [
+       64.7845,
+       27.0,
+       40.0
+      ],
+      [
+       65.0,
+       27.0,
+       40.0
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The screw boss 'screw_boss_1.thread' is drawn with the thread_tap clearance the guessed default calibration asks for (this printer is not measured yet): -0.216 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "card": "screw_boss",
+     "difference": -0.0,
+     "distance": 0.2945,
+     "expected": 0.2945,
+     "extreme": "nominal",
+     "fit_class": "thread_free",
+     "instance": "screw_boss_1",
+     "kind": "pair",
+     "measured": 0.2945,
+     "nominal": 3.0,
+     "offsets_provenance": "guessed",
+     "pair": "screw",
+     "parts": [
+      null,
+      "lid"
+     ],
+     "points": [
+      [
+       65.0,
+       27.0,
+       42.4
+      ],
+      [
+       65.2945,
+       27.0,
+       42.4
+      ]
+     ],
+     "provenance": "guessed",
+     "reason": "",
+     "target_provenance": "guessed",
+     "tolerance": 0.001
+    },
+    "id": "fit_pairs",
+    "message": "The screw boss 'screw_boss_1.screw' is drawn with the thread_free clearance the guessed default calibration asks for (this printer is not measured yet): 0.294 mm.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "assembled_overlap": 0.0,
+     "card": "snap_lid",
+     "in_place": true,
+     "instance": "snap_lid_1",
+     "intended_overlap": 0.0,
+     "keep_out": {
+      "box": 0.0
+     },
+     "kind": "joint",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "placement_shift": 0.0,
+     "problems": []
+    },
+    "id": "fit_pairs",
+    "message": "The snap lid 'snap_lid_1' goes together: 'lid' reaches its place on 'box' without colliding, and the room the joint needs is free.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "assembled_overlap": 0.0,
+     "card": "screw_boss",
+     "in_place": true,
+     "instance": "screw_boss_1",
+     "intended_overlap": 0.0,
+     "keep_out": {
+      "plate": 0.0
+     },
+     "kind": "joint",
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "placement_shift": 0.0,
+     "problems": []
+    },
+    "id": "fit_pairs",
+    "message": "The screw boss 'screw_boss_1' goes together: 'lid' reaches its place on 'box' without colliding, and the room the joint needs is free.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "k": 2.0,
+     "kind": "robustness",
+     "unproven": [
+      {
+       "axis": "xy",
+       "drawn": -0.19,
+       "fit_class": "snap",
+       "index": 1,
+       "k": 2.0,
+       "nominal": 60.0,
+       "offsets_provenance": "guessed",
+       "ok": false,
+       "pairs": [
+        "snap_lid_1.snap_plus",
+        "snap_lid_1.snap_minus"
+       ],
+       "printed": {
+        "loose": -0.14,
+        "tight": -0.46
+       },
+       "reason": "on the tightest printer the calibration allows it prints with -0.460 mm per side, below -0.450 mm: it would overstress the snap bead; on the loosest printer the calibration allows it prints with -0.140 mm per side, above -0.150 mm: it would not hold the snap",
+       "target": -0.3,
+       "target_provenance": "guessed",
+       "window": [
+        -0.45,
+        -0.15
+       ]
+      },
+      {
+       "axis": "xy",
+       "drawn": 0.21,
+       "fit_class": "snug",
+       "index": 2,
+       "k": 2.0,
+       "nominal": 60.0,
+       "offsets_provenance": "guessed",
+       "ok": false,
+       "pairs": [
+        "snap_lid_1.seat_plus",
+        "snap_lid_1.seat_minus"
+       ],
+       "printed": {
+        "loose": 0.26,
+        "tight": -0.06
+       },
+       "reason": "on the tightest printer the calibration allows it prints with -0.060 mm per side, below +0.000 mm: it could not be pushed together by hand",
+       "target": 0.1,
+       "target_provenance": "guessed",
+       "window": [
+        0.0,
+        null
+       ]
+      }
+     ]
+    },
+    "id": "fit_pairs",
+    "message": "This printer is not calibrated, so 2 of 7 clearances are not sure to give their fit: snap_lid_1.snap_plus, snap_lid_1.snap_minus (snap): on the tightest printer the calibration allows it prints with -0.460 mm per side, below -0.450 mm: it would overstress the snap bead; on the loosest printer the calibration allows it prints with -0.140 mm per side, above -0.150 mm: it would not hold the snap; snap_lid_1.seat_plus, snap_lid_1.seat_minus (snug): on the tightest printer the calibration allows it prints with -0.060 mm per side, below +0.000 mm: it could not be pushed together by hand. The gaps are drawn for a guessed printer; print the card's gauge or calibrate the printer before relying on these fits.",
+    "part": null,
+    "severity": "error",
+    "status": "warn"
+   },
+   {
+    "data": {
+     "bounding_box": [
+      129.9995,
+      64.0,
+      40.0
+     ],
+     "kind": "requirement",
+     "met": true,
+     "params": [
+      "width",
+      "depth",
+      "height"
+     ],
+     "parts": [
+      "box"
+     ],
+     "provenance": "guessed",
+     "question": {
+      "guessed_params": [
+       "width",
+       "depth"
+      ],
+      "requirement": "holds_power_strip",
+      "text": "The space inside 'box' of at least 120 x 60 x 36 mm depends on a value that was guessed (Inside width, Inside depth). Please measure it."
+     },
+     "requirement": "holds_power_strip",
+     "requirement_kind": "cavity_min",
+     "size": [
+      120.0,
+      60.0,
+      36.0
+     ]
+    },
+    "id": "contract",
+    "message": "Requirement 'holds_power_strip' (guessed) is met: a 120 x 60 x 36 mm cuboid fits inside 'box'. It rests on a guess: The space inside 'box' of at least 120 x 60 x 36 mm depends on a value that was guessed (Inside width, Inside depth). Please measure it.",
+    "part": "box",
+    "severity": "error",
+    "status": "warn"
+   },
+   {
+    "data": {
+     "kind": "requirement",
+     "met": null,
+     "not_checkable": true,
+     "params": [
+      "cable"
+     ],
+     "parts": [
+      "box"
+     ],
+     "provenance": "guessed",
+     "question": {
+      "guessed_params": [
+       "cable"
+      ],
+      "requirement": "cables_pass",
+      "text": "Cable slot width of 'box' (12 mm) depends on a value that was guessed (Cable slot). Please measure it."
+     },
+     "reason": "a dimension named in words ('cable slot width') has no place on the solid that Hotend could find, so it cannot be measured; to have it checked, state what must hold as `cavity_min`, `outer_max`, `wall_min`, `standoff` or `fit`, or measure it yourself with the measure tool and say so",
+     "requirement": "cables_pass",
+     "requirement_kind": "dimension"
+    },
+    "id": "contract",
+    "message": "Not checkable: Requirement 'cables_pass' (guessed) is not checkable: a dimension named in words ('cable slot width') has no place on the solid that Hotend could find, so it cannot be measured; to have it checked, state what must hold as `cavity_min`, `outer_max`, `wall_min`, `standoff` or `fit`, or measure it yourself with the measure tool and say so. It rests on a guess: Cable slot width of 'box' (12 mm) depends on a value that was guessed (Cable slot). Please measure it.",
+    "part": "box",
+    "severity": "error",
+    "status": "warn"
+   },
+   {
+    "data": {
+     "cards": [
+      {
+       "clearance_provenance": [
+        "guessed"
+       ],
+       "instance": "snap_lid_1",
+       "joint_ok": true,
+       "pairs": 10,
+       "pairs_failed": 0
+      }
+     ],
+     "kind": "requirement",
+     "met": true,
+     "params": [],
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "provenance": "guessed",
+     "question": {
+      "guessed_params": [],
+      "requirement": "lid_snaps",
+      "text": "Nobody has measured the snap fit (snap lid) between 'box' and 'lid' on this printer yet. Print the fit gauge and say whether it works, is too tight or too loose."
+     },
+     "requirement": "lid_snaps",
+     "requirement_kind": "fit"
+    },
+    "id": "contract",
+    "message": "Requirement 'lid_snaps' (guessed) is met: the snap lid card with a snap fit between 'box' and 'lid' is built by 'snap_lid_1' and all its clearances measure as resolved. It rests on a guess: Nobody has measured the snap fit (snap lid) between 'box' and 'lid' on this printer yet. Print the fit gauge and say whether it works, is too tight or too loose.",
+    "part": null,
+    "severity": "error",
+    "status": "warn"
+   },
+   {
+    "data": {
+     "cards": [
+      {
+       "clearance_provenance": [
+        "guessed"
+       ],
+       "instance": "screw_boss_1",
+       "joint_ok": true,
+       "pairs": 2,
+       "pairs_failed": 0
+      }
+     ],
+     "kind": "requirement",
+     "met": true,
+     "params": [],
+     "parts": [
+      "box",
+      "lid"
+     ],
+     "provenance": "standard",
+     "question": null,
+     "requirement": "lid_screwed",
+     "requirement_kind": "fit"
+    },
+    "id": "contract",
+    "message": "Requirement 'lid_screwed' (standard) is met: the screw boss card with a thread tap fit between 'box' and 'lid' is built by 'screw_boss_1' and all its clearances measure as resolved.",
+    "part": null,
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {
+     "kind": "requirement",
+     "measured": 2622,
+     "met": true,
+     "min_wall": 0.8,
+     "params": [
+      "wall"
+     ],
+     "parts": [
+      "box"
+     ],
+     "provenance": "style",
+     "question": null,
+     "requirement": "walls_print",
+     "requirement_kind": "wall_min",
+     "samples": 2743,
+     "thin_area": 0.0,
+     "thinnest": 1.6,
+     "thinnest_at": [
+      -5.1567,
+      -30.4,
+      32.681
+     ],
+     "value": 0.8
+    },
+    "id": "contract",
+    "message": "Requirement 'walls_print' (style) is met: thinnest wall found is 1.60 mm; the minimum is 0.80 mm (2622 points sampled).",
+    "part": "box",
+    "severity": "error",
+    "status": "pass"
+   },
+   {
+    "data": {},
+    "id": "parameter_ranges",
+    "message": "Skipped: range sampling was not requested.",
+    "part": null,
+    "severity": "warning",
+    "status": "skipped"
+   }
+  ],
+  "error": null,
+  "op": "build",
+  "param_specs": {
+   "cable": {
+    "default": 12.0,
+    "label": "Cable slot",
+    "provenance": "guessed",
+    "unit": "mm"
+   },
+   "depth": {
+    "default": 60.0,
+    "label": "Inside depth",
+    "max": 80.0,
+    "min": 30.0,
+    "provenance": "guessed",
+    "unit": "mm"
+   },
+   "height": {
+    "default": 40.0,
+    "label": "Height",
+    "max": 80.0,
+    "min": 26.0,
+    "provenance": "style",
+    "unit": "mm"
+   },
+   "wall": {
+    "default": 2.0,
+    "label": "Wall thickness",
+    "max": 3.0,
+    "min": 1.6,
+    "provenance": "style",
+    "unit": "mm"
+   },
+   "width": {
+    "default": 120.0,
+    "label": "Inside width",
+    "max": 200.0,
+    "min": 60.0,
+    "provenance": "guessed",
+    "unit": "mm"
+   }
+  },
+  "params": {
+   "cable": 12.0,
+   "depth": 60.0,
+   "height": 40.0,
+   "wall": 2.0,
+   "width": 120.0
+  },
+  "parts": [
+   {
+    "area": 44792.046191,
+    "bbox": {
+     "max": [
+      68.0,
+      32.0,
+      40.0
+     ],
+     "min": [
+      -62.0,
+      -32.0,
+      0.0
+     ]
+    },
+    "color": "#4c78a8",
+    "faces": 36,
+    "is_manifold": true,
+    "is_valid": true,
+    "mass_estimate_g": 55.246,
+    "name": "box",
+    "solids": 1,
+    "volume": 44552.920457
+   },
+   {
+    "area": 19877.742449,
+    "bbox": {
+     "max": [
+      68.0,
+      32.0,
+      42.4
+     ],
+     "min": [
+      -62.0,
+      -32.0,
+      32.0
+     ]
+    },
+    "color": "#f58518",
+    "faces": 42,
+    "is_manifold": true,
+    "is_valid": true,
+    "mass_estimate_g": 26.599,
+    "name": "lid",
+    "solids": 1,
+    "volume": 21450.982993
+   }
+  ],
+  "protocol": 0,
+  "questions": [
+   {
+    "guessed_params": [
+     "width",
+     "depth"
+    ],
+    "requirement": "holds_power_strip",
+    "text": "The space inside 'box' of at least 120 x 60 x 36 mm depends on a value that was guessed (Inside width, Inside depth). Please measure it."
+   },
+   {
+    "guessed_params": [
+     "cable"
+    ],
+    "requirement": "cables_pass",
+    "text": "Cable slot width of 'box' (12 mm) depends on a value that was guessed (Cable slot). Please measure it."
+   },
+   {
+    "guessed_params": [],
+    "requirement": "lid_snaps",
+    "text": "Nobody has measured the snap fit (snap lid) between 'box' and 'lid' on this printer yet. Print the fit gauge and say whether it works, is too tight or too loose."
+   }
+  ],
+  "status": "ok",
+  "stdout_truncated": false,
+  "timings": {
+   "build_s": 0.159,
+   "checks_s": 1.861,
+   "export_s": 0.02,
+   "import_s": 1.088,
+   "model_process_s": 0.537,
+   "tessellate_s": 0.025,
+   "total_s": 4.129,
+   "views_s": 0.462
+  }
+ },
+ "version": {
+  "code_sha256": "e5642f5bbb771b9923f32093251c5eced43c9340d713c80a2c04bafc199e46a1",
+  "created_at_ms": 1794949378382,
+  "note": "Wall 2 mm (slider 1.6 to 3 mm) so the snap groove leaves 0.8 mm",
+  "number": 2,
+  "origin": "write_model_code",
+  "params": {
+   "cable": 12.0,
+   "depth": 60.0,
+   "height": 40.0,
+   "wall": 2.0,
+   "width": 120.0
+  },
+  "parent": 1,
+  "project_id": "01a1eb51-7b48-7046-9384-bd1bfc2b4e51",
+  "status": "ok"
+ }
+}

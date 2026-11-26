@@ -1,0 +1,11 @@
+{
+  "name": "Hotend demo filament petg-basic (fake slicer only)",
+  "filament_type": ["PETG"],
+  "filament_density": ["1.27"],
+  "filament_diameter": ["1.75"],
+  "nozzle_temperature": ["250"],
+  "cool_plate_temp": ["60"],
+  "textured_plate_temp": ["70"],
+  "hot_plate_temp": ["70"],
+  "eng_plate_temp": ["70"]
+}

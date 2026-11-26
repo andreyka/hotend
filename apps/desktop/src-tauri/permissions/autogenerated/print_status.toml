@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-print-status"
+description = "Enables the print_status command without any pre-configured scope."
+commands.allow = ["print_status"]
+
+[[permission]]
+identifier = "deny-print-status"
+description = "Denies the print_status command without any pre-configured scope."
+commands.deny = ["print_status"]

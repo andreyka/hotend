@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-gauge-export"
+description = "Enables the gauge_export command without any pre-configured scope."
+commands.allow = ["gauge_export"]
+
+[[permission]]
+identifier = "deny-gauge-export"
+description = "Denies the gauge_export command without any pre-configured scope."
+commands.deny = ["gauge_export"]
